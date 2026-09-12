@@ -1,3 +1,14 @@
 .DS_Store
 Thumbs.db
 node_modules/
+
+# Vídeos ainda não usados no site (conteúdo futuro) — ficam no disco, fora do git
+videos/*
+!videos/01-apresentacao-rita.mp4
+!videos/10-transformacao-loft.mp4
+!videos/09-decoracao-recomeco.mp4
+!videos/04-decoracao-clinica.mp4
+!videos/11-evento-decora.mp4
+!videos/02-apresentando-fragrancias.mp4
+!videos/13-decoracoes-mesa.mp4
+!videos/14-decoracoes-vasos.mp4

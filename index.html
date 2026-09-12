@@ -5,7 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Espaço Decora By Rita Assunção</title>
 <meta name="description" content="Espaço Decora By Rita Assunção — loja de decoração em Lages/SC.">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%230A0706'/%3E%3Ctext x='50' y='68' font-size='60' text-anchor='middle' fill='%23BD9A72' font-family='Georgia, serif'%3ED%3C/text%3E%3C/svg%3E">
+<link rel="icon" href="assets/logo/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/logo/favicon-32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="assets/logo/favicon-16.png">
+<link rel="apple-touch-icon" sizes="180x180" href="assets/logo/apple-touch-icon.png">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -47,10 +50,8 @@
   <div class="hero__conteudo">
     <p class="eyebrow">Lages · Santa Catarina</p>
 
-    <div class="marca" aria-label="Espaço Decora By Rita Assunção">
-      <span class="marca__linha1">Espaço</span>
-      <span class="marca__linha2"><em>DeCora</em></span>
-      <span class="marca__linha3">By Rita Assunção</span>
+    <div class="marca">
+      <img class="marca__logo" src="assets/logo/logo-transparente.png" width="512" height="512" alt="Espaço Decora By Rita Assunção">
     </div>
 
     <h1 class="hero__headline">
@@ -72,64 +73,180 @@
       <p class="eyebrow">A essência</p>
       <h2 class="titulo-secao">Uma casa para o <em>bom gosto.</em></h2>
       <p class="manifesto__paragrafo">
-        [Placeholder — texto do manifesto sobre Rita Assunção e a filosofia do
-        Espaço Decora entra aqui em uma próxima etapa. Um parágrafo curto,
-        pessoal, contando a trajetória por trás da loja e o cuidado por trás
-        de cada peça escolhida.]
+        Cada ambiente conta uma história. Transformo espaços em Lages com
+        peças que têm alma — da decoração ao aroma, do detalhe ao acabamento.
+        O Espaço Decora nasceu do olhar de quem acredita que casa bonita é
+        casa que abraça.
       </p>
+      <p class="manifesto__experiencia">[X anos de experiência]</p>
       <p class="manifesto__assinatura">— Rita Assunção</p>
     </div>
 
-    <div class="manifesto__moldura" data-reveal aria-hidden="true">
-      <span class="manifesto__moldura-texto">retrato / ambiente</span>
+    <div class="manifesto__video" data-reveal>
+      <video
+        class="manifesto__video-el"
+        controls
+        preload="metadata"
+        playsinline
+        poster="assets/posters/01-apresentacao-rita.jpg"
+      >
+        <source src="videos/01-apresentacao-rita.mp4" type="video/mp4">
+      </video>
       <svg class="ramo ramo--manifesto"><use href="#ramo-dourado"/></svg>
     </div>
   </div>
 </section>
 
 <!-- ============================================================
-     VITRINE DE VÍDEOS (placeholder)
+     ANTES / DEPOIS — prova de transformação real
+     ============================================================ -->
+<section class="transformacao" id="transformacao">
+  <div class="vitrine__cabecalho" data-reveal>
+    <p class="eyebrow">Prova em imagens</p>
+    <h2 class="titulo-secao">O <em>antes</em> e o <em>depois</em></h2>
+    <p class="transformacao__intro">Mesmo cantinho, mesma casa — arraste para ver a transformação.</p>
+  </div>
+
+  <div class="comparador" data-reveal style="--pos: 50%">
+    <div class="comparador__quadro">
+      <img class="comparador__camada comparador__camada--depois" src="assets/02-depois-decoracao.png" alt="Depois: cantinho com espelho iluminado, penteadeira e puff de couro" draggable="false">
+      <div class="comparador__camada comparador__camada--antes">
+        <img src="assets/01-antes-decoracao.png" alt="Antes: canto vazio, apenas parede branca e tomada" draggable="false">
+      </div>
+
+      <span class="comparador__rotulo comparador__rotulo--antes">Antes</span>
+      <span class="comparador__rotulo comparador__rotulo--depois">Depois</span>
+
+      <div class="comparador__linha" aria-hidden="true"></div>
+      <div class="comparador__alca" aria-hidden="true">
+        <svg viewBox="0 0 24 24" width="14" height="14"><path d="M8 6l-6 6 6 6M16 6l6 6-6 6" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+    </div>
+
+    <input class="comparador__range" type="range" min="0" max="100" value="50" aria-label="Arraste para comparar o antes e o depois">
+
+    <svg class="ramo ramo--transformacao"><use href="#ramo-dourado"/></svg>
+  </div>
+
+  <figure class="transformacao__projeto" data-reveal>
+    <img src="assets/03-depois-decoracao.png" alt="Render do projeto do mesmo cantinho antes da execução final">
+    <figcaption>Do projeto ao resultado real.</figcaption>
+  </figure>
+</section>
+
+<!-- ============================================================
+     VITRINE DE VÍDEOS
      ============================================================ -->
 <section class="vitrine vitrine--videos" id="videos">
   <div class="vitrine__cabecalho" data-reveal>
     <p class="eyebrow">Em movimento</p>
     <h2 class="titulo-secao">Vitrine em <em>vídeo</em></h2>
+    <p class="vitrine__dica">Toque ou passe o mouse sobre um vídeo para ouvir o som.</p>
   </div>
 
-  <div class="grid grid--videos">
-    <article class="placeholder placeholder--video placeholder--com-ramo" data-reveal>
-      <svg class="ramo ramo--videos"><use href="#ramo-dourado"/></svg>
-      <span class="placeholder__play" aria-hidden="true"></span>
-      <span class="placeholder__legenda">Vídeo em breve</span>
+  <div class="grid grid--videos-mosaico">
+    <article class="video-card video-card--grande" data-reveal data-video>
+      <video class="video-card__el" muted loop playsinline preload="none" poster="assets/posters/10-transformacao-loft.jpg">
+        <source src="videos/10-transformacao-loft.mp4" type="video/mp4">
+      </video>
+      <button class="video-card__som" type="button" aria-pressed="false" aria-label="Ativar som deste vídeo">
+        <svg class="icone-som-off" viewBox="0 0 24 24" width="16" height="16"><path d="M4 9v6h4l5 4V5L8 9H4z" fill="currentColor"/><line x1="16" y1="9" x2="21" y2="15" stroke="currentColor" stroke-width="1.6"/><line x1="21" y1="9" x2="16" y2="15" stroke="currentColor" stroke-width="1.6"/></svg>
+        <svg class="icone-som-on" viewBox="0 0 24 24" width="16" height="16"><path d="M4 9v6h4l5 4V5L8 9H4z" fill="currentColor"/><path d="M16.5 8.5a5 5 0 0 1 0 7" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round"/><path d="M19 6a9 9 0 0 1 0 12" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round"/></svg>
+      </button>
     </article>
-    <article class="placeholder placeholder--video" data-reveal>
-      <span class="placeholder__play" aria-hidden="true"></span>
-      <span class="placeholder__legenda">Vídeo em breve</span>
+
+    <article class="video-card video-card--alto" data-reveal data-video>
+      <video class="video-card__el" muted loop playsinline preload="none" poster="assets/posters/09-decoracao-recomeco.jpg">
+        <source src="videos/09-decoracao-recomeco.mp4" type="video/mp4">
+      </video>
+      <button class="video-card__som" type="button" aria-pressed="false" aria-label="Ativar som deste vídeo">
+        <svg class="icone-som-off" viewBox="0 0 24 24" width="16" height="16"><path d="M4 9v6h4l5 4V5L8 9H4z" fill="currentColor"/><line x1="16" y1="9" x2="21" y2="15" stroke="currentColor" stroke-width="1.6"/><line x1="21" y1="9" x2="16" y2="15" stroke="currentColor" stroke-width="1.6"/></svg>
+        <svg class="icone-som-on" viewBox="0 0 24 24" width="16" height="16"><path d="M4 9v6h4l5 4V5L8 9H4z" fill="currentColor"/><path d="M16.5 8.5a5 5 0 0 1 0 7" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round"/><path d="M19 6a9 9 0 0 1 0 12" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round"/></svg>
+      </button>
     </article>
-    <article class="placeholder placeholder--video" data-reveal>
-      <span class="placeholder__play" aria-hidden="true"></span>
-      <span class="placeholder__legenda">Vídeo em breve</span>
+
+    <article class="video-card" data-reveal data-video>
+      <video class="video-card__el" muted loop playsinline preload="none" poster="assets/posters/04-decoracao-clinica.jpg">
+        <source src="videos/04-decoracao-clinica.mp4" type="video/mp4">
+      </video>
+      <button class="video-card__som" type="button" aria-pressed="false" aria-label="Ativar som deste vídeo">
+        <svg class="icone-som-off" viewBox="0 0 24 24" width="16" height="16"><path d="M4 9v6h4l5 4V5L8 9H4z" fill="currentColor"/><line x1="16" y1="9" x2="21" y2="15" stroke="currentColor" stroke-width="1.6"/><line x1="21" y1="9" x2="16" y2="15" stroke="currentColor" stroke-width="1.6"/></svg>
+        <svg class="icone-som-on" viewBox="0 0 24 24" width="16" height="16"><path d="M4 9v6h4l5 4V5L8 9H4z" fill="currentColor"/><path d="M16.5 8.5a5 5 0 0 1 0 7" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round"/><path d="M19 6a9 9 0 0 1 0 12" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round"/></svg>
+      </button>
     </article>
+
+    <article class="video-card video-card--largo" data-reveal data-video>
+      <video class="video-card__el" muted loop playsinline preload="none" poster="assets/posters/11-evento-decora.jpg">
+        <source src="videos/11-evento-decora.mp4" type="video/mp4">
+      </video>
+      <button class="video-card__som" type="button" aria-pressed="false" aria-label="Ativar som deste vídeo">
+        <svg class="icone-som-off" viewBox="0 0 24 24" width="16" height="16"><path d="M4 9v6h4l5 4V5L8 9H4z" fill="currentColor"/><line x1="16" y1="9" x2="21" y2="15" stroke="currentColor" stroke-width="1.6"/><line x1="21" y1="9" x2="16" y2="15" stroke="currentColor" stroke-width="1.6"/></svg>
+        <svg class="icone-som-on" viewBox="0 0 24 24" width="16" height="16"><path d="M4 9v6h4l5 4V5L8 9H4z" fill="currentColor"/><path d="M16.5 8.5a5 5 0 0 1 0 7" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round"/><path d="M19 6a9 9 0 0 1 0 12" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round"/></svg>
+      </button>
+    </article>
+
+    <article class="video-card video-card--alto" data-reveal data-video>
+      <video class="video-card__el" muted loop playsinline preload="none" poster="assets/posters/02-apresentando-fragrancias.jpg">
+        <source src="videos/02-apresentando-fragrancias.mp4" type="video/mp4">
+      </video>
+      <button class="video-card__som" type="button" aria-pressed="false" aria-label="Ativar som deste vídeo">
+        <svg class="icone-som-off" viewBox="0 0 24 24" width="16" height="16"><path d="M4 9v6h4l5 4V5L8 9H4z" fill="currentColor"/><line x1="16" y1="9" x2="21" y2="15" stroke="currentColor" stroke-width="1.6"/><line x1="21" y1="9" x2="16" y2="15" stroke="currentColor" stroke-width="1.6"/></svg>
+        <svg class="icone-som-on" viewBox="0 0 24 24" width="16" height="16"><path d="M4 9v6h4l5 4V5L8 9H4z" fill="currentColor"/><path d="M16.5 8.5a5 5 0 0 1 0 7" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round"/><path d="M19 6a9 9 0 0 1 0 12" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round"/></svg>
+      </button>
+    </article>
+
+    <article class="video-card" data-reveal data-video>
+      <video class="video-card__el" muted loop playsinline preload="none" poster="assets/posters/13-decoracoes-mesa.jpg">
+        <source src="videos/13-decoracoes-mesa.mp4" type="video/mp4">
+      </video>
+      <button class="video-card__som" type="button" aria-pressed="false" aria-label="Ativar som deste vídeo">
+        <svg class="icone-som-off" viewBox="0 0 24 24" width="16" height="16"><path d="M4 9v6h4l5 4V5L8 9H4z" fill="currentColor"/><line x1="16" y1="9" x2="21" y2="15" stroke="currentColor" stroke-width="1.6"/><line x1="21" y1="9" x2="16" y2="15" stroke="currentColor" stroke-width="1.6"/></svg>
+        <svg class="icone-som-on" viewBox="0 0 24 24" width="16" height="16"><path d="M4 9v6h4l5 4V5L8 9H4z" fill="currentColor"/><path d="M16.5 8.5a5 5 0 0 1 0 7" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round"/><path d="M19 6a9 9 0 0 1 0 12" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round"/></svg>
+      </button>
+    </article>
+
+    <article class="video-card" data-reveal data-video>
+      <video class="video-card__el" muted loop playsinline preload="none" poster="assets/posters/14-decoracoes-vasos.jpg">
+        <source src="videos/14-decoracoes-vasos.mp4" type="video/mp4">
+      </video>
+      <button class="video-card__som" type="button" aria-pressed="false" aria-label="Ativar som deste vídeo">
+        <svg class="icone-som-off" viewBox="0 0 24 24" width="16" height="16"><path d="M4 9v6h4l5 4V5L8 9H4z" fill="currentColor"/><line x1="16" y1="9" x2="21" y2="15" stroke="currentColor" stroke-width="1.6"/><line x1="21" y1="9" x2="16" y2="15" stroke="currentColor" stroke-width="1.6"/></svg>
+        <svg class="icone-som-on" viewBox="0 0 24 24" width="16" height="16"><path d="M4 9v6h4l5 4V5L8 9H4z" fill="currentColor"/><path d="M16.5 8.5a5 5 0 0 1 0 7" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round"/><path d="M19 6a9 9 0 0 1 0 12" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round"/></svg>
+      </button>
+    </article>
+
+    <svg class="ramo ramo--videos"><use href="#ramo-dourado"/></svg>
+    <svg class="ramo ramo--videos-fim"><use href="#ramo-dourado"/></svg>
   </div>
 </section>
 
 <!-- ============================================================
-     VITRINE DE PRODUTOS (placeholder — sem preços, sem carrinho)
+     DETALHE DE PRODUTO (fechamento — sem preços, sem carrinho)
      ============================================================ -->
 <section class="vitrine vitrine--produtos" id="pecas">
   <div class="vitrine__cabecalho" data-reveal>
-    <p class="eyebrow">Peças selecionadas</p>
-    <h2 class="titulo-secao">Curadoria de <em>ambientes</em></h2>
+    <p class="eyebrow">Em detalhe</p>
+    <h2 class="titulo-secao">Peças que <em>compõem</em></h2>
   </div>
 
   <div class="grid grid--produtos">
-    <article class="placeholder placeholder--produto placeholder--com-ramo" data-reveal>
-      <svg class="ramo ramo--produtos"><use href="#ramo-dourado"/></svg>
-      <span class="placeholder__legenda">Peça em breve</span>
-    </article>
-    <article class="placeholder placeholder--produto" data-reveal><span class="placeholder__legenda">Peça em breve</span></article>
-    <article class="placeholder placeholder--produto" data-reveal><span class="placeholder__legenda">Peça em breve</span></article>
-    <article class="placeholder placeholder--produto" data-reveal><span class="placeholder__legenda">Peça em breve</span></article>
+    <figure class="produto-card" data-reveal>
+      <img src="assets/04-decoracao-geral.png" alt="Composição geral de mesa decorada" loading="lazy">
+    </figure>
+    <figure class="produto-card" data-reveal>
+      <img src="assets/05-decoracao-mesa.png" alt="Detalhe de mesa posta e decorada" loading="lazy">
+    </figure>
+    <figure class="produto-card" data-reveal>
+      <img src="assets/06-decoracao-flores.png" alt="Arranjo de flores como detalhe de decoração" loading="lazy">
+    </figure>
+    <figure class="produto-card" data-reveal>
+      <img src="assets/07-decoracao-facas.png" alt="Detalhe de talheres sobre a mesa posta" loading="lazy">
+    </figure>
+    <figure class="produto-card" data-reveal>
+      <img src="assets/08-decoracao-mesa.png" alt="Outro ângulo de mesa decorada" loading="lazy">
+    </figure>
+
+    <svg class="ramo ramo--produtos"><use href="#ramo-dourado"/></svg>
   </div>
 </section>
 

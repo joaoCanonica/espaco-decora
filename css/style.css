@@ -43,13 +43,13 @@ body{
   background: linear-gradient(
     180deg,
     var(--creme)  0%,
-    var(--creme)  16%,
-    var(--creme)  30%,
-    var(--escuro) 42%,
-    var(--escuro) 60%,
-    var(--accent) 72%,
-    var(--accent) 85%,
-    var(--escuro) 93%,
+    var(--creme)  10%,
+    var(--creme)  20%,
+    var(--escuro) 28%,
+    var(--escuro) 48%,
+    var(--accent) 56%,
+    var(--accent) 76%,
+    var(--escuro) 84%,
     var(--escuro) 100%
   );
 }
@@ -127,38 +127,12 @@ a{ color: inherit; text-decoration: none; }
 
 .marca{
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.15em;
-  margin-bottom: 2.5rem;
+  justify-content: center;
+  margin-bottom: 1.5rem;
 }
-.marca__linha1{
-  font-family: var(--fonte-corpo);
-  font-weight: 300;
-  font-size: clamp(0.95rem, 1.6vw, 1.3rem);
-  letter-spacing: 0.55em;
-  text-transform: uppercase;
-  padding-left: 0.55em; /* compensa o tracking visualmente */
-  color: var(--escuro);
-}
-.marca__linha2{
-  font-family: var(--fonte-titulo);
-  font-size: clamp(3.2rem, 9vw, 6rem);
-  line-height: 1;
-  color: var(--accent);
-}
-.marca__linha2 em{
-  font-style: italic;
-  font-weight: 500;
-}
-.marca__linha3{
-  font-family: var(--fonte-corpo);
-  font-weight: 400;
-  font-size: clamp(0.62rem, 1vw, 0.75rem);
-  letter-spacing: 0.42em;
-  text-transform: uppercase;
-  color: var(--primaria);
-  padding-left: 0.42em;
+.marca__logo{
+  width: clamp(220px, 26vw, 340px);
+  height: auto;
 }
 
 .hero__headline{
@@ -228,37 +202,44 @@ a{ color: inherit; text-decoration: none; }
   max-width: 46ch;
 }
 
+.manifesto__experiencia{
+  display: inline-block;
+  margin: 1.5rem 0 0;
+  padding: 0.3em 0.9em;
+  font-size: 0.72rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--accent);
+  border: 1px dashed color-mix(in srgb, var(--accent) 55%, transparent);
+}
+
 .manifesto__assinatura{
-  margin-top: 2rem;
+  margin-top: 1.5rem;
   font-family: var(--fonte-titulo);
   font-style: italic;
   font-size: 1.15rem;
   color: var(--accent);
 }
 
-.manifesto__moldura{
+.manifesto__video{
   position: relative;
-  aspect-ratio: 4 / 5;
-  border: 1px solid color-mix(in srgb, var(--primaria) 55%, transparent);
-  display: flex;
-  align-items: center;
-  justify-content: center;
   overflow: visible;
 }
-.manifesto__moldura-texto{
-  font-family: var(--fonte-corpo);
-  font-size: 0.68rem;
-  letter-spacing: 0.28em;
-  text-transform: uppercase;
-  color: var(--primaria);
-  opacity: 0.7;
+.manifesto__video-el{
+  width: 100%;
+  aspect-ratio: 9 / 16;
+  max-height: 640px;
+  margin: 0 auto;
+  object-fit: cover;
+  background: var(--escuro);
+  border: 1px solid color-mix(in srgb, var(--primaria) 55%, transparent);
 }
 
-/* Sai da lateral esquerda da moldura, cruzando para o espaço em branco
+/* Sai da lateral esquerda do vídeo, cruzando para o espaço em branco
    ao lado do texto do manifesto. */
 .ramo--manifesto{
-  width: 65%;
-  left: -30%;
+  width: 55%;
+  left: -26%;
   bottom: 6%;
   transform: rotate(-6deg) scaleX(-1);
   z-index: 3;
@@ -282,6 +263,13 @@ a{ color: inherit; text-decoration: none; }
 }
 .vitrine__cabecalho .eyebrow{ display:inline-block; }
 .vitrine__cabecalho .titulo-secao{ margin: 0 auto; }
+.vitrine__dica{
+  margin: -0.8rem 0 0;
+  font-size: 0.8rem;
+  font-weight: 300;
+  color: var(--claro);
+  opacity: 0.55;
+}
 
 .grid{
   position: relative;
@@ -291,63 +279,245 @@ a{ color: inherit; text-decoration: none; }
   display: grid;
   gap: clamp(20px, 2.4vw, 36px);
 }
-.grid--videos{ grid-template-columns: repeat(3, 1fr); }
-.grid--produtos{ grid-template-columns: repeat(4, 1fr); }
 
-.placeholder{
+/* ---- grid assimétrico de vídeos: mosaico editorial, não cards uniformes ---- */
+.grid--videos-mosaico{
+  grid-template-columns: repeat(4, 1fr);
+  grid-auto-rows: 150px;
+  grid-auto-flow: dense;
+}
+
+.video-card{
   position: relative;
-  border: 1px solid color-mix(in srgb, var(--primaria) 45%, transparent);
-  background: color-mix(in srgb, var(--claro) 4%, transparent);
+  grid-column: span 1;
+  grid-row: span 2;
+  overflow: hidden;
+  background: var(--escuro);
+  border: 1px solid color-mix(in srgb, var(--primaria) 40%, transparent);
+}
+.video-card--grande{ grid-column: span 2; grid-row: span 3; }
+.video-card--alto{ grid-row: span 3; }
+.video-card--largo{ grid-column: span 2; grid-row: span 1; }
+
+.video-card__el{
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.video-card__som{
+  position: absolute;
+  right: 0.7em;
+  bottom: 0.7em;
+  z-index: 2;
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 0.9rem;
-  text-align: center;
+  width: 2.1em;
+  height: 2.1em;
+  padding: 0;
+  background: color-mix(in srgb, var(--escuro) 55%, transparent);
+  border: 1px solid color-mix(in srgb, var(--claro) 35%, transparent);
+  border-radius: 50%;
+  color: var(--claro);
+  cursor: pointer;
+  transition: border-color 0.2s ease, background 0.2s ease;
 }
-.placeholder--video{ aspect-ratio: 16 / 10; }
-.placeholder--produto{ aspect-ratio: 3 / 4; }
+.video-card__som:hover{ border-color: var(--primaria); }
+.video-card__som .icone-som-on{ display: none; }
+.video-card__som.com-som .icone-som-off{ display: none; }
+.video-card__som.com-som .icone-som-on{ display: block; }
 
-/* Garante que o ramo que atravessa para fora do card fique por cima
-   dos vizinhos na grade, em vez de ser coberto pela ordem no DOM. */
-.placeholder--com-ramo{ z-index: 2; }
+/* Ramos posicionados como filhos do próprio .grid (que tem overflow
+   visível), não dos cards (que precisam de overflow:hidden para recortar
+   vídeo/imagem) — assim cruzam livremente para fora da grade. */
 
-.placeholder__legenda{
-  font-family: var(--fonte-corpo);
-  font-size: 0.68rem;
-  letter-spacing: 0.22em;
-  text-transform: uppercase;
-  color: var(--primaria);
-  opacity: 0.75;
-}
-
-.placeholder__play{
-  width: 0;
-  height: 0;
-  border-style: solid;
-  border-width: 10px 0 10px 16px;
-  border-color: transparent transparent transparent var(--primaria);
-  opacity: 0.85;
-}
-
-/* Sai do canto superior-direito do primeiro vídeo, cruzando para o
-   espaço acima, entre esta seção e o manifesto. */
+/* Sai por cima do primeiro vídeo (o maior), cruzando para o espaço
+   acima, entre esta seção e o antes/depois. */
 .ramo--videos{
-  width: 48%;
-  top: -28%;
-  right: -10%;
-  transform: rotate(20deg);
+  width: clamp(140px, 15vw, 220px);
+  top: -5%;
+  left: 10%;
+  transform: rotate(14deg);
+  z-index: 3;
+}
+/* Sai por baixo, do lado direito da grade, cruzando para o espaço
+   abaixo, entre esta seção e o detalhe de produto. */
+.ramo--videos-fim{
+  width: clamp(160px, 18vw, 260px);
+  top: 78%;
+  right: 2%;
+  transform: rotate(-20deg) scaleX(-1);
   z-index: 3;
 }
 
-/* Sai do canto inferior-esquerdo da primeira peça, cruzando para o
-   espaço abaixo, entre esta seção e o rodapé. */
+/* ---- grid de detalhe de produto: mais contido que o mosaico de vídeo ---- */
+.grid--produtos{ grid-template-columns: repeat(5, 1fr); }
+
+.produto-card{
+  position: relative;
+  margin: 0;
+  aspect-ratio: 3 / 4;
+  overflow: hidden;
+  border: 1px solid color-mix(in srgb, var(--primaria) 40%, transparent);
+}
+.produto-card img{
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Sai por baixo da primeira peça, cruzando para o espaço abaixo,
+   entre esta seção e o rodapé. O grid de produtos é bem mais baixo que
+   o próprio ramo, então o deslocamento precisa ser um percentual bem
+   maior do que nos outros ramos para empurrá-lo para fora da grade. */
 .ramo--produtos{
-  width: 62%;
-  bottom: -34%;
-  left: -20%;
+  width: clamp(120px, 14vw, 190px);
+  bottom: -58%;
+  left: 0;
   transform: rotate(-8deg) scaleX(-1);
   z-index: 3;
+}
+
+/* ==========================================================================
+   ANTES / DEPOIS — comparador de arrastar
+   ========================================================================== */
+.transformacao{
+  position: relative;
+  padding: clamp(90px, 12vw, 150px) var(--gutter);
+  color: var(--claro);
+  text-align: center;
+}
+.transformacao__intro{
+  margin: -0.8rem 0 0;
+  font-size: 0.9rem;
+  font-weight: 300;
+  color: var(--claro);
+  opacity: 0.6;
+}
+
+.comparador{
+  position: relative;
+  z-index: 2;
+  max-width: 640px;
+  margin: clamp(40px, 5vw, 64px) auto 0;
+}
+
+.comparador__quadro{
+  position: relative;
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
+  border: 1px solid color-mix(in srgb, var(--primaria) 55%, transparent);
+}
+
+.comparador__camada{ position: absolute; inset: 0; }
+.comparador__camada img{
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.comparador__camada--antes{
+  clip-path: inset(0 calc(100% - var(--pos, 50%)) 0 0);
+}
+
+.comparador__rotulo{
+  position: absolute;
+  top: 1em;
+  z-index: 2;
+  font-size: 0.68rem;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--claro);
+  background: color-mix(in srgb, var(--escuro) 45%, transparent);
+  padding: 0.4em 0.8em;
+}
+.comparador__rotulo--antes{ left: 1em; }
+.comparador__rotulo--depois{ right: 1em; }
+
+.comparador__linha{
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: var(--pos, 50%);
+  z-index: 3;
+  width: 1px;
+  background: color-mix(in srgb, var(--claro) 70%, transparent);
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+
+.comparador__alca{
+  position: absolute;
+  top: 50%;
+  left: var(--pos, 50%);
+  z-index: 4;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.2em;
+  height: 2.2em;
+  transform: translate(-50%, -50%);
+  background: var(--claro);
+  color: var(--escuro);
+  border-radius: 50%;
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--primaria) 60%, transparent);
+  pointer-events: none;
+}
+
+.comparador__range{
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  opacity: 0;
+  cursor: ew-resize;
+  appearance: none;
+  -webkit-appearance: none;
+}
+.comparador__range::-webkit-slider-thumb{
+  appearance: none;
+  -webkit-appearance: none;
+  width: 100%;
+  height: 100%;
+}
+.comparador__range::-moz-range-thumb{
+  width: 2px;
+  height: 100%;
+  border: none;
+}
+
+.ramo--transformacao{
+  bottom: -18%;
+  right: -8%;
+  width: clamp(160px, 20vw, 260px);
+  transform: rotate(30deg);
+}
+
+.transformacao__projeto{
+  position: relative;
+  z-index: 2;
+  max-width: 300px;
+  margin: clamp(56px, 7vw, 88px) auto 0;
+}
+.transformacao__projeto img{
+  width: 100%;
+  aspect-ratio: 4 / 5;
+  object-fit: cover;
+  border: 1px solid color-mix(in srgb, var(--primaria) 45%, transparent);
+  opacity: 0.9;
+}
+.transformacao__projeto figcaption{
+  margin-top: 0.9rem;
+  font-family: var(--fonte-titulo);
+  font-style: italic;
+  font-size: 1rem;
+  color: var(--primaria);
 }
 
 /* ==========================================================================
@@ -448,13 +618,37 @@ html.js-pronto [data-reveal].is-visible{
    ========================================================================== */
 @media (max-width: 900px){
   .manifesto__grid{ grid-template-columns: 1fr; }
-  .manifesto__moldura{ order: -1; max-width: 340px; margin: 0 auto; }
-  .grid--videos{ grid-template-columns: 1fr; }
-  .grid--produtos{ grid-template-columns: repeat(2, 1fr); }
+  .manifesto__video{ order: -1; max-width: 340px; margin: 0 auto; }
+  .grid--videos-mosaico{ grid-template-columns: repeat(2, 1fr); grid-auto-rows: 170px; }
+  .video-card--grande{ grid-column: span 2; grid-row: span 3; }
+  .video-card--alto{ grid-column: span 1; grid-row: span 3; }
+  .video-card--largo{ grid-column: span 2; grid-row: span 2; }
+  .grid--produtos{ grid-template-columns: repeat(3, 1fr); }
+  .comparador{ max-width: 460px; }
   .ramo{ width: clamp(130px, 30vw, 220px); }
+
+  /* Nestas larguras os grids ficam bem mais altos (colunas empilhando),
+     então os deslocamentos em % calibrados para o desktop (grade baixa
+     e larga) precisam ser recalculados para essas proporções mais altas. */
+  .ramo--manifesto{ left: -12%; }
+  .ramo--videos-fim{ top: auto; bottom: -4%; right: 6%; }
 }
 
 @media (max-width: 520px){
+  .grid--videos-mosaico{ grid-template-columns: 1fr; grid-auto-rows: auto; }
+  .video-card,
+  .video-card--grande,
+  .video-card--alto,
+  .video-card--largo{
+    grid-column: span 1;
+    grid-row: auto;
+    aspect-ratio: 9 / 14;
+  }
   .grid--produtos{ grid-template-columns: 1fr 1fr; gap: 14px; }
+  .transformacao__projeto{ max-width: 220px; }
   .rodape__contato{ flex-direction: column; gap: 0.8rem; }
+
+  /* Grade de produtos empilha em 3 linhas aqui, bem mais alta que a
+     única linha do desktop — precisa de bem menos deslocamento em %. */
+  .ramo--produtos{ bottom: -18%; }
 }
