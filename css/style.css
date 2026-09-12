@@ -1,0 +1,460 @@
+/* ==========================================================================
+   Espaço Decora By Rita Assunção — folha de estilos base
+   Paleta (usar exatamente):
+     --primaria   #BD9A72  câmel dourado
+     --creme      #EFE3D0  fundo claro
+     --claro      #FFFFFB  texto claro
+     --escuro     #0A0706  contraste / preto profundo
+     --accent     #644B47  vinho / marrom
+   ========================================================================== */
+
+:root{
+  --primaria: #BD9A72;
+  --creme:    #EFE3D0;
+  --claro:    #FFFFFB;
+  --escuro:   #0A0706;
+  --accent:   #644B47;
+
+  --fonte-titulo: 'Cormorant Garamond', serif;
+  --fonte-corpo:  'Inter', sans-serif;
+
+  --container: 1180px;
+  --gutter: clamp(24px, 6vw, 96px);
+}
+
+*, *::before, *::after{ box-sizing: border-box; }
+
+html{
+  scroll-behavior: smooth;
+}
+
+body{
+  margin: 0;
+  font-family: var(--fonte-corpo);
+  font-weight: 300;
+  color: var(--escuro);
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+
+  /* ---- transição contínua de cor por trás de toda a página ----
+     Um único gradiente cobrindo o documento inteiro: as seções não
+     têm fundo próprio, então não existem blocos empilhados nem
+     divisórias visíveis entre elas. */
+  background: linear-gradient(
+    180deg,
+    var(--creme)  0%,
+    var(--creme)  16%,
+    var(--creme)  30%,
+    var(--escuro) 42%,
+    var(--escuro) 60%,
+    var(--accent) 72%,
+    var(--accent) 85%,
+    var(--escuro) 93%,
+    var(--escuro) 100%
+  );
+}
+
+img{ max-width: 100%; display: block; }
+a{ color: inherit; text-decoration: none; }
+
+.eyebrow{
+  font-family: var(--fonte-corpo);
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: var(--primaria);
+  margin: 0 0 1.1rem;
+}
+
+.titulo-secao{
+  font-family: var(--fonte-titulo);
+  font-weight: 400;
+  font-size: clamp(2rem, 3.6vw, 3rem);
+  line-height: 1.15;
+  margin: 0 0 1.5rem;
+}
+.titulo-secao em{
+  font-style: italic;
+  font-weight: 500;
+  color: var(--primaria);
+}
+
+/* ==========================================================================
+   RAMO DECORATIVO — instâncias do símbolo SVG
+   ========================================================================== */
+.ramo{
+  position: absolute;
+  width: clamp(160px, 22vw, 320px);
+  height: auto;
+  color: var(--primaria);
+  opacity: 0.85;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* ==========================================================================
+   HERO
+   ========================================================================== */
+.hero{
+  position: relative;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: var(--gutter);
+  color: var(--escuro);
+}
+
+.ramo--hero-tl{
+  top: clamp(-20px, -2vw, 10px);
+  left: clamp(-40px, -3vw, 10px);
+  transform: scaleX(-1) rotate(6deg);
+}
+.ramo--hero-br{
+  bottom: clamp(-20px, -2vw, 10px);
+  right: clamp(-40px, -3vw, 10px);
+  transform: rotate(6deg);
+}
+
+.hero__conteudo{
+  position: relative;
+  z-index: 2;
+  max-width: 720px;
+}
+
+.marca{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.15em;
+  margin-bottom: 2.5rem;
+}
+.marca__linha1{
+  font-family: var(--fonte-corpo);
+  font-weight: 300;
+  font-size: clamp(0.95rem, 1.6vw, 1.3rem);
+  letter-spacing: 0.55em;
+  text-transform: uppercase;
+  padding-left: 0.55em; /* compensa o tracking visualmente */
+  color: var(--escuro);
+}
+.marca__linha2{
+  font-family: var(--fonte-titulo);
+  font-size: clamp(3.2rem, 9vw, 6rem);
+  line-height: 1;
+  color: var(--accent);
+}
+.marca__linha2 em{
+  font-style: italic;
+  font-weight: 500;
+}
+.marca__linha3{
+  font-family: var(--fonte-corpo);
+  font-weight: 400;
+  font-size: clamp(0.62rem, 1vw, 0.75rem);
+  letter-spacing: 0.42em;
+  text-transform: uppercase;
+  color: var(--primaria);
+  padding-left: 0.42em;
+}
+
+.hero__headline{
+  font-family: var(--fonte-titulo);
+  font-weight: 400;
+  font-size: clamp(1.5rem, 2.6vw, 2.2rem);
+  line-height: 1.3;
+  margin: 0;
+  color: var(--escuro);
+}
+.hero__headline em{
+  font-style: italic;
+  font-weight: 500;
+  color: var(--accent);
+}
+
+.hero__scroll{
+  position: absolute;
+  bottom: clamp(24px, 4vh, 48px);
+  left: 50%;
+  transform: translateX(-50%);
+  width: 1px;
+  height: 56px;
+  z-index: 2;
+}
+.hero__scroll span{
+  display: block;
+  width: 1px;
+  height: 100%;
+  background: linear-gradient(180deg, transparent, var(--primaria) 60%, transparent);
+  animation: escoar 2.2s ease-in-out infinite;
+}
+@keyframes escoar{
+  0%   { transform: scaleY(0); transform-origin: top; }
+  50%  { transform: scaleY(1); transform-origin: top; }
+  51%  { transform: scaleY(1); transform-origin: bottom; }
+  100% { transform: scaleY(0); transform-origin: bottom; }
+}
+
+/* ==========================================================================
+   MANIFESTO
+   ========================================================================== */
+.manifesto{
+  position: relative;
+  padding: clamp(80px, 12vw, 160px) var(--gutter);
+  color: var(--escuro);
+}
+
+.manifesto__grid{
+  position: relative;
+  z-index: 2;
+  max-width: var(--container);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: clamp(40px, 6vw, 100px);
+  align-items: center;
+}
+.manifesto__texto{ position: relative; z-index: 3; }
+
+.manifesto__paragrafo{
+  font-size: clamp(1rem, 1.15vw, 1.15rem);
+  line-height: 1.85;
+  font-weight: 300;
+  color: var(--escuro);
+  opacity: 0.85;
+  max-width: 46ch;
+}
+
+.manifesto__assinatura{
+  margin-top: 2rem;
+  font-family: var(--fonte-titulo);
+  font-style: italic;
+  font-size: 1.15rem;
+  color: var(--accent);
+}
+
+.manifesto__moldura{
+  position: relative;
+  aspect-ratio: 4 / 5;
+  border: 1px solid color-mix(in srgb, var(--primaria) 55%, transparent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: visible;
+}
+.manifesto__moldura-texto{
+  font-family: var(--fonte-corpo);
+  font-size: 0.68rem;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--primaria);
+  opacity: 0.7;
+}
+
+/* Sai da lateral esquerda da moldura, cruzando para o espaço em branco
+   ao lado do texto do manifesto. */
+.ramo--manifesto{
+  width: 65%;
+  left: -30%;
+  bottom: 6%;
+  transform: rotate(-6deg) scaleX(-1);
+  z-index: 3;
+}
+
+/* ==========================================================================
+   VITRINES (vídeos / produtos)
+   ========================================================================== */
+.vitrine{
+  position: relative;
+  padding: clamp(90px, 12vw, 150px) var(--gutter);
+  color: var(--claro);
+}
+
+.vitrine__cabecalho{
+  position: relative;
+  z-index: 2;
+  max-width: var(--container);
+  margin: 0 auto clamp(48px, 6vw, 80px);
+  text-align: center;
+}
+.vitrine__cabecalho .eyebrow{ display:inline-block; }
+.vitrine__cabecalho .titulo-secao{ margin: 0 auto; }
+
+.grid{
+  position: relative;
+  z-index: 2;
+  max-width: var(--container);
+  margin: 0 auto;
+  display: grid;
+  gap: clamp(20px, 2.4vw, 36px);
+}
+.grid--videos{ grid-template-columns: repeat(3, 1fr); }
+.grid--produtos{ grid-template-columns: repeat(4, 1fr); }
+
+.placeholder{
+  position: relative;
+  border: 1px solid color-mix(in srgb, var(--primaria) 45%, transparent);
+  background: color-mix(in srgb, var(--claro) 4%, transparent);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.9rem;
+  text-align: center;
+}
+.placeholder--video{ aspect-ratio: 16 / 10; }
+.placeholder--produto{ aspect-ratio: 3 / 4; }
+
+/* Garante que o ramo que atravessa para fora do card fique por cima
+   dos vizinhos na grade, em vez de ser coberto pela ordem no DOM. */
+.placeholder--com-ramo{ z-index: 2; }
+
+.placeholder__legenda{
+  font-family: var(--fonte-corpo);
+  font-size: 0.68rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--primaria);
+  opacity: 0.75;
+}
+
+.placeholder__play{
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 10px 0 10px 16px;
+  border-color: transparent transparent transparent var(--primaria);
+  opacity: 0.85;
+}
+
+/* Sai do canto superior-direito do primeiro vídeo, cruzando para o
+   espaço acima, entre esta seção e o manifesto. */
+.ramo--videos{
+  width: 48%;
+  top: -28%;
+  right: -10%;
+  transform: rotate(20deg);
+  z-index: 3;
+}
+
+/* Sai do canto inferior-esquerdo da primeira peça, cruzando para o
+   espaço abaixo, entre esta seção e o rodapé. */
+.ramo--produtos{
+  width: 62%;
+  bottom: -34%;
+  left: -20%;
+  transform: rotate(-8deg) scaleX(-1);
+  z-index: 3;
+}
+
+/* ==========================================================================
+   RODAPÉ
+   ========================================================================== */
+.rodape{
+  position: relative;
+  padding: clamp(70px, 10vw, 110px) var(--gutter) clamp(40px, 6vw, 60px);
+  color: var(--claro);
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.1rem;
+}
+
+.ramo--rodape{
+  top: -6%;
+  left: 50%;
+  transform: translateX(-50%) rotate(0deg);
+  width: clamp(220px, 30vw, 420px);
+}
+
+.rodape__marca{
+  position: relative;
+  z-index: 2;
+  font-family: var(--fonte-titulo);
+  font-size: 1.8rem;
+  color: var(--claro);
+}
+.rodape__marca em{
+  font-style: italic;
+  color: var(--primaria);
+}
+
+.rodape__contato{
+  position: relative;
+  z-index: 2;
+  display: flex;
+  gap: clamp(20px, 4vw, 40px);
+  font-size: 0.85rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.rodape__contato a{
+  border-bottom: 1px solid transparent;
+  transition: border-color 0.25s ease, color 0.25s ease;
+}
+.rodape__contato a:hover{
+  color: var(--primaria);
+  border-color: var(--primaria);
+}
+
+.rodape__endereco{
+  position: relative;
+  z-index: 2;
+  font-size: 0.85rem;
+  font-weight: 300;
+  color: var(--claro);
+  opacity: 0.7;
+  margin: 0;
+}
+
+.rodape__copy{
+  position: relative;
+  z-index: 2;
+  font-size: 0.7rem;
+  letter-spacing: 0.05em;
+  color: var(--claro);
+  opacity: 0.45;
+  margin: 1.5rem 0 0;
+}
+
+/* ==========================================================================
+   REVELAÇÃO SUAVE AO ROLAR
+   ========================================================================== */
+/* Só oculta o conteúdo se o JS confirmar que está ativo (classe aplicada
+   de forma síncrona no <head>) e o observer puder de fato revelá-lo depois.
+   Sem essa classe (JS bloqueado/falho), tudo permanece visível. */
+html.js-pronto [data-reveal]{
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.9s ease, transform 0.9s ease;
+}
+html.js-pronto [data-reveal].is-visible{
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce){
+  html{ scroll-behavior: auto; }
+  html.js-pronto [data-reveal]{ opacity: 1; transform: none; transition: none; }
+  .hero__scroll span{ animation: none; }
+}
+
+/* ==========================================================================
+   RESPONSIVO
+   ========================================================================== */
+@media (max-width: 900px){
+  .manifesto__grid{ grid-template-columns: 1fr; }
+  .manifesto__moldura{ order: -1; max-width: 340px; margin: 0 auto; }
+  .grid--videos{ grid-template-columns: 1fr; }
+  .grid--produtos{ grid-template-columns: repeat(2, 1fr); }
+  .ramo{ width: clamp(130px, 30vw, 220px); }
+}
+
+@media (max-width: 520px){
+  .grid--produtos{ grid-template-columns: 1fr 1fr; gap: 14px; }
+  .rodape__contato{ flex-direction: column; gap: 0.8rem; }
+}
