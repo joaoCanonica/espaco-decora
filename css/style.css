@@ -178,11 +178,21 @@ html.splash-ativo{ overflow: hidden; }
 .marca{
   display: flex;
   justify-content: center;
+  align-items: center;
   margin-bottom: 1.5rem;
 }
 .marca__logo{
+  position: relative;
+  z-index: 1;
   width: clamp(220px, 26vw, 340px);
   height: auto;
+  /* A logo tem letras brancas: sozinha sobre o fundo creme do hero ela
+     quase some. As sombras dão o "peso" que a marca precisa sem
+     depender de recolorir a arte original. */
+  filter:
+    drop-shadow(0 1px 2px rgba(10, 7, 6, 0.35))
+    drop-shadow(0 2px 14px rgba(10, 7, 6, 0.22))
+    drop-shadow(0 0 32px rgba(10, 7, 6, 0.12));
 }
 
 .hero__headline{
@@ -530,15 +540,26 @@ html.splash-ativo{ overflow: hidden; }
   appearance: none;
   -webkit-appearance: none;
 }
+/* O "thumb" nativo fica invisível (a alça visível é o .comparador__alca
+   sincronizado via --pos), mas precisa de um tamanho normal — um thumb
+   do tamanho da trilha inteira trava o arrasto de volta perto das
+   pontas, porque o navegador não consegue posicioná-lo corretamente
+   nos extremos do intervalo. */
 .comparador__range::-webkit-slider-thumb{
   appearance: none;
   -webkit-appearance: none;
-  width: 100%;
-  height: 100%;
+  width: 2.4em;
+  height: 2.4em;
 }
 .comparador__range::-moz-range-thumb{
-  width: 2px;
+  width: 2.4em;
+  height: 2.4em;
+  border: none;
+}
+.comparador__range::-moz-range-track{
+  width: 100%;
   height: 100%;
+  background: transparent;
   border: none;
 }
 
@@ -601,6 +622,74 @@ html.splash-ativo{ overflow: hidden; }
 .rodape__marca em{
   font-style: italic;
   color: var(--primaria);
+}
+
+/* Chamada principal do rodapé: é para onde o site quer levar quem
+   chegou até aqui — ver mais peças e ambientes no Instagram. Por isso
+   ganha tratamento de botão, maior e mais forte que o link de contato. */
+.rodape__instagram{
+  position: relative;
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6em;
+  padding: 0.85em 1.8em;
+  margin-top: 0.3rem;
+  font-size: 0.85rem;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--claro);
+  border: 1px solid var(--primaria);
+  border-radius: 999px;
+  transition: background 0.25s ease, color 0.25s ease, border-color 0.25s ease;
+}
+.rodape__instagram:hover{
+  background: var(--primaria);
+  color: var(--escuro);
+}
+.rodape__instagram svg{ flex-shrink: 0; }
+
+.rodape__instagram-legenda{
+  position: relative;
+  z-index: 2;
+  margin: -0.4rem 0 0;
+  font-size: 0.78rem;
+  font-weight: 300;
+  color: var(--claro);
+  opacity: 0.55;
+}
+
+.rodape__mapa{
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  max-width: 480px;
+  aspect-ratio: 16 / 10;
+  margin-top: 0.4rem;
+  overflow: hidden;
+  border: 1px solid color-mix(in srgb, var(--primaria) 45%, transparent);
+}
+.rodape__mapa iframe{
+  width: 100%;
+  height: 100%;
+  border: 0;
+  /* O Google Maps não aceita CSS por dentro do iframe (é outra origem):
+     o filtro tira o azul/verde padrão antes da camada de cor por cima. */
+  filter: grayscale(0.5) sepia(0.4) brightness(0.85) contrast(1.05);
+}
+/* Camada de cor com blend "color": tinge o mapa com o vinho da marca
+   mantendo o desenho das ruas legível, sem travar o pan/zoom (o toque
+   passa direto porque a camada não recebe eventos de ponteiro). */
+.rodape__mapa::after{
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: var(--accent);
+  opacity: 0.4;
+  mix-blend-mode: color;
+  pointer-events: none;
 }
 
 .rodape__contato{
