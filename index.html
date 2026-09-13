@@ -15,9 +15,32 @@
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,400;1,500;1,600&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
 
 <link rel="stylesheet" href="css/style.css">
-<script>document.documentElement.classList.add('js-pronto');</script>
+<script>
+  document.documentElement.classList.add('js-pronto');
+  try {
+    if (sessionStorage.getItem('edIntroVista')) {
+      document.documentElement.classList.add('sem-splash');
+    }
+  } catch (e) {}
+</script>
 </head>
 <body>
+
+<!-- ============================================================
+     SPLASH — tela de abertura (só na primeira carga da sessão)
+     ============================================================ -->
+<div id="splash" class="splash" aria-hidden="true">
+  <video
+    class="splash__video"
+    muted
+    loop
+    playsinline
+    preload="none"
+    data-src="assets/video/logo-animada.mp4"
+    data-poster="assets/video/splash-poster.jpg"
+  ></video>
+  <img class="splash__texto" src="assets/logo/logo-texto.png" alt="">
+</div>
 
 <!-- ============================================================
      SPRITE: ramo decorativo reutilizável (referência: logo anexa)
@@ -259,8 +282,7 @@
   <div class="rodape__marca">Espaço <em>DeCora</em></div>
 
   <nav class="rodape__contato" aria-label="Contato">
-    <!-- TODO: substituir pelo @ real do Instagram -->
-    <a href="#" target="_blank" rel="noopener">Instagram</a>
+    <a href="https://www.instagram.com/espacodecorabyritaassuncao" target="_blank" rel="noopener">Instagram</a>
     <a href="https://wa.me/554932242543" target="_blank" rel="noopener">(49) 3224-2543</a>
   </nav>
 

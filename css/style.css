@@ -57,6 +57,56 @@ body{
 img{ max-width: 100%; display: block; }
 a{ color: inherit; text-decoration: none; }
 
+/* ==========================================================================
+   SPLASH — tela de abertura (vídeo de ramos + texto real da marca)
+   ========================================================================== */
+html.sem-splash .splash{ display: none; }
+html.splash-ativo{ overflow: hidden; }
+
+.splash{
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--primaria);
+  opacity: 1;
+  transition: opacity 400ms ease;
+}
+.splash.splash--saindo{
+  opacity: 0;
+  pointer-events: none;
+}
+
+.splash__video{
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.splash__texto{
+  position: relative;
+  z-index: 1;
+  width: clamp(220px, 30vw, 440px);
+  height: auto;
+  opacity: 0;
+  transform: translateY(12px);
+  transition: opacity 600ms ease-out, transform 600ms ease-out;
+}
+.splash__texto.splash__texto--visivel{
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce){
+  /* Uma animação de ramos se desenhando é o tipo de movimento que essa
+     preferência existe para evitar — pula direto para o conteúdo real. */
+  .splash{ display: none; }
+}
+
 .eyebrow{
   font-family: var(--fonte-corpo);
   font-size: 0.72rem;

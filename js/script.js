@@ -2,10 +2,64 @@
 
 document.getElementById('ano').textContent = new Date().getFullYear();
 
-// Revela suavemente os blocos marcados com [data-reveal] ao entrar na tela.
-// A ocultação inicial só existe em CSS quando .js-pronto está presente
-// (ver <head>), então uma falha aqui nunca deixa conteúdo invisível.
+// A ocultação inicial dos blocos [data-reveal] só existe em CSS quando
+// .js-pronto está presente (ver <head>), então uma falha aqui nunca deixa
+// conteúdo invisível.
 const prefereMenosMovimento = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+// ---------------------------------------------------------------------------
+// Splash de abertura: vídeo dos ramos se desenhando + fade-in do texto real
+// da marca por cima. Timeline fixa (não depende do vídeo ter carregado):
+//   0s     — vídeo roda sozinho
+//   2.5s   — texto entra (fade + leve subida, 600ms, ease-out)
+//   4s     — splash inteiro começa a sumir (fade, 400ms) revelando o hero
+// Aparece só na primeira carga da sessão: a marca em sessionStorage garante
+// que navegação interna (âncoras da própria página) nunca a repete, e o
+// <head> já aplica .sem-splash antes do primeiro paint para não piscar.
+// ---------------------------------------------------------------------------
+const splash = document.getElementById('splash');
+
+if (splash) {
+  const marcarComoVista = () => {
+    try { sessionStorage.setItem('edIntroVista', '1'); } catch (e) {}
+  };
+
+  const pularSplash = () => {
+    marcarComoVista();
+    document.documentElement.classList.remove('splash-ativo');
+    splash.remove();
+  };
+
+  const jaVista = document.documentElement.classList.contains('sem-splash');
+
+  if (jaVista || prefereMenosMovimento) {
+    pularSplash();
+  } else {
+    const video = splash.querySelector('.splash__video');
+    const texto = splash.querySelector('.splash__texto');
+
+    document.documentElement.classList.add('splash-ativo');
+
+    // O <video> só ganha poster/fonte aqui, via JS — assim quem já viu a
+    // intro nesta sessão (branch acima) nunca faz o navegador buscar esses
+    // arquivos, e o carregamento da página real não compete com eles.
+    video.poster = video.dataset.poster;
+    const fonte = document.createElement('source');
+    fonte.src = video.dataset.src;
+    fonte.type = 'video/mp4';
+    video.appendChild(fonte);
+    video.load();
+    video.play().catch(() => {}); // autoplay bloqueado: fica no poster, timeline segue igual
+
+    setTimeout(() => texto.classList.add('splash__texto--visivel'), 2500);
+
+    setTimeout(() => {
+      splash.classList.add('splash--saindo');
+      splash.addEventListener('transitionend', pularSplash, { once: true });
+      setTimeout(pularSplash, 600); // segurança caso 'transitionend' não dispare
+    }, 4000);
+  }
+}
 
 if (!prefereMenosMovimento) {
   const alvos = document.querySelectorAll('[data-reveal]');
