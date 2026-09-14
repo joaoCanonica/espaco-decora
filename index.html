@@ -20,6 +20,21 @@
   try {
     if (sessionStorage.getItem('edIntroVista')) {
       document.documentElement.classList.add('sem-splash');
+    } else if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      // Dispara o download do vídeo do splash já durante o parse do <head>,
+      // em paralelo com o resto da página — em vez de esperar o script.js
+      // no fim do <body>, o que atrasava o início do buffer e causava
+      // engasgo perceptível na reprodução em conexões móveis.
+      var ehMovel = window.matchMedia('(max-width: 640px), (max-aspect-ratio: 4/5)').matches;
+      window.__edSplashSrc = ehMovel
+        ? 'assets/video/logo-animada-mobile.mp4'
+        : 'assets/video/logo-animada.mp4';
+      var preload = document.createElement('link');
+      preload.rel = 'preload';
+      preload.as = 'video';
+      preload.href = window.__edSplashSrc;
+      preload.setAttribute('fetchpriority', 'high');
+      document.head.appendChild(preload);
     }
   } catch (e) {}
 </script>
@@ -30,15 +45,19 @@
      SPLASH — tela de abertura (só na primeira carga da sessão)
      ============================================================ -->
 <div id="splash" class="splash" aria-hidden="true">
-  <video
-    class="splash__video"
-    muted
-    loop
-    playsinline
-    preload="none"
-    data-src="assets/video/logo-animada.mp4"
-    data-poster="assets/video/splash-poster.jpg"
-  ></video>
+  <div class="splash__quadro">
+    <video
+      class="splash__video"
+      muted
+      loop
+      playsinline
+      preload="none"
+      fetchpriority="high"
+      data-src="assets/video/logo-animada.mp4"
+      data-src-movel="assets/video/logo-animada-mobile.mp4"
+      data-poster="assets/video/splash-poster.jpg"
+    ></video>
+  </div>
   <img class="splash__texto" src="assets/logo/logo-texto.png" alt="">
 </div>
 

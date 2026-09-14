@@ -43,13 +43,27 @@ if (splash) {
     // O <video> só ganha poster/fonte aqui, via JS — assim quem já viu a
     // intro nesta sessão (branch acima) nunca faz o navegador buscar esses
     // arquivos, e o carregamento da página real não compete com eles.
+    // A fonte usa a mesma URL já disparada via <link rel="preload"> no
+    // <head> (window.__edSplashSrc), reaproveitando o download que já
+    // está em andamento em vez de começar tudo de novo aqui.
+    const ehMovel = window.matchMedia('(max-width: 640px), (max-aspect-ratio: 4/5)').matches;
+    const fonteEscolhida = window.__edSplashSrc
+      || (ehMovel ? video.dataset.srcMovel : video.dataset.src);
     video.poster = video.dataset.poster;
     const fonte = document.createElement('source');
-    fonte.src = video.dataset.src;
+    fonte.src = fonteEscolhida;
     fonte.type = 'video/mp4';
     video.appendChild(fonte);
     video.load();
-    video.play().catch(() => {}); // autoplay bloqueado: fica no poster, timeline segue igual
+    // Só chama play() quando já houver buffer suficiente para reproduzir
+    // sem travar — chamar play() direto após load() podia render um
+    // engasgo visível em conexões móveis mais lentas, com o vídeo tocando
+    // e pausando para continuar baixando.
+    if (video.readyState >= 3) {
+      video.play().catch(() => {});
+    } else {
+      video.addEventListener('canplay', () => video.play().catch(() => {}), { once: true });
+    }
 
     setTimeout(() => texto.classList.add('splash__texto--visivel'), 2500);
 

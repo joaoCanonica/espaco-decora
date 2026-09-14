@@ -79,6 +79,11 @@ html.splash-ativo{ overflow: hidden; }
   pointer-events: none;
 }
 
+.splash__quadro{
+  position: absolute;
+  inset: 0;
+}
+
 .splash__video{
   position: absolute;
   inset: 0;
@@ -99,6 +104,27 @@ html.splash-ativo{ overflow: hidden; }
 .splash__texto.splash__texto--visivel{
   opacity: 1;
   transform: translateY(0);
+}
+
+/* Em telas estreitas/altas, o vídeo (16:9) "cover" em tela cheia mostra só
+   uma tira central — a maior parte dos ramos desenhados fica cortada fora
+   das laterais e o movimento não fica reconhecível. Em vez de recortar,
+   o quadro passa a ter a própria proporção do vídeo: um cartão contido,
+   centralizado, com moldura fina — mostra a ilustração inteira e lê como
+   um detalhe intencional, não como um vídeo quebrado. */
+@media (max-width: 640px), (max-aspect-ratio: 4/5){
+  .splash{
+    flex-direction: column;
+    gap: clamp(20px, 5vh, 40px);
+  }
+  .splash__quadro{
+    position: relative;
+    inset: auto;
+    width: min(86vw, 440px);
+    aspect-ratio: 16 / 9;
+    border: 1px solid color-mix(in srgb, var(--claro) 40%, transparent);
+    overflow: hidden;
+  }
 }
 
 @media (prefers-reduced-motion: reduce){
@@ -176,15 +202,29 @@ html.splash-ativo{ overflow: hidden; }
 }
 
 .marca{
+  position: relative;
   display: flex;
   justify-content: center;
   align-items: center;
   margin-bottom: 1.5rem;
 }
+/* A logo sozinha, cercada de fundo creme liso, ficava com pouca presença
+   no meio de tanto espaço vazio. Um halo suave por trás lhe dá um "chão"
+   visual sem exigir recolorir a arte nem aumentar demais a peça. */
+.marca::before{
+  content: '';
+  position: absolute;
+  inset: 50% auto auto 50%;
+  width: clamp(260px, 34vw, 460px);
+  height: clamp(260px, 34vw, 460px);
+  transform: translate(-50%, -50%);
+  background: radial-gradient(circle, color-mix(in srgb, var(--primaria) 30%, transparent) 0%, transparent 68%);
+  z-index: 0;
+}
 .marca__logo{
   position: relative;
   z-index: 1;
-  width: clamp(220px, 26vw, 340px);
+  width: clamp(240px, 29vw, 380px);
   height: auto;
   /* A logo tem letras brancas: sozinha sobre o fundo creme do hero ela
      quase some. As sombras dão o "peso" que a marca precisa sem
