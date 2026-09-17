@@ -467,12 +467,13 @@ html.menu-aberto{ overflow: hidden; }
 
 .hero__titulo{
   font-family: var(--fonte-titulo);
-  font-weight: 500;
+  font-weight: 600;
   font-size: clamp(1.9rem, 4.4vw, 3.1rem);
   line-height: 1.18;
   max-width: 15ch;
   margin: 0 0 0.7rem;
   color: var(--claro);
+  text-shadow: 0 2px 20px rgba(10, 7, 6, 0.3);
 }
 
 .hero__texto{
@@ -557,12 +558,14 @@ html.menu-aberto{ overflow: hidden; }
 /* Fachada em retrato: em telas mais largas e curtas o recorte horizontal
    do cover cresce, então o ponto focal precisa migrar um pouco para a
    direita para não perder a placa "aromas decorações" (mais central na
-   foto original) por trás do texto ou fora da tela. */
+   foto original) por trás do texto ou fora da tela. O valor vertical foi
+   recalibrado para descer o enquadramento: a versão anterior mostrava
+   céu vazio demais e pouca fachada, competindo com o texto por atenção. */
 @media (min-width: 640px){
-  .hero__foto{ object-position: 40% 18%; }
+  .hero__foto{ object-position: 40% 30%; }
 }
 @media (min-width: 1024px){
-  .hero__foto{ object-position: 46% 16%; }
+  .hero__foto{ object-position: 46% 35%; }
 }
 
 /* ==========================================================================
@@ -656,6 +659,16 @@ html.menu-aberto{ overflow: hidden; }
 .curadoria__cta{
   text-align: center;
   margin-top: clamp(40px, 5vw, 64px);
+}
+
+/* Sai discretamente do canto superior direito, atrás do cabeçalho da
+   seção — mesmo tratamento de canto usado no hero e no "sobre". */
+.ramo--curadoria{
+  top: -3%;
+  right: -3%;
+  width: clamp(120px, 14vw, 190px);
+  opacity: 0.5;
+  transform: rotate(18deg) scaleX(-1);
 }
 
 /* ==========================================================================
@@ -1001,6 +1014,17 @@ html.menu-aberto{ overflow: hidden; }
   flex-wrap: wrap;
   justify-content: center;
   gap: 1rem;
+}
+
+/* Canto inferior esquerdo, atrás do bloco de informações — cor clara para
+   se ver sobre o fundo vinho (mesma lógica de contraste dos rótulos). */
+.ramo--faixa-visita{
+  bottom: -8%;
+  left: -3%;
+  width: clamp(110px, 13vw, 170px);
+  color: var(--primaria-clara);
+  opacity: 0.45;
+  transform: rotate(-10deg);
 }
 
 /* ==========================================================================
