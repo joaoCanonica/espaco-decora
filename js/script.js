@@ -75,6 +75,57 @@ if (splash) {
   }
 }
 
+// ---------------------------------------------------------------------------
+// Cabeçalho: fundo creme translúcido após rolar, e menu mobile acessível
+// (abre/fecha por clique no botão, clique fora, clique num link ou Esc).
+// ---------------------------------------------------------------------------
+const cabecalho = document.querySelector('[data-cabecalho]');
+
+if (cabecalho) {
+  const aoRolar = () => {
+    cabecalho.classList.toggle('cabecalho--rolado', window.scrollY > 8);
+  };
+  aoRolar();
+  window.addEventListener('scroll', aoRolar, { passive: true });
+
+  const botaoMenu = cabecalho.querySelector('.cabecalho__alternador');
+  const nav = cabecalho.querySelector('.cabecalho__nav');
+  const fundoMenu = document.querySelector('[data-cabecalho-fundo]');
+
+  if (botaoMenu && nav && fundoMenu) {
+    const abrirMenu = () => {
+      botaoMenu.setAttribute('aria-expanded', 'true');
+      // aria-label muda junto (não só aria-expanded): sem isso, um leitor
+      // de tela anuncia "Abrir menu" mesmo com o menu já aberto e o botão
+      // prestes a fechá-lo — nome ambíguo para o que o botão faz agora.
+      botaoMenu.setAttribute('aria-label', 'Fechar menu');
+      nav.classList.add('cabecalho__nav--aberto');
+      fundoMenu.classList.add('cabecalho__fundo--visivel');
+      document.documentElement.classList.add('menu-aberto');
+    };
+    const fecharMenu = () => {
+      botaoMenu.setAttribute('aria-expanded', 'false');
+      botaoMenu.setAttribute('aria-label', 'Abrir menu');
+      nav.classList.remove('cabecalho__nav--aberto');
+      fundoMenu.classList.remove('cabecalho__fundo--visivel');
+      document.documentElement.classList.remove('menu-aberto');
+    };
+
+    botaoMenu.addEventListener('click', () => {
+      const aberto = botaoMenu.getAttribute('aria-expanded') === 'true';
+      if (aberto) fecharMenu(); else abrirMenu();
+    });
+    fundoMenu.addEventListener('click', fecharMenu);
+    nav.querySelectorAll('a').forEach((link) => link.addEventListener('click', fecharMenu));
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && botaoMenu.getAttribute('aria-expanded') === 'true') {
+        fecharMenu();
+        botaoMenu.focus();
+      }
+    });
+  }
+}
+
 if (!prefereMenosMovimento) {
   const alvos = document.querySelectorAll('[data-reveal]');
 
@@ -108,69 +159,19 @@ if (comparador) {
 }
 
 // ---------------------------------------------------------------------------
-// Vitrine de vídeo: cada preview só reproduz (mudo) enquanto está visível na
-// tela — evita tocar vários vídeos grandes ao mesmo tempo fora da vista.
-// Passar o mouse (ou tocar, no touch) ativa o som daquele vídeo por vez.
+// Vídeos com controles nativos (Sobre + Inspirações em vídeo): tocar um
+// pausa os demais, para não sobrepor sons. Não mexe nos controles nativos
+// em si — só reage ao evento 'play', então funciona igual com clique,
+// toque ou teclado.
 // ---------------------------------------------------------------------------
-const cardsDeVideo = document.querySelectorAll('[data-video]');
+const videosComControles = document.querySelectorAll('video[controls]');
 
-if (cardsDeVideo.length) {
-  const observadorDeVideo = new IntersectionObserver(
-    (entradas) => {
-      entradas.forEach((entrada) => {
-        const video = entrada.target.querySelector('video');
-        if (!video) return;
-        if (entrada.isIntersecting) {
-          video.play().catch(() => {});
-        } else {
-          video.pause();
-        }
+if (videosComControles.length > 1) {
+  videosComControles.forEach((video) => {
+    video.addEventListener('play', () => {
+      videosComControles.forEach((outro) => {
+        if (outro !== video) outro.pause();
       });
-    },
-    { threshold: 0.4 }
-  );
-
-  const silenciarTodos = (exceto) => {
-    cardsDeVideo.forEach((card) => {
-      if (card === exceto) return;
-      const video = card.querySelector('video');
-      const botao = card.querySelector('.video-card__som');
-      if (video) video.muted = true;
-      if (botao) {
-        botao.classList.remove('com-som');
-        botao.setAttribute('aria-pressed', 'false');
-      }
-    });
-  };
-
-  cardsDeVideo.forEach((card) => {
-    observadorDeVideo.observe(card);
-
-    const video = card.querySelector('video');
-    const botao = card.querySelector('.video-card__som');
-    if (!video || !botao) return;
-
-    const ativarSom = () => {
-      silenciarTodos(card);
-      video.muted = false;
-      botao.classList.add('com-som');
-      botao.setAttribute('aria-pressed', 'true');
-    };
-    const desativarSom = () => {
-      video.muted = true;
-      botao.classList.remove('com-som');
-      botao.setAttribute('aria-pressed', 'false');
-    };
-
-    card.addEventListener('pointerenter', (e) => {
-      if (e.pointerType === 'mouse') ativarSom();
-    });
-    card.addEventListener('pointerleave', (e) => {
-      if (e.pointerType === 'mouse') desativarSom();
-    });
-    botao.addEventListener('click', () => {
-      if (video.muted) ativarSom();
-      else desativarSom();
     });
   });
 }

@@ -14,18 +14,41 @@
   --claro:    #FFFFFB;
   --escuro:   #0A0706;
   --accent:   #644B47;
+  /* Variantes de --primaria só para texto pequeno (eyebrows, rótulos):
+     a cor dourada "pura" tem contraste insuficiente (WCAG AA) tanto sobre
+     --creme (2.06:1) quanto sobre --accent (3.04:1) — falha para texto
+     normal nos dois casos. Estas variantes passam em 4.5:1 nos fundos
+     onde texto pequeno dourado é usado, mantendo a mesma família de cor. */
+  --primaria-escura: #64503C;
+  --primaria-clara:  #DECCB6;
 
   --fonte-titulo: 'Cormorant Garamond', serif;
   --fonte-corpo:  'Inter', sans-serif;
 
   --container: 1180px;
   --gutter: clamp(24px, 6vw, 96px);
+
+  --raio-s: 3px;
+  --raio-m: 8px;
+  --raio-pill: 999px;
+
+  --sombra-suave: 0 8px 28px rgba(10, 7, 6, 0.14);
+
+  --foco: var(--accent);
+  --foco-largura: 2px;
+
+  --cabecalho-altura: clamp(64px, 9vh, 84px);
 }
 
 *, *::before, *::after{ box-sizing: border-box; }
 
 html{
   scroll-behavior: smooth;
+  /* O painel do menu mobile fica fora da tela via transform (não display),
+     e um position:fixed transladado ainda pode abrir uma folga de rolagem
+     horizontal mínima no documento — overflow-x só no body não bloqueia
+     isso, precisa estar no html (o "root scroller") também. */
+  overflow-x: hidden;
 }
 
 body{
@@ -35,27 +58,58 @@ body{
   color: var(--escuro);
   -webkit-font-smoothing: antialiased;
   overflow-x: hidden;
-
-  /* ---- transição contínua de cor por trás de toda a página ----
-     Um único gradiente cobrindo o documento inteiro: as seções não
-     têm fundo próprio, então não existem blocos empilhados nem
-     divisórias visíveis entre elas. */
-  background: linear-gradient(
-    180deg,
-    var(--creme)  0%,
-    var(--creme)  10%,
-    var(--creme)  20%,
-    var(--escuro) 28%,
-    var(--escuro) 48%,
-    var(--accent) 56%,
-    var(--accent) 76%,
-    var(--escuro) 84%,
-    var(--escuro) 100%
-  );
+  /* Cada seção define seu próprio fundo (ver CURADORIA/INSPIRAÇÕES/
+     TRANSFORMAÇÕES/SOBRE/FAIXA-VISITA/RODAPÉ) para não depender da altura total da
+     página — esta cor só aparece em frestas eventuais (ex.: overscroll
+     elástico no iOS). */
+  background: var(--creme);
 }
 
 img{ max-width: 100%; display: block; }
 a{ color: inherit; text-decoration: none; }
+
+/* Foco de teclado visível em qualquer elemento interativo — nunca escondido. */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible{
+  outline: var(--foco-largura) solid var(--foco);
+  outline-offset: 3px;
+}
+
+.sr-only{
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ==========================================================================
+   PULAR PARA O CONTEÚDO — link de acessibilidade, visível só ao focar
+   ========================================================================== */
+.pular-conteudo{
+  position: fixed;
+  top: -100%;
+  left: 1rem;
+  z-index: 10000;
+  padding: 0.8em 1.4em;
+  background: var(--escuro);
+  color: var(--claro);
+  font-size: 0.85rem;
+  letter-spacing: 0.03em;
+  border-radius: var(--raio-s);
+  transition: top 0.2s ease;
+}
+.pular-conteudo:focus{
+  top: 1rem;
+}
+@media (prefers-reduced-motion: reduce){
+  .pular-conteudo{ transition: none; }
+}
 
 /* ==========================================================================
    SPLASH — tela de abertura (vídeo de ramos + texto real da marca)
@@ -156,6 +210,16 @@ html.splash-ativo{ overflow: hidden; }
   color: var(--primaria);
 }
 
+/* O header é sticky por cima do conteúdo: sem isso, navegar direto para uma
+   seção (menu, âncora do rodapé) alinha o topo dela exatamente com o topo
+   da viewport — ou seja, atrás do header. Achado real de QA: em telas
+   estreitas com o header na altura máxima, o texto do início da faixa de
+   visita (padding-top menor que as outras seções) ficava parcialmente
+   coberto. */
+main > section{
+  scroll-margin-top: var(--cabecalho-altura);
+}
+
 /* ==========================================================================
    RAMO DECORATIVO — instâncias do símbolo SVG
    ========================================================================== */
@@ -170,188 +234,345 @@ html.splash-ativo{ overflow: hidden; }
 }
 
 /* ==========================================================================
-   HERO
+   CABEÇALHO — navegação sticky, separada do hero
+   ========================================================================== */
+.cabecalho{
+  position: sticky;
+  top: 0;
+  z-index: 500;
+  background: transparent;
+  transition: background-color 0.25s ease, box-shadow 0.25s ease;
+}
+.cabecalho.cabecalho--rolado{
+  background: color-mix(in srgb, var(--creme) 90%, transparent);
+  backdrop-filter: blur(8px);
+  box-shadow: var(--sombra-suave);
+}
+
+.cabecalho__barra{
+  max-width: var(--container);
+  margin: 0 auto;
+  min-height: var(--cabecalho-altura);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: clamp(1rem, 3vw, 2rem);
+  padding: 0 var(--gutter);
+}
+
+.cabecalho__marca{
+  font-family: var(--fonte-titulo);
+  font-size: clamp(1.2rem, 2vw, 1.5rem);
+  font-weight: 500;
+  color: var(--escuro);
+  white-space: nowrap;
+}
+.cabecalho__marca em{
+  font-style: normal;
+  color: var(--accent);
+}
+
+.cabecalho__alternador{
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  background: transparent;
+  border: 1px solid color-mix(in srgb, var(--escuro) 22%, transparent);
+  border-radius: var(--raio-s);
+  color: var(--escuro);
+  cursor: pointer;
+}
+
+.cabecalho__linha{
+  transition: transform 0.25s ease, opacity 0.25s ease;
+  transform-origin: center;
+}
+.cabecalho__alternador[aria-expanded="true"] .cabecalho__linha--1{
+  transform: translateY(5.5px) rotate(45deg);
+}
+.cabecalho__alternador[aria-expanded="true"] .cabecalho__linha--2{
+  opacity: 0;
+}
+.cabecalho__alternador[aria-expanded="true"] .cabecalho__linha--3{
+  transform: translateY(-5.5px) rotate(-45deg);
+}
+
+.cabecalho__nav{
+  display: flex;
+  align-items: center;
+  gap: clamp(1.4rem, 2.4vw, 2.6rem);
+}
+
+.cabecalho__lista{
+  display: flex;
+  align-items: center;
+  gap: clamp(1rem, 1.6vw, 1.8rem);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.cabecalho__lista a{
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  color: var(--escuro);
+  border-bottom: 1px solid transparent;
+  transition: color 0.2s ease, border-color 0.2s ease;
+}
+.cabecalho__lista a:hover{
+  color: var(--accent);
+  border-color: var(--accent);
+}
+
+.cabecalho__cta{
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  white-space: nowrap;
+  padding: 0.6em 1.3em;
+  font-size: 0.8rem;
+  font-weight: 500;
+  letter-spacing: 0.03em;
+  color: var(--claro);
+  background: var(--accent);
+  border-radius: var(--raio-pill);
+  transition: background 0.2s ease;
+}
+.cabecalho__cta:hover{
+  background: color-mix(in srgb, var(--accent) 82%, black);
+}
+
+.cabecalho__fundo{
+  position: fixed;
+  inset: 0;
+  z-index: 498;
+  background: color-mix(in srgb, var(--escuro) 45%, transparent);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s ease;
+}
+.cabecalho__fundo.cabecalho__fundo--visivel{
+  opacity: 1;
+  pointer-events: auto;
+}
+
+html.menu-aberto{ overflow: hidden; }
+
+@media (max-width: 880px){
+  .cabecalho__alternador{ display: inline-flex; }
+
+  .cabecalho__fundo{ display: block; }
+
+  .cabecalho__nav{
+    position: fixed;
+    inset: 0 0 0 auto;
+    width: min(84vw, 360px);
+    height: 100dvh;
+    z-index: 499;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    gap: 2rem;
+    padding: clamp(96px, 18vh, 130px) 1.8rem 2rem;
+    background: var(--creme);
+    box-shadow: var(--sombra-suave);
+    transform: translateX(100%);
+    transition: transform 0.3s ease;
+  }
+  .cabecalho__nav.cabecalho__nav--aberto{
+    transform: translateX(0);
+  }
+  .cabecalho__lista{
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.4rem;
+  }
+  .cabecalho__lista a{ font-size: 1rem; }
+  .cabecalho__cta{ width: 100%; }
+}
+
+@media (min-width: 881px){
+  .cabecalho__fundo{ display: none; }
+}
+
+@media (prefers-reduced-motion: reduce){
+  .cabecalho{ transition: none; }
+  .cabecalho__nav{ transition: none; }
+  .cabecalho__linha{ transition: none; }
+  .cabecalho__fundo{ transition: none; }
+}
+
+/* ==========================================================================
+   HERO — fachada real da loja
    ========================================================================== */
 .hero{
   position: relative;
-  min-height: 100dvh;
+  min-height: calc(100dvh - var(--cabecalho-altura));
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  padding: var(--gutter);
-  color: var(--escuro);
+  align-items: flex-end;
+  overflow: hidden;
 }
 
-.ramo--hero-tl{
-  top: clamp(-20px, -2vw, 10px);
-  left: clamp(-40px, -3vw, 10px);
-  transform: scaleX(-1) rotate(6deg);
+.hero__foto{
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  /* Enquadramento por breakpoint (ver media queries abaixo) para manter a
+     placa "aromas decorações" e o letreiro "DECORA" visíveis — a foto é
+     em retrato (3024×4032) e o recorte do cover varia bastante conforme a
+     proporção do hero em cada largura de tela. */
+  object-position: 34% 20%;
 }
-.ramo--hero-br{
-  bottom: clamp(-20px, -2vw, 10px);
-  right: clamp(-40px, -3vw, 10px);
-  transform: rotate(6deg);
+
+.hero__nevoa{
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: linear-gradient(
+    180deg,
+    rgba(10, 7, 6, 0) 0%,
+    rgba(10, 7, 6, 0.05) 35%,
+    color-mix(in srgb, var(--accent) 78%, var(--escuro) 22%) 100%
+  );
+}
+
+.ramo--hero{
+  width: clamp(90px, 9vw, 130px);
+  bottom: 5%;
+  right: 4%;
+  opacity: 0.4;
+  z-index: 1;
+  transform: rotate(10deg) scaleX(-1);
 }
 
 .hero__conteudo{
   position: relative;
   z-index: 2;
-  max-width: 720px;
-}
-
-.marca{
-  position: relative;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-bottom: 1.5rem;
-}
-/* A logo sozinha, cercada de fundo creme liso, ficava com pouca presença
-   no meio de tanto espaço vazio. Um halo suave por trás lhe dá um "chão"
-   visual sem exigir recolorir a arte nem aumentar demais a peça. */
-.marca::before{
-  content: '';
-  position: absolute;
-  inset: 50% auto auto 50%;
-  width: clamp(260px, 34vw, 460px);
-  height: clamp(260px, 34vw, 460px);
-  transform: translate(-50%, -50%);
-  background: radial-gradient(circle, color-mix(in srgb, var(--primaria) 30%, transparent) 0%, transparent 68%);
-  z-index: 0;
-}
-.marca__logo{
-  position: relative;
-  z-index: 1;
-  width: clamp(240px, 29vw, 380px);
-  height: auto;
-  /* A logo tem letras brancas: sozinha sobre o fundo creme do hero ela
-     quase some. As sombras dão o "peso" que a marca precisa sem
-     depender de recolorir a arte original. */
-  filter:
-    drop-shadow(0 1px 2px rgba(10, 7, 6, 0.35))
-    drop-shadow(0 2px 14px rgba(10, 7, 6, 0.22))
-    drop-shadow(0 0 32px rgba(10, 7, 6, 0.12));
-}
-
-.hero__headline{
-  font-family: var(--fonte-titulo);
-  font-weight: 400;
-  font-size: clamp(1.5rem, 2.6vw, 2.2rem);
-  line-height: 1.3;
-  margin: 0;
-  color: var(--escuro);
-}
-.hero__headline em{
-  font-style: italic;
-  font-weight: 500;
-  color: var(--accent);
-}
-
-.hero__scroll{
-  position: absolute;
-  bottom: clamp(24px, 4vh, 48px);
-  left: 50%;
-  transform: translateX(-50%);
-  width: 1px;
-  height: 56px;
-  z-index: 2;
-}
-.hero__scroll span{
-  display: block;
-  width: 1px;
-  height: 100%;
-  background: linear-gradient(180deg, transparent, var(--primaria) 60%, transparent);
-  animation: escoar 2.2s ease-in-out infinite;
-}
-@keyframes escoar{
-  0%   { transform: scaleY(0); transform-origin: top; }
-  50%  { transform: scaleY(1); transform-origin: top; }
-  51%  { transform: scaleY(1); transform-origin: bottom; }
-  100% { transform: scaleY(0); transform-origin: bottom; }
-}
-
-/* ==========================================================================
-   MANIFESTO
-   ========================================================================== */
-.manifesto{
-  position: relative;
-  padding: clamp(80px, 12vw, 160px) var(--gutter);
-  color: var(--escuro);
-}
-
-.manifesto__grid{
-  position: relative;
-  z-index: 2;
+  width: 100%;
   max-width: var(--container);
   margin: 0 auto;
-  display: grid;
-  grid-template-columns: 1.1fr 0.9fr;
-  gap: clamp(40px, 6vw, 100px);
-  align-items: center;
+  padding: clamp(32px, 6vw, 56px) var(--gutter) clamp(44px, 7vw, 72px);
+  color: var(--claro);
 }
-.manifesto__texto{ position: relative; z-index: 3; }
+.hero__conteudo .eyebrow{ color: var(--primaria); }
 
-.manifesto__paragrafo{
-  font-size: clamp(1rem, 1.15vw, 1.15rem);
-  line-height: 1.85;
-  font-weight: 300;
-  color: var(--escuro);
-  opacity: 0.85;
-  max-width: 46ch;
-}
-
-.manifesto__experiencia{
-  display: inline-block;
-  margin: 1.5rem 0 0;
-  padding: 0.3em 0.9em;
-  font-size: 0.72rem;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--accent);
-  border: 1px dashed color-mix(in srgb, var(--accent) 55%, transparent);
-}
-
-.manifesto__assinatura{
-  margin-top: 1.5rem;
+.hero__titulo{
   font-family: var(--fonte-titulo);
-  font-style: italic;
-  font-size: 1.15rem;
+  font-weight: 500;
+  font-size: clamp(1.9rem, 4.4vw, 3.1rem);
+  line-height: 1.18;
+  max-width: 15ch;
+  margin: 0 0 0.7rem;
+  color: var(--claro);
+}
+
+.hero__texto{
+  font-size: clamp(0.95rem, 1.3vw, 1.1rem);
+  line-height: 1.6;
+  max-width: 46ch;
+  margin: 0 0 1.6rem;
+  color: var(--claro);
+  opacity: 0.92;
+}
+
+.hero__acoes{
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.9rem;
+  margin-bottom: 1.4rem;
+}
+
+.botao{
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: 0.75em 1.7em;
+  font-size: 0.85rem;
+  font-weight: 500;
+  letter-spacing: 0.03em;
+  border-radius: var(--raio-pill);
+  border: 1px solid transparent;
+  transition: background 0.2s ease, border-color 0.2s ease;
+}
+.botao--primario{
+  background: var(--primaria);
+  color: var(--escuro);
+}
+.botao--primario:hover{
+  background: color-mix(in srgb, var(--primaria) 85%, white);
+}
+.botao--secundario{
+  background: transparent;
+  color: var(--claro);
+  border-color: color-mix(in srgb, var(--claro) 55%, transparent);
+}
+.botao--secundario:hover{
+  background: color-mix(in srgb, var(--claro) 14%, transparent);
+  border-color: var(--claro);
+}
+.botao--contorno{
+  background: transparent;
   color: var(--accent);
+  border-color: var(--accent);
+}
+.botao--contorno:hover{
+  background: var(--accent);
+  color: var(--claro);
+}
+.botao--claro{
+  background: var(--claro);
+  color: var(--escuro);
+}
+.botao--claro:hover{
+  background: color-mix(in srgb, var(--claro) 85%, var(--primaria));
+}
+.botao--contorno-claro{
+  background: transparent;
+  color: var(--claro);
+  border-color: color-mix(in srgb, var(--claro) 55%, transparent);
+}
+.botao--contorno-claro:hover{
+  background: color-mix(in srgb, var(--claro) 16%, transparent);
+  border-color: var(--claro);
 }
 
-.manifesto__video{
-  position: relative;
-  overflow: visible;
-}
-.manifesto__video-el{
-  width: 100%;
-  aspect-ratio: 9 / 16;
-  max-height: 640px;
-  margin: 0 auto;
-  object-fit: cover;
-  background: var(--escuro);
-  border: 1px solid color-mix(in srgb, var(--primaria) 55%, transparent);
+.hero__endereco{
+  font-size: 0.82rem;
+  letter-spacing: 0.02em;
+  color: var(--claro);
+  opacity: 0.85;
+  margin: 0;
 }
 
-/* Sai da lateral esquerda do vídeo, cruzando para o espaço em branco
-   ao lado do texto do manifesto. */
-.ramo--manifesto{
-  width: 55%;
-  left: -26%;
-  bottom: 6%;
-  transform: rotate(-6deg) scaleX(-1);
-  z-index: 3;
+/* Fachada em retrato: em telas mais largas e curtas o recorte horizontal
+   do cover cresce, então o ponto focal precisa migrar um pouco para a
+   direita para não perder a placa "aromas decorações" (mais central na
+   foto original) por trás do texto ou fora da tela. */
+@media (min-width: 640px){
+  .hero__foto{ object-position: 40% 18%; }
+}
+@media (min-width: 1024px){
+  .hero__foto{ object-position: 46% 16%; }
 }
 
 /* ==========================================================================
-   VITRINES (vídeos / produtos)
+   CURADORIA — categorias reais da loja
    ========================================================================== */
-.vitrine{
+.curadoria{
   position: relative;
-  padding: clamp(90px, 12vw, 150px) var(--gutter);
-  color: var(--claro);
+  background: var(--creme);
+  padding: clamp(80px, 12vw, 150px) var(--gutter);
+  color: var(--escuro);
 }
 
 .vitrine__cabecalho{
@@ -363,12 +584,18 @@ html.splash-ativo{ overflow: hidden; }
 }
 .vitrine__cabecalho .eyebrow{ display:inline-block; }
 .vitrine__cabecalho .titulo-secao{ margin: 0 auto; }
-.vitrine__dica{
-  margin: -0.8rem 0 0;
-  font-size: 0.8rem;
-  font-weight: 300;
-  color: var(--claro);
-  opacity: 0.55;
+
+/* .eyebrow padrão (--primaria) só tem contraste AA sobre fundo escuro
+   (usado em .transformacao). Sobre creme, --primaria-escura. */
+.curadoria .eyebrow{ color: var(--primaria-escura); }
+
+.curadoria__intro{
+  max-width: 56ch;
+  margin: -0.6rem auto 0;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: var(--escuro);
+  opacity: 0.75;
 }
 
 .grid{
@@ -380,104 +607,206 @@ html.splash-ativo{ overflow: hidden; }
   gap: clamp(20px, 2.4vw, 36px);
 }
 
-/* ---- grid assimétrico de vídeos: mosaico editorial, não cards uniformes ---- */
-.grid--videos-mosaico{
+.grid--categorias{
   grid-template-columns: repeat(4, 1fr);
-  grid-auto-rows: 150px;
-  grid-auto-flow: dense;
+  align-items: start;
 }
 
-.video-card{
-  position: relative;
-  grid-column: span 1;
-  grid-row: span 2;
-  overflow: hidden;
-  background: var(--escuro);
-  border: 1px solid color-mix(in srgb, var(--primaria) 40%, transparent);
-}
-.video-card--grande{ grid-column: span 2; grid-row: span 3; }
-.video-card--alto{ grid-row: span 3; }
-.video-card--largo{ grid-column: span 2; grid-row: span 1; }
-
-.video-card__el{
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.video-card__som{
-  position: absolute;
-  right: 0.7em;
-  bottom: 0.7em;
-  z-index: 2;
+.categoria-card{
   display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: center;
-  width: 2.1em;
-  height: 2.1em;
-  padding: 0;
-  background: color-mix(in srgb, var(--escuro) 55%, transparent);
-  border: 1px solid color-mix(in srgb, var(--claro) 35%, transparent);
-  border-radius: 50%;
-  color: var(--claro);
-  cursor: pointer;
-  transition: border-color 0.2s ease, background 0.2s ease;
-}
-.video-card__som:hover{ border-color: var(--primaria); }
-.video-card__som .icone-som-on{ display: none; }
-.video-card__som.com-som .icone-som-off{ display: none; }
-.video-card__som.com-som .icone-som-on{ display: block; }
-
-/* Ramos posicionados como filhos do próprio .grid (que tem overflow
-   visível), não dos cards (que precisam de overflow:hidden para recortar
-   vídeo/imagem) — assim cruzam livremente para fora da grade. */
-
-/* Sai por cima do primeiro vídeo (o maior), cruzando para o espaço
-   acima, entre esta seção e o antes/depois. */
-.ramo--videos{
-  width: clamp(140px, 15vw, 220px);
-  top: -5%;
-  left: 10%;
-  transform: rotate(14deg);
-  z-index: 3;
-}
-/* Sai por baixo, do lado direito da grade, cruzando para o espaço
-   abaixo, entre esta seção e o detalhe de produto. */
-.ramo--videos-fim{
-  width: clamp(160px, 18vw, 260px);
-  top: 78%;
-  right: 2%;
-  transform: rotate(-20deg) scaleX(-1);
-  z-index: 3;
+  gap: 1rem;
+  text-align: center;
 }
 
-/* ---- grid de detalhe de produto: mais contido que o mosaico de vídeo ---- */
-.grid--produtos{ grid-template-columns: repeat(5, 1fr); }
-
-.produto-card{
-  position: relative;
-  margin: 0;
+.categoria-card__fotos{
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.5rem;
+  aspect-ratio: 4 / 3;
+}
+.categoria-card__fotos--unica{
+  grid-template-columns: 1fr;
   aspect-ratio: 3 / 4;
-  overflow: hidden;
-  border: 1px solid color-mix(in srgb, var(--primaria) 40%, transparent);
 }
-.produto-card img{
+.categoria-card__fotos img{
   width: 100%;
   height: 100%;
   object-fit: cover;
+  border: 1px solid color-mix(in srgb, var(--primaria) 40%, transparent);
 }
 
-/* Sai por baixo da primeira peça, cruzando para o espaço abaixo,
-   entre esta seção e o rodapé. O grid de produtos é bem mais baixo que
-   o próprio ramo, então o deslocamento precisa ser um percentual bem
-   maior do que nos outros ramos para empurrá-lo para fora da grade. */
-.ramo--produtos{
-  width: clamp(120px, 14vw, 190px);
-  bottom: -58%;
-  left: 0;
-  transform: rotate(-8deg) scaleX(-1);
+.categoria-card__titulo{
+  font-family: var(--fonte-titulo);
+  font-weight: 500;
+  font-size: 1.35rem;
+  margin: 0;
+  color: var(--escuro);
+}
+.categoria-card__texto{
+  font-size: 0.85rem;
+  line-height: 1.5;
+  margin: -0.4rem 0 0;
+  color: var(--escuro);
+  opacity: 0.7;
+}
+
+.curadoria__cta{
+  text-align: center;
+  margin-top: clamp(40px, 5vw, 64px);
+}
+
+/* ==========================================================================
+   INSPIRAÇÕES EM VÍDEO — seleção curta, três vídeos reais
+   ========================================================================== */
+.inspiracoes{
+  position: relative;
+  background: var(--accent);
+  padding: clamp(80px, 12vw, 150px) var(--gutter);
+  color: var(--claro);
+}
+/* --primaria pura só passa 3.04:1 sobre --accent (insuficiente para texto
+   pequeno) — --primaria-clara passa 4.5:1+ aqui e sobre --escuro. */
+.inspiracoes .eyebrow{ color: var(--primaria-clara); }
+.inspiracoes .titulo-secao em{ color: var(--primaria-clara); }
+
+.inspiracoes__intro{
+  max-width: 56ch;
+  margin: -0.6rem auto 0;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: var(--claro);
+  opacity: 0.8;
+}
+
+.inspiracoes__lista{
+  list-style: none;
+  margin: 0 auto;
+  padding: 0;
+  max-width: var(--container);
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: clamp(20px, 2.4vw, 36px);
+}
+
+.video-editorial{
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+}
+.video-editorial__el{
+  width: 100%;
+  aspect-ratio: 9 / 16;
+  max-height: 480px;
+  margin: 0 auto;
+  object-fit: cover;
+  background: var(--escuro);
+  border: 1px solid color-mix(in srgb, var(--claro) 30%, transparent);
+}
+.video-editorial__titulo{
+  font-family: var(--fonte-titulo);
+  font-weight: 500;
+  font-size: 1.15rem;
+  margin: 0;
+  color: var(--claro);
+}
+.video-editorial__texto{
+  font-size: 0.85rem;
+  line-height: 1.5;
+  margin: 0;
+  color: var(--claro);
+  opacity: 0.75;
+}
+
+.inspiracoes__cta{
+  text-align: center;
+  margin-top: clamp(40px, 5vw, 64px);
+}
+
+/* Até 767px, a coluna vertical de três vídeos altos ficaria enorme —
+   vira uma lista horizontal com scroll-snap, e cada cartão mostra ~78%
+   da largura de propósito: a fatia do próximo cartão espiando na borda
+   é o que avisa que há mais conteúdo, sem precisar de texto extra. */
+@media (max-width: 767px){
+  .inspiracoes__lista{
+    display: flex;
+    grid-template-columns: unset;
+    max-width: none;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    margin: 0 calc(var(--gutter) * -1);
+    padding: 0 var(--gutter) 0.6rem;
+    -webkit-overflow-scrolling: touch;
+  }
+  .video-editorial{
+    flex: 0 0 78%;
+    scroll-snap-align: start;
+  }
+  .video-editorial__el{ max-height: 420px; }
+}
+
+@media (prefers-reduced-motion: reduce){
+  .inspiracoes__lista{ scroll-snap-type: none; }
+}
+
+/* ==========================================================================
+   SOBRE — Rita Assunção
+   ========================================================================== */
+.sobre{
+  position: relative;
+  background: var(--creme);
+  padding: clamp(80px, 12vw, 160px) var(--gutter);
+  color: var(--escuro);
+}
+
+.sobre__grid{
+  position: relative;
+  z-index: 2;
+  max-width: var(--container);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: clamp(40px, 6vw, 100px);
+  align-items: center;
+}
+.sobre__texto{ position: relative; z-index: 3; }
+/* Mesmo ajuste de contraste do .curadoria .eyebrow — .sobre também é
+   fundo creme, --primaria pura falha AA aqui. */
+.sobre .eyebrow{ color: var(--primaria-escura); }
+.sobre .titulo-secao em{ color: var(--primaria-escura); }
+
+.sobre__paragrafo{
+  font-size: clamp(1rem, 1.15vw, 1.15rem);
+  line-height: 1.85;
+  font-weight: 300;
+  color: var(--escuro);
+  opacity: 0.85;
+  max-width: 46ch;
+}
+
+.sobre__video{
+  position: relative;
+  overflow: visible;
+}
+.sobre__video-el{
+  width: 100%;
+  aspect-ratio: 9 / 16;
+  max-height: 640px;
+  margin: 0 auto;
+  object-fit: cover;
+  background: var(--escuro);
+  border: 1px solid color-mix(in srgb, var(--primaria) 55%, transparent);
+}
+
+/* Sai da lateral esquerda do vídeo, cruzando para o espaço em branco
+   ao lado do texto. */
+.ramo--sobre{
+  width: 55%;
+  left: -26%;
+  bottom: 6%;
+  transform: rotate(-6deg) scaleX(-1);
   z-index: 3;
 }
 
@@ -486,6 +815,7 @@ html.splash-ativo{ overflow: hidden; }
    ========================================================================== */
 .transformacao{
   position: relative;
+  background: var(--escuro);
   padding: clamp(90px, 12vw, 150px) var(--gutter);
   color: var(--claro);
   text-align: center;
@@ -632,142 +962,183 @@ html.splash-ativo{ overflow: hidden; }
 }
 
 /* ==========================================================================
+   FAIXA PRÁTICA — como encontrar e falar com a loja
+   ========================================================================== */
+.faixa-visita{
+  position: relative;
+  background: var(--accent);
+  padding: clamp(56px, 8vw, 90px) var(--gutter);
+  color: var(--claro);
+  text-align: center;
+}
+
+.faixa-visita__grid{
+  max-width: var(--container);
+  margin: 0 auto clamp(32px, 5vw, 48px);
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: clamp(24px, 4vw, 48px);
+}
+
+.faixa-visita__rotulo{
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  /* --primaria pura só dá 3.04:1 sobre --accent, insuficiente para texto
+     deste tamanho — --primaria-clara passa 5:1+. */
+  color: var(--primaria-clara);
+  margin: 0 0 0.5rem;
+}
+.faixa-visita__valor{
+  font-size: 1rem;
+  color: var(--claro);
+  margin: 0;
+}
+
+.faixa-visita__acoes{
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1rem;
+}
+
+/* ==========================================================================
    RODAPÉ
    ========================================================================== */
 .rodape{
   position: relative;
-  padding: clamp(70px, 10vw, 110px) var(--gutter) clamp(40px, 6vw, 60px);
+  background: var(--escuro);
+  padding: clamp(56px, 8vw, 80px) var(--gutter) clamp(28px, 4vw, 40px);
   color: var(--claro);
-  text-align: center;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 1.1rem;
 }
 
-.ramo--rodape{
-  top: -6%;
-  left: 50%;
-  transform: translateX(-50%) rotate(0deg);
-  width: clamp(220px, 30vw, 420px);
+.rodape__grid{
+  max-width: var(--container);
+  margin: 0 auto;
+  padding-bottom: clamp(28px, 4vw, 40px);
+  border-bottom: 1px solid color-mix(in srgb, var(--claro) 16%, transparent);
+  display: grid;
+  grid-template-columns: 1.3fr 0.8fr 1fr 1fr;
+  gap: clamp(24px, 4vw, 40px);
+  text-align: left;
+}
+
+.rodape__coluna{
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.7rem;
 }
 
 .rodape__marca{
-  position: relative;
-  z-index: 2;
   font-family: var(--fonte-titulo);
-  font-size: 1.8rem;
+  font-size: 1.3rem;
   color: var(--claro);
+  margin: 0;
 }
-.rodape__marca em{
-  font-style: italic;
-  color: var(--primaria);
-}
-
-/* Chamada principal do rodapé: é para onde o site quer levar quem
-   chegou até aqui — ver mais peças e ambientes no Instagram. Por isso
-   ganha tratamento de botão, maior e mais forte que o link de contato. */
-.rodape__instagram{
-  position: relative;
-  z-index: 2;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.6em;
-  padding: 0.85em 1.8em;
-  margin-top: 0.3rem;
-  font-size: 0.85rem;
+.rodape__marca-sub{
+  display: block;
+  margin-top: 0.35rem;
+  font-family: var(--fonte-corpo);
+  font-size: 0.7rem;
   font-weight: 500;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: var(--claro);
-  border: 1px solid var(--primaria);
-  border-radius: 999px;
-  transition: background 0.25s ease, color 0.25s ease, border-color 0.25s ease;
+  color: var(--primaria-clara);
 }
-.rodape__instagram:hover{
-  background: var(--primaria);
-  color: var(--escuro);
-}
-.rodape__instagram svg{ flex-shrink: 0; }
 
-.rodape__instagram-legenda{
-  position: relative;
-  z-index: 2;
-  margin: -0.4rem 0 0;
-  font-size: 0.78rem;
+.rodape__endereco{
+  font-size: 0.85rem;
   font-weight: 300;
   color: var(--claro);
-  opacity: 0.55;
+  opacity: 0.75;
+  margin: 0;
 }
 
+.rodape__link-mapa{
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  font-size: 0.82rem;
+  color: var(--primaria-clara);
+  border-bottom: 1px solid transparent;
+  transition: border-color 0.2s ease;
+}
+.rodape__link-mapa:hover{ border-color: var(--primaria-clara); }
+
+.rodape__lista{
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+}
+.rodape__lista a{
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  font-size: 0.85rem;
+  color: var(--claro);
+  opacity: 0.85;
+  transition: color 0.2s ease, opacity 0.2s ease;
+}
+.rodape__lista a:hover{ opacity: 1; color: var(--primaria-clara); }
+
+.rodape__instagram{
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5em;
+  min-height: 44px;
+  font-size: 0.85rem;
+  color: var(--claro);
+  transition: color 0.2s ease;
+}
+.rodape__instagram:hover{ color: var(--primaria-clara); }
+.rodape__instagram svg{ flex-shrink: 0; }
+
+.rodape__whatsapp{
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  font-size: 0.85rem;
+  color: var(--claro);
+  opacity: 0.85;
+  transition: color 0.2s ease, opacity 0.2s ease;
+}
+.rodape__whatsapp:hover{ opacity: 1; color: var(--primaria-clara); }
+
+/* Mapa sem filtro de cor: o tingimento e a dessaturação anteriores
+   prejudicavam a leitura dos nomes das ruas. Fica só num quadro fino,
+   compacto (coluna, não mais um bloco central grande). */
 .rodape__mapa{
-  position: relative;
-  z-index: 2;
   width: 100%;
-  max-width: 480px;
-  aspect-ratio: 16 / 10;
-  margin-top: 0.4rem;
+  aspect-ratio: 4 / 3;
   overflow: hidden;
-  border: 1px solid color-mix(in srgb, var(--primaria) 45%, transparent);
+  border: 1px solid color-mix(in srgb, var(--claro) 22%, transparent);
 }
 .rodape__mapa iframe{
   width: 100%;
   height: 100%;
   border: 0;
-  /* O Google Maps não aceita CSS por dentro do iframe (é outra origem):
-     o filtro tira o azul/verde padrão antes da camada de cor por cima. */
-  filter: grayscale(0.5) sepia(0.4) brightness(0.85) contrast(1.05);
-}
-/* Camada de cor com blend "color": tinge o mapa com o vinho da marca
-   mantendo o desenho das ruas legível, sem travar o pan/zoom (o toque
-   passa direto porque a camada não recebe eventos de ponteiro). */
-.rodape__mapa::after{
-  content: '';
-  position: absolute;
-  inset: 0;
-  z-index: 1;
-  background: var(--accent);
-  opacity: 0.4;
-  mix-blend-mode: color;
-  pointer-events: none;
-}
-
-.rodape__contato{
-  position: relative;
-  z-index: 2;
-  display: flex;
-  gap: clamp(20px, 4vw, 40px);
-  font-size: 0.85rem;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-}
-.rodape__contato a{
-  border-bottom: 1px solid transparent;
-  transition: border-color 0.25s ease, color 0.25s ease;
-}
-.rodape__contato a:hover{
-  color: var(--primaria);
-  border-color: var(--primaria);
-}
-
-.rodape__endereco{
-  position: relative;
-  z-index: 2;
-  font-size: 0.85rem;
-  font-weight: 300;
-  color: var(--claro);
-  opacity: 0.7;
-  margin: 0;
 }
 
 .rodape__copy{
-  position: relative;
-  z-index: 2;
-  font-size: 0.7rem;
+  max-width: var(--container);
+  margin: clamp(20px, 3vw, 28px) auto 0;
+  text-align: center;
+  font-size: 0.72rem;
   letter-spacing: 0.05em;
   color: var(--claro);
-  opacity: 0.45;
-  margin: 1.5rem 0 0;
+  opacity: 0.7;
+}
+
+@media (max-width: 900px){
+  .rodape__grid{ grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 560px){
+  .rodape__grid{ grid-template-columns: 1fr; text-align: center; }
+  .rodape__coluna{ align-items: center; }
 }
 
 /* ==========================================================================
@@ -789,45 +1160,27 @@ html.js-pronto [data-reveal].is-visible{
 @media (prefers-reduced-motion: reduce){
   html{ scroll-behavior: auto; }
   html.js-pronto [data-reveal]{ opacity: 1; transform: none; transition: none; }
-  .hero__scroll span{ animation: none; }
 }
 
 /* ==========================================================================
    RESPONSIVO
    ========================================================================== */
 @media (max-width: 900px){
-  .manifesto__grid{ grid-template-columns: 1fr; }
-  .manifesto__video{ order: -1; max-width: 340px; margin: 0 auto; }
-  .grid--videos-mosaico{ grid-template-columns: repeat(2, 1fr); grid-auto-rows: 170px; }
-  .video-card--grande{ grid-column: span 2; grid-row: span 3; }
-  .video-card--alto{ grid-column: span 1; grid-row: span 3; }
-  .video-card--largo{ grid-column: span 2; grid-row: span 2; }
-  .grid--produtos{ grid-template-columns: repeat(3, 1fr); }
+  .grid--categorias{ grid-template-columns: repeat(2, 1fr); }
+  .sobre__grid{ grid-template-columns: 1fr; }
+  .sobre__video{ order: -1; max-width: 340px; margin: 0 auto; }
   .comparador{ max-width: 460px; }
   .ramo{ width: clamp(130px, 30vw, 220px); }
+  .faixa-visita__grid{ grid-template-columns: 1fr; gap: 1.5rem; }
 
   /* Nestas larguras os grids ficam bem mais altos (colunas empilhando),
      então os deslocamentos em % calibrados para o desktop (grade baixa
      e larga) precisam ser recalculados para essas proporções mais altas. */
-  .ramo--manifesto{ left: -12%; }
-  .ramo--videos-fim{ top: auto; bottom: -4%; right: 6%; }
+  .ramo--sobre{ left: -12%; }
 }
 
 @media (max-width: 520px){
-  .grid--videos-mosaico{ grid-template-columns: 1fr; grid-auto-rows: auto; }
-  .video-card,
-  .video-card--grande,
-  .video-card--alto,
-  .video-card--largo{
-    grid-column: span 1;
-    grid-row: auto;
-    aspect-ratio: 9 / 14;
-  }
-  .grid--produtos{ grid-template-columns: 1fr 1fr; gap: 14px; }
+  .grid--categorias{ grid-template-columns: 1fr; }
+  .categoria-card{ max-width: 320px; margin: 0 auto; }
   .transformacao__projeto{ max-width: 220px; }
-  .rodape__contato{ flex-direction: column; gap: 0.8rem; }
-
-  /* Grade de produtos empilha em 3 linhas aqui, bem mais alta que a
-     única linha do desktop — precisa de bem menos deslocamento em %. */
-  .ramo--produtos{ bottom: -18%; }
 }

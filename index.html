@@ -3,8 +3,40 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Espaço Decora By Rita Assunção</title>
-<meta name="description" content="Espaço Decora By Rita Assunção — loja de decoração em Lages/SC.">
+<title>Espaço Decora By Rita Assunção | Loja de Decoração em Lages, SC</title>
+<meta name="description" content="Espaço Decora By Rita Assunção: loja de decoração em Lages, SC, com peças decorativas, aromas para casa e atendimento pelo WhatsApp. Visite ou fale conosco.">
+<link rel="canonical" href="https://espaco-decora.vercel.app/">
+
+<meta property="og:type" content="website">
+<meta property="og:locale" content="pt_BR">
+<meta property="og:title" content="Espaço Decora By Rita Assunção | Loja de Decoração em Lages, SC">
+<meta property="og:description" content="Espaço Decora By Rita Assunção: loja de decoração em Lages, SC, com peças decorativas, aromas para casa e atendimento pelo WhatsApp. Visite ou fale conosco.">
+<meta property="og:url" content="https://espaco-decora.vercel.app/">
+<meta property="og:image" content="https://espaco-decora.vercel.app/assets/video/splash-poster.jpg">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Espaço Decora By Rita Assunção | Loja de Decoração em Lages, SC">
+<meta name="twitter:description" content="Espaço Decora By Rita Assunção: loja de decoração em Lages, SC, com peças decorativas, aromas para casa e atendimento pelo WhatsApp. Visite ou fale conosco.">
+<meta name="twitter:image" content="https://espaco-decora.vercel.app/assets/video/splash-poster.jpg">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "HomeGoodsStore",
+  "name": "Espaço Decora By Rita Assunção",
+  "url": "https://espaco-decora.vercel.app/",
+  "image": "https://espaco-decora.vercel.app/assets/video/splash-poster.jpg",
+  "telephone": "+55 49 3224-2543",
+  "address": {
+    "@type": "PostalAddress",
+    "streetAddress": "R. Frei Rogério, 83",
+    "addressLocality": "Lages",
+    "addressRegion": "SC",
+    "addressCountry": "BR"
+  }
+}
+</script>
+
 <link rel="icon" href="assets/logo/favicon.ico" sizes="any">
 <link rel="icon" type="image/png" sizes="32x32" href="assets/logo/favicon-32.png">
 <link rel="icon" type="image/png" sizes="16x16" href="assets/logo/favicon-16.png">
@@ -41,8 +73,15 @@
 </head>
 <body>
 
+<a class="pular-conteudo" href="#conteudo-principal">Pular para o conteúdo</a>
+
 <!-- ============================================================
      SPLASH — tela de abertura (só na primeira carga da sessão)
+     NÃO REMOVER/RENOMEAR sem atualizar js/script.js em conjunto:
+     os atributos data-src/data-src-movel/data-poster abaixo só viram
+     src/poster via JS (para não baixar o vídeo de quem já viu a intro
+     nesta sessão — chave 'edIntroVista' no sessionStorage), e o próprio
+     splash é pulado com prefers-reduced-motion.
      ============================================================ -->
 <div id="splash" class="splash" aria-hidden="true">
   <div class="splash__quadro">
@@ -58,7 +97,7 @@
       data-poster="assets/video/splash-poster.jpg"
     ></video>
   </div>
-  <img class="splash__texto" src="assets/logo/logo-texto.png" alt="">
+  <img class="splash__texto" src="assets/logo/logo-texto.png" alt="" width="430" height="175">
 </div>
 
 <!-- ============================================================
@@ -82,78 +121,227 @@
 </svg>
 
 <!-- ============================================================
-     HERO
+     CABEÇALHO — navegação fixa, separada do hero
      ============================================================ -->
-<header class="hero" id="topo">
+<header class="cabecalho" data-cabecalho>
+  <div class="cabecalho__barra">
+    <a class="cabecalho__marca" href="#topo">Espaço <em>Decora</em></a>
 
-  <svg class="ramo ramo--hero-tl"><use href="#ramo-dourado"/></svg>
-  <svg class="ramo ramo--hero-br"><use href="#ramo-dourado"/></svg>
+    <button
+      class="cabecalho__alternador"
+      type="button"
+      aria-expanded="false"
+      aria-controls="menu-principal"
+      aria-label="Abrir menu"
+    >
+      <svg class="cabecalho__icone" viewBox="0 0 24 24" width="22" height="22" aria-hidden="true">
+        <line class="cabecalho__linha cabecalho__linha--1" x1="3" y1="7" x2="21" y2="7" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+        <line class="cabecalho__linha cabecalho__linha--2" x1="3" y1="12.5" x2="21" y2="12.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+        <line class="cabecalho__linha cabecalho__linha--3" x1="3" y1="18" x2="21" y2="18" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+      </svg>
+    </button>
 
-  <div class="hero__conteudo">
-    <p class="eyebrow">Lages · Santa Catarina</p>
-
-    <div class="marca">
-      <img class="marca__logo" src="assets/logo/logo-transparente.png" width="512" height="512" alt="Espaço Decora By Rita Assunção">
-    </div>
-
-    <h1 class="hero__headline">
-      Onde cada ambiente <em>ganha alma.</em>
-    </h1>
+    <nav class="cabecalho__nav" id="menu-principal" aria-label="Principal">
+      <ul class="cabecalho__lista">
+        <li><a href="#curadoria">A loja</a></li>
+        <li><a href="#inspiracoes">Inspirações</a></li>
+        <li><a href="#transformacoes">Transformações</a></li>
+        <li><a href="#sobre">Sobre</a></li>
+        <li><a href="#visite-nos">Visite-nos</a></li>
+      </ul>
+      <a class="cabecalho__cta" href="https://wa.me/554932242543" target="_blank" rel="noopener noreferrer">Falar no WhatsApp</a>
+    </nav>
   </div>
-
-  <a class="hero__scroll" href="#manifesto" aria-label="Rolar para o manifesto">
-    <span></span>
-  </a>
 </header>
+<div class="cabecalho__fundo" data-cabecalho-fundo aria-hidden="true"></div>
+
+<main id="conteudo-principal">
 
 <!-- ============================================================
-     MANIFESTO
+     HERO — fachada real da loja
      ============================================================ -->
-<section class="manifesto" id="manifesto">
-  <div class="manifesto__grid">
-    <div class="manifesto__texto" data-reveal>
-      <p class="eyebrow">A essência</p>
-      <h2 class="titulo-secao">Uma casa para o <em>bom gosto.</em></h2>
-      <p class="manifesto__paragrafo">
-        Cada ambiente conta uma história. Transformo espaços em Lages com
-        peças que têm alma — da decoração ao aroma, do detalhe ao acabamento.
-        O Espaço Decora nasceu do olhar de quem acredita que casa bonita é
-        casa que abraça.
-      </p>
-      <p class="manifesto__experiencia">[X anos de experiência]</p>
-      <p class="manifesto__assinatura">— Rita Assunção</p>
+<section class="hero" id="topo">
+  <picture>
+    <source srcset="assets/fachada-loja.webp" type="image/webp">
+    <img
+      class="hero__foto"
+      src="assets/fachada-loja.JPG"
+      alt="Fachada da loja Espaço Decora, com vitrine de vidro, placa 'aromas decorações' e letreiro Decora, no Centro de Lages/SC."
+      width="3024"
+      height="4032"
+      fetchpriority="high"
+    >
+  </picture>
+  <div class="hero__nevoa" aria-hidden="true"></div>
+  <svg class="ramo ramo--hero" aria-hidden="true"><use href="#ramo-dourado"/></svg>
+
+  <div class="hero__conteudo">
+    <p class="eyebrow">Loja de decoração em Lages · SC</p>
+    <h1 class="hero__titulo">Peças que transformam a casa em um lugar só seu.</h1>
+    <p class="hero__texto">Decoração, aromas e detalhes escolhidos com curadoria e atendimento próximo.</p>
+
+    <div class="hero__acoes">
+      <a class="botao botao--primario" href="#curadoria">Conheça a loja</a>
+      <a class="botao botao--secundario" href="https://wa.me/554932242543" target="_blank" rel="noopener noreferrer">Falar no WhatsApp</a>
     </div>
 
-    <div class="manifesto__video" data-reveal>
-      <video
-        class="manifesto__video-el"
-        controls
-        preload="metadata"
-        playsinline
-        poster="assets/posters/01-apresentacao-rita.jpg"
-      >
-        <source src="videos/01-apresentacao-rita.mp4" type="video/mp4">
-      </video>
-      <svg class="ramo ramo--manifesto"><use href="#ramo-dourado"/></svg>
-    </div>
+    <p class="hero__endereco">R. Frei Rogério, 83 · Centro · Lages/SC</p>
   </div>
 </section>
 
 <!-- ============================================================
-     ANTES / DEPOIS — prova de transformação real
+     CURADORIA — categorias reais da loja
      ============================================================ -->
-<section class="transformacao" id="transformacao">
+<section class="curadoria" id="curadoria">
   <div class="vitrine__cabecalho" data-reveal>
-    <p class="eyebrow">Prova em imagens</p>
-    <h2 class="titulo-secao">O <em>antes</em> e o <em>depois</em></h2>
-    <p class="transformacao__intro">Mesmo cantinho, mesma casa — arraste para ver a transformação.</p>
+    <p class="eyebrow">A loja</p>
+    <h2 class="titulo-secao">Encontre o detalhe que faltava.</h2>
+    <p class="curadoria__intro">Uma seleção de peças decorativas, aromas e composições para diferentes ambientes e ocasiões.</p>
+  </div>
+
+  <div class="grid grid--categorias">
+    <article class="categoria-card" data-reveal>
+      <div class="categoria-card__fotos">
+        <picture>
+          <source srcset="assets/04-decoracao-geral.webp" type="image/webp">
+          <img src="assets/04-decoracao-geral.png" alt="Almofadas decorativas com estampas de cavalo, xadrez e listras" loading="lazy" width="476" height="752">
+        </picture>
+        <picture>
+          <source srcset="assets/05-decoracao-mesa.webp" type="image/webp">
+          <img src="assets/05-decoracao-mesa.png" alt="Escultura decorativa de vidro em formato orgânico" loading="lazy" width="472" height="684">
+        </picture>
+      </div>
+      <h3 class="categoria-card__titulo">Objetos decorativos</h3>
+      <p class="categoria-card__texto">Almofadas, esculturas e peças de composição.</p>
+      <a class="botao botao--contorno categoria-card__cta" href="https://wa.me/554932242543?text=Ol%C3%A1%21%20Vi%20os%20objetos%20decorativos%20no%20site%20do%20Espa%C3%A7o%20Decora%20e%20queria%20saber%20mais." target="_blank" rel="noopener noreferrer">Consultar pelo WhatsApp<span class="sr-only"> sobre objetos decorativos</span></a>
+    </article>
+
+    <article class="categoria-card" data-reveal>
+      <div class="categoria-card__fotos">
+        <picture>
+          <source srcset="assets/07-decoracao-facas.webp" type="image/webp">
+          <img src="assets/07-decoracao-facas.png" alt="Jogo de talheres dourados em caixa" loading="lazy" width="443" height="592">
+        </picture>
+        <picture>
+          <source srcset="assets/08-decoracao-mesa.webp" type="image/webp">
+          <img src="assets/08-decoracao-mesa.png" alt="Vaso de vidro e prato decorativo sobre mesa de vidro" loading="lazy" width="463" height="748">
+        </picture>
+      </div>
+      <h3 class="categoria-card__titulo">Mesa posta</h3>
+      <p class="categoria-card__texto">Talheres, taças e detalhes para a mesa.</p>
+      <a class="botao botao--contorno categoria-card__cta" href="https://wa.me/554932242543?text=Ol%C3%A1%21%20Vi%20a%20categoria%20mesa%20posta%20no%20site%20do%20Espa%C3%A7o%20Decora%20e%20queria%20saber%20mais." target="_blank" rel="noopener noreferrer">Consultar pelo WhatsApp<span class="sr-only"> sobre mesa posta</span></a>
+    </article>
+
+    <article class="categoria-card" data-reveal>
+      <div class="categoria-card__fotos categoria-card__fotos--unica">
+        <picture>
+          <source srcset="assets/06-decoracao-flores.webp" type="image/webp">
+          <img src="assets/06-decoracao-flores.png" alt="Planta ornamental de folhagem em vaso" loading="lazy" width="450" height="758">
+        </picture>
+      </div>
+      <h3 class="categoria-card__titulo">Arranjos e composições</h3>
+      <p class="categoria-card__texto">Plantas e arranjos para dar vida ao ambiente.</p>
+      <a class="botao botao--contorno categoria-card__cta" href="https://wa.me/554932242543?text=Ol%C3%A1%21%20Vi%20arranjos%20e%20composi%C3%A7%C3%B5es%20no%20site%20do%20Espa%C3%A7o%20Decora%20e%20queria%20saber%20mais." target="_blank" rel="noopener noreferrer">Consultar pelo WhatsApp<span class="sr-only"> sobre arranjos e composições</span></a>
+    </article>
+
+    <article class="categoria-card" data-reveal>
+      <div class="categoria-card__fotos categoria-card__fotos--unica">
+        <img src="assets/posters/02-apresentando-fragrancias.jpg" alt="Rita Assunção apresentando frascos de perfume e difusores de ambiente" loading="lazy" width="720" height="1280">
+      </div>
+      <h3 class="categoria-card__titulo">Aromas para a casa</h3>
+      <p class="categoria-card__texto">Perfumes e difusores para perfumar a casa.</p>
+      <a class="botao botao--contorno categoria-card__cta" href="https://wa.me/554932242543?text=Ol%C3%A1%21%20Vi%20aromas%20para%20a%20casa%20no%20site%20do%20Espa%C3%A7o%20Decora%20e%20queria%20saber%20mais." target="_blank" rel="noopener noreferrer">Consultar pelo WhatsApp<span class="sr-only"> sobre aromas para a casa</span></a>
+    </article>
+  </div>
+
+  <div class="curadoria__cta" data-reveal>
+    <a class="botao botao--contorno" href="https://wa.me/554932242543?text=Ol%C3%A1%21%20Vi%20o%20site%20do%20Espa%C3%A7o%20Decora%20e%20queria%20saber%20mais%20sobre%20as%20pe%C3%A7as." target="_blank" rel="noopener noreferrer">Falar no WhatsApp</a>
+  </div>
+</section>
+
+<!-- ============================================================
+     INSPIRAÇÕES EM VÍDEO — seleção curta, três vídeos reais
+     ============================================================ -->
+<section class="inspiracoes" id="inspiracoes">
+  <div class="vitrine__cabecalho" data-reveal>
+    <p class="eyebrow">Em vídeo</p>
+    <h2 class="titulo-secao">Inspirações em <em>movimento.</em></h2>
+    <p class="inspiracoes__intro">Uma seleção curta de vídeos reais da loja e dos ambientes.</p>
+  </div>
+
+  <ul class="inspiracoes__lista" data-reveal>
+    <li class="video-editorial">
+      <video
+        class="video-editorial__el"
+        controls
+        preload="none"
+        playsinline
+        poster="assets/posters/10-transformacao-loft.jpg"
+        aria-label="Transformação de ambiente: vídeo de um loft com escada de metal preta"
+      >
+        <source src="videos/10-transformacao-loft.mp4" type="video/mp4">
+      </video>
+      <h3 class="video-editorial__titulo">Transformação de ambiente</h3>
+      <p class="video-editorial__texto">Um loft com escada de metal preta como peça central.</p>
+    </li>
+
+    <li class="video-editorial">
+      <video
+        class="video-editorial__el"
+        controls
+        preload="none"
+        playsinline
+        poster="assets/posters/02-apresentando-fragrancias.jpg"
+        aria-label="Aromas para a casa: vídeo de apresentação de perfumes e difusores de ambiente"
+      >
+        <source src="videos/02-apresentando-fragrancias.mp4" type="video/mp4">
+      </video>
+      <h3 class="video-editorial__titulo">Aromas para a casa</h3>
+      <p class="video-editorial__texto">Rita apresenta perfumes e difusores de ambiente.</p>
+    </li>
+
+    <li class="video-editorial">
+      <video
+        class="video-editorial__el"
+        controls
+        preload="none"
+        playsinline
+        poster="assets/posters/13-decoracoes-mesa.jpg"
+        aria-label="Mesa posta e composições: vídeo de uma composição de mesa com vaso e flores secas"
+      >
+        <source src="videos/13-decoracoes-mesa.mp4" type="video/mp4">
+      </video>
+      <h3 class="video-editorial__titulo">Mesa posta e composições</h3>
+      <p class="video-editorial__texto">Vaso, flores secas e objetos decorativos compondo a mesa.</p>
+    </li>
+  </ul>
+
+  <div class="inspiracoes__cta" data-reveal>
+    <a class="botao botao--contorno-claro" href="https://www.instagram.com/espacodecorabyritaassuncao" target="_blank" rel="noopener noreferrer">Ver mais no Instagram</a>
+  </div>
+</section>
+
+<!-- ============================================================
+     TRANSFORMAÇÕES — comparador antes/depois
+     ============================================================ -->
+<section class="transformacao" id="transformacoes">
+  <div class="vitrine__cabecalho" data-reveal>
+    <p class="eyebrow">Composição de ambiente</p>
+    <h2 class="titulo-secao">Um mesmo espaço, <em>uma nova leitura.</em></h2>
+    <p class="transformacao__intro">Compare o ambiente antes e depois da composição e veja como a escolha das peças muda a percepção do espaço.</p>
   </div>
 
   <div class="comparador" data-reveal style="--pos: 50%">
     <div class="comparador__quadro">
-      <img class="comparador__camada comparador__camada--depois" src="assets/02-depois-decoracao.png" alt="Depois: cantinho com espelho iluminado, penteadeira e puff de couro" draggable="false">
+      <picture>
+        <source srcset="assets/02-depois-decoracao.webp" type="image/webp">
+        <img class="comparador__camada comparador__camada--depois" src="assets/02-depois-decoracao.png" alt="Depois: cantinho com espelho iluminado, penteadeira e puff de couro" draggable="false" loading="lazy" width="683" height="878">
+      </picture>
       <div class="comparador__camada comparador__camada--antes">
-        <img src="assets/01-antes-decoracao.png" alt="Antes: canto vazio, apenas parede branca e tomada" draggable="false">
+        <picture>
+          <source srcset="assets/01-antes-decoracao.webp" type="image/webp">
+          <img src="assets/01-antes-decoracao.png" alt="Antes: canto vazio, apenas parede branca e tomada" draggable="false" loading="lazy" width="676" height="860">
+        </picture>
       </div>
 
       <span class="comparador__rotulo comparador__rotulo--antes">Antes</span>
@@ -171,159 +359,117 @@
   </div>
 
   <figure class="transformacao__projeto" data-reveal>
-    <img src="assets/03-depois-decoracao.png" alt="Render do projeto do mesmo cantinho antes da execução final">
-    <figcaption>Do projeto ao resultado real.</figcaption>
+    <picture>
+      <source srcset="assets/03-depois-decoracao.webp" type="image/webp">
+      <img src="assets/03-depois-decoracao.png" alt="Render do projeto do mesmo cantinho antes da execução final" loading="lazy" width="665" height="863">
+    </picture>
+    <figcaption>Estudo visual da composição.</figcaption>
   </figure>
 </section>
 
 <!-- ============================================================
-     VITRINE DE VÍDEOS
+     SOBRE — Rita Assunção
      ============================================================ -->
-<section class="vitrine vitrine--videos" id="videos">
-  <div class="vitrine__cabecalho" data-reveal>
-    <p class="eyebrow">Em movimento</p>
-    <h2 class="titulo-secao">Vitrine em <em>vídeo</em></h2>
-    <p class="vitrine__dica">Toque ou passe o mouse sobre um vídeo para ouvir o som.</p>
-  </div>
+<section class="sobre" id="sobre">
+  <div class="sobre__grid">
+    <div class="sobre__texto" data-reveal>
+      <p class="eyebrow">Sobre</p>
+      <h2 class="titulo-secao">Curadoria com <em>olhar pessoal.</em></h2>
+      <p class="sobre__paragrafo">
+        À frente do Espaço Decora, Rita Assunção recebe cada cliente de perto
+        e ajuda a encontrar peças que conversem com o ambiente e com o
+        estilo de quem vive nele.
+      </p>
+      <a class="botao botao--contorno" href="https://wa.me/554932242543" target="_blank" rel="noopener noreferrer">Falar no WhatsApp</a>
+    </div>
 
-  <div class="grid grid--videos-mosaico">
-    <article class="video-card video-card--grande" data-reveal data-video>
-      <video class="video-card__el" muted loop playsinline preload="none" poster="assets/posters/10-transformacao-loft.jpg">
-        <source src="videos/10-transformacao-loft.mp4" type="video/mp4">
+    <div class="sobre__video" data-reveal>
+      <video
+        class="sobre__video-el"
+        controls
+        preload="metadata"
+        playsinline
+        poster="assets/posters/01-apresentacao-rita.jpg"
+      >
+        <source src="videos/01-apresentacao-rita.mp4" type="video/mp4">
       </video>
-      <button class="video-card__som" type="button" aria-pressed="false" aria-label="Ativar som deste vídeo">
-        <svg class="icone-som-off" viewBox="0 0 24 24" width="16" height="16"><path d="M4 9v6h4l5 4V5L8 9H4z" fill="currentColor"/><line x1="16" y1="9" x2="21" y2="15" stroke="currentColor" stroke-width="1.6"/><line x1="21" y1="9" x2="16" y2="15" stroke="currentColor" stroke-width="1.6"/></svg>
-        <svg class="icone-som-on" viewBox="0 0 24 24" width="16" height="16"><path d="M4 9v6h4l5 4V5L8 9H4z" fill="currentColor"/><path d="M16.5 8.5a5 5 0 0 1 0 7" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round"/><path d="M19 6a9 9 0 0 1 0 12" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round"/></svg>
-      </button>
-    </article>
-
-    <article class="video-card video-card--alto" data-reveal data-video>
-      <video class="video-card__el" muted loop playsinline preload="none" poster="assets/posters/09-decoracao-recomeco.jpg">
-        <source src="videos/09-decoracao-recomeco.mp4" type="video/mp4">
-      </video>
-      <button class="video-card__som" type="button" aria-pressed="false" aria-label="Ativar som deste vídeo">
-        <svg class="icone-som-off" viewBox="0 0 24 24" width="16" height="16"><path d="M4 9v6h4l5 4V5L8 9H4z" fill="currentColor"/><line x1="16" y1="9" x2="21" y2="15" stroke="currentColor" stroke-width="1.6"/><line x1="21" y1="9" x2="16" y2="15" stroke="currentColor" stroke-width="1.6"/></svg>
-        <svg class="icone-som-on" viewBox="0 0 24 24" width="16" height="16"><path d="M4 9v6h4l5 4V5L8 9H4z" fill="currentColor"/><path d="M16.5 8.5a5 5 0 0 1 0 7" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round"/><path d="M19 6a9 9 0 0 1 0 12" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round"/></svg>
-      </button>
-    </article>
-
-    <article class="video-card" data-reveal data-video>
-      <video class="video-card__el" muted loop playsinline preload="none" poster="assets/posters/04-decoracao-clinica.jpg">
-        <source src="videos/04-decoracao-clinica.mp4" type="video/mp4">
-      </video>
-      <button class="video-card__som" type="button" aria-pressed="false" aria-label="Ativar som deste vídeo">
-        <svg class="icone-som-off" viewBox="0 0 24 24" width="16" height="16"><path d="M4 9v6h4l5 4V5L8 9H4z" fill="currentColor"/><line x1="16" y1="9" x2="21" y2="15" stroke="currentColor" stroke-width="1.6"/><line x1="21" y1="9" x2="16" y2="15" stroke="currentColor" stroke-width="1.6"/></svg>
-        <svg class="icone-som-on" viewBox="0 0 24 24" width="16" height="16"><path d="M4 9v6h4l5 4V5L8 9H4z" fill="currentColor"/><path d="M16.5 8.5a5 5 0 0 1 0 7" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round"/><path d="M19 6a9 9 0 0 1 0 12" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round"/></svg>
-      </button>
-    </article>
-
-    <article class="video-card video-card--largo" data-reveal data-video>
-      <video class="video-card__el" muted loop playsinline preload="none" poster="assets/posters/11-evento-decora.jpg">
-        <source src="videos/11-evento-decora.mp4" type="video/mp4">
-      </video>
-      <button class="video-card__som" type="button" aria-pressed="false" aria-label="Ativar som deste vídeo">
-        <svg class="icone-som-off" viewBox="0 0 24 24" width="16" height="16"><path d="M4 9v6h4l5 4V5L8 9H4z" fill="currentColor"/><line x1="16" y1="9" x2="21" y2="15" stroke="currentColor" stroke-width="1.6"/><line x1="21" y1="9" x2="16" y2="15" stroke="currentColor" stroke-width="1.6"/></svg>
-        <svg class="icone-som-on" viewBox="0 0 24 24" width="16" height="16"><path d="M4 9v6h4l5 4V5L8 9H4z" fill="currentColor"/><path d="M16.5 8.5a5 5 0 0 1 0 7" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round"/><path d="M19 6a9 9 0 0 1 0 12" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round"/></svg>
-      </button>
-    </article>
-
-    <article class="video-card video-card--alto" data-reveal data-video>
-      <video class="video-card__el" muted loop playsinline preload="none" poster="assets/posters/02-apresentando-fragrancias.jpg">
-        <source src="videos/02-apresentando-fragrancias.mp4" type="video/mp4">
-      </video>
-      <button class="video-card__som" type="button" aria-pressed="false" aria-label="Ativar som deste vídeo">
-        <svg class="icone-som-off" viewBox="0 0 24 24" width="16" height="16"><path d="M4 9v6h4l5 4V5L8 9H4z" fill="currentColor"/><line x1="16" y1="9" x2="21" y2="15" stroke="currentColor" stroke-width="1.6"/><line x1="21" y1="9" x2="16" y2="15" stroke="currentColor" stroke-width="1.6"/></svg>
-        <svg class="icone-som-on" viewBox="0 0 24 24" width="16" height="16"><path d="M4 9v6h4l5 4V5L8 9H4z" fill="currentColor"/><path d="M16.5 8.5a5 5 0 0 1 0 7" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round"/><path d="M19 6a9 9 0 0 1 0 12" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round"/></svg>
-      </button>
-    </article>
-
-    <article class="video-card" data-reveal data-video>
-      <video class="video-card__el" muted loop playsinline preload="none" poster="assets/posters/13-decoracoes-mesa.jpg">
-        <source src="videos/13-decoracoes-mesa.mp4" type="video/mp4">
-      </video>
-      <button class="video-card__som" type="button" aria-pressed="false" aria-label="Ativar som deste vídeo">
-        <svg class="icone-som-off" viewBox="0 0 24 24" width="16" height="16"><path d="M4 9v6h4l5 4V5L8 9H4z" fill="currentColor"/><line x1="16" y1="9" x2="21" y2="15" stroke="currentColor" stroke-width="1.6"/><line x1="21" y1="9" x2="16" y2="15" stroke="currentColor" stroke-width="1.6"/></svg>
-        <svg class="icone-som-on" viewBox="0 0 24 24" width="16" height="16"><path d="M4 9v6h4l5 4V5L8 9H4z" fill="currentColor"/><path d="M16.5 8.5a5 5 0 0 1 0 7" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round"/><path d="M19 6a9 9 0 0 1 0 12" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round"/></svg>
-      </button>
-    </article>
-
-    <article class="video-card" data-reveal data-video>
-      <video class="video-card__el" muted loop playsinline preload="none" poster="assets/posters/14-decoracoes-vasos.jpg">
-        <source src="videos/14-decoracoes-vasos.mp4" type="video/mp4">
-      </video>
-      <button class="video-card__som" type="button" aria-pressed="false" aria-label="Ativar som deste vídeo">
-        <svg class="icone-som-off" viewBox="0 0 24 24" width="16" height="16"><path d="M4 9v6h4l5 4V5L8 9H4z" fill="currentColor"/><line x1="16" y1="9" x2="21" y2="15" stroke="currentColor" stroke-width="1.6"/><line x1="21" y1="9" x2="16" y2="15" stroke="currentColor" stroke-width="1.6"/></svg>
-        <svg class="icone-som-on" viewBox="0 0 24 24" width="16" height="16"><path d="M4 9v6h4l5 4V5L8 9H4z" fill="currentColor"/><path d="M16.5 8.5a5 5 0 0 1 0 7" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round"/><path d="M19 6a9 9 0 0 1 0 12" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round"/></svg>
-      </button>
-    </article>
-
-    <svg class="ramo ramo--videos"><use href="#ramo-dourado"/></svg>
-    <svg class="ramo ramo--videos-fim"><use href="#ramo-dourado"/></svg>
+      <svg class="ramo ramo--sobre"><use href="#ramo-dourado"/></svg>
+    </div>
   </div>
 </section>
 
 <!-- ============================================================
-     DETALHE DE PRODUTO (fechamento — sem preços, sem carrinho)
+     FAIXA PRÁTICA — como encontrar e falar com a loja
      ============================================================ -->
-<section class="vitrine vitrine--produtos" id="pecas">
-  <div class="vitrine__cabecalho" data-reveal>
-    <p class="eyebrow">Em detalhe</p>
-    <h2 class="titulo-secao">Peças que <em>compõem</em></h2>
+<section class="faixa-visita" id="visite-nos">
+  <h2 class="sr-only">Visite a loja</h2>
+  <div class="faixa-visita__grid">
+    <div class="faixa-visita__item" data-reveal>
+      <p class="faixa-visita__rotulo">Loja física</p>
+      <p class="faixa-visita__valor">Lages, Santa Catarina.</p>
+    </div>
+    <div class="faixa-visita__item" data-reveal>
+      <p class="faixa-visita__rotulo">Endereço</p>
+      <p class="faixa-visita__valor">R. Frei Rogério, 83 · Centro · Lages/SC</p>
+    </div>
+    <div class="faixa-visita__item" data-reveal>
+      <p class="faixa-visita__rotulo">Atendimento</p>
+      <p class="faixa-visita__valor">Também pelo WhatsApp.</p>
+    </div>
   </div>
 
-  <div class="grid grid--produtos">
-    <figure class="produto-card" data-reveal>
-      <img src="assets/04-decoracao-geral.png" alt="Composição geral de mesa decorada" loading="lazy">
-    </figure>
-    <figure class="produto-card" data-reveal>
-      <img src="assets/05-decoracao-mesa.png" alt="Detalhe de mesa posta e decorada" loading="lazy">
-    </figure>
-    <figure class="produto-card" data-reveal>
-      <img src="assets/06-decoracao-flores.png" alt="Arranjo de flores como detalhe de decoração" loading="lazy">
-    </figure>
-    <figure class="produto-card" data-reveal>
-      <img src="assets/07-decoracao-facas.png" alt="Detalhe de talheres sobre a mesa posta" loading="lazy">
-    </figure>
-    <figure class="produto-card" data-reveal>
-      <img src="assets/08-decoracao-mesa.png" alt="Outro ângulo de mesa decorada" loading="lazy">
-    </figure>
-
-    <svg class="ramo ramo--produtos"><use href="#ramo-dourado"/></svg>
+  <div class="faixa-visita__acoes" data-reveal>
+    <a class="botao botao--claro" href="https://www.google.com/maps/search/?api=1&amp;query=R.%20Frei%20Rog%C3%A9rio%2C%2083%20-%20Centro%2C%20Lages%2FSC" target="_blank" rel="noopener noreferrer">Como chegar</a>
+    <a class="botao botao--contorno-claro" href="https://wa.me/554932242543" target="_blank" rel="noopener noreferrer">Falar no WhatsApp</a>
   </div>
 </section>
+
+</main>
 
 <!-- ============================================================
      RODAPÉ
      ============================================================ -->
 <footer class="rodape">
-  <svg class="ramo ramo--rodape"><use href="#ramo-dourado"/></svg>
+  <div class="rodape__grid">
+    <div class="rodape__coluna">
+      <p class="rodape__marca">Espaço Decora<span class="rodape__marca-sub">By Rita Assunção</span></p>
+      <p class="rodape__endereco">R. Frei Rogério, 83 · Centro · Lages/SC</p>
+      <a class="rodape__link-mapa" href="https://www.google.com/maps/search/?api=1&amp;query=R.%20Frei%20Rog%C3%A9rio%2C%2083%20-%20Centro%2C%20Lages%2FSC" target="_blank" rel="noopener noreferrer">Abrir no Google Maps</a>
+    </div>
 
-  <div class="rodape__marca">Espaço <em>DeCora</em></div>
+    <nav class="rodape__coluna rodape__nav" aria-label="Navegação do rodapé">
+      <ul class="rodape__lista">
+        <li><a href="#curadoria">A loja</a></li>
+        <li><a href="#inspiracoes">Inspirações</a></li>
+        <li><a href="#transformacoes">Transformações</a></li>
+        <li><a href="#sobre">Sobre</a></li>
+        <li><a href="#visite-nos">Visite-nos</a></li>
+      </ul>
+    </nav>
 
-  <a class="rodape__instagram" href="https://www.instagram.com/espacodecorabyritaassuncao" target="_blank" rel="noopener">
-    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true">
-      <rect x="3" y="3" width="18" height="18" rx="5.5"/>
-      <circle cx="12" cy="12" r="4.2"/>
-      <circle cx="17.3" cy="6.7" r="0.9" fill="currentColor" stroke="none"/>
-    </svg>
-    <span>Siga no Instagram</span>
-  </a>
-  <p class="rodape__instagram-legenda">Mais ambientes, peças e novidades por lá.</p>
+    <div class="rodape__coluna">
+      <a class="rodape__instagram" href="https://www.instagram.com/espacodecorabyritaassuncao" target="_blank" rel="noopener noreferrer">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true">
+          <rect x="3" y="3" width="18" height="18" rx="5.5"/>
+          <circle cx="12" cy="12" r="4.2"/>
+          <circle cx="17.3" cy="6.7" r="0.9" fill="currentColor" stroke="none"/>
+        </svg>
+        <span>Instagram</span>
+      </a>
+      <a class="rodape__whatsapp" href="https://wa.me/554932242543" target="_blank" rel="noopener noreferrer">WhatsApp — (49) 3224-2543</a>
+    </div>
 
-  <p class="rodape__endereco">R. Frei Rogerio, 83 — Centro, Lages - SC</p>
-
-  <div class="rodape__mapa" data-reveal>
-    <iframe
-      src="https://maps.google.com/maps?q=R.+Frei+Rogerio,+83+-+Centro,+Lages+-+SC&z=16&output=embed"
-      title="Mapa com a localização do Espaço Decora em Lages - SC"
-      loading="lazy"
-      referrerpolicy="no-referrer-when-downgrade"
-    ></iframe>
+    <div class="rodape__coluna">
+      <div class="rodape__mapa" data-reveal>
+        <iframe
+          src="https://maps.google.com/maps?q=R.+Frei+Rogerio,+83+-+Centro,+Lages+-+SC&z=16&output=embed"
+          title="Mapa com a localização do Espaço Decora em Lages - SC"
+          loading="lazy"
+          referrerpolicy="no-referrer-when-downgrade"
+        ></iframe>
+      </div>
+    </div>
   </div>
-
-  <nav class="rodape__contato" aria-label="Contato">
-    <a href="https://wa.me/554932242543" target="_blank" rel="noopener">WhatsApp — (49) 3224-2543</a>
-  </nav>
 
   <p class="rodape__copy">&copy; <span id="ano"></span> Espaço Decora By Rita Assunção</p>
 </footer>
