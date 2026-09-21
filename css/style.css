@@ -3,9 +3,9 @@
    Paleta: vinho #644B47 / #493532 · caramelo #BD9A72 / #D8BE9E
            creme #EFE3D0 / #F7F1E8 · marfim #FFFFFB
    Tipografia: Lora 400/500 nos títulos, Arial/Helvetica 400 no corpo.
-   Ritmo de fundos: hero creme-claro · categorias marfim · explorador
-   vinho-escuro · composições creme-claro · antes/depois marfim · sobre
-   creme · avaliações vinho · visite creme-claro · rodapé vinho-escuro.
+   Ritmo de fundos: abertura creme-claro · Rita creme · galeria marfim ·
+   por dentro vinho-escuro · ideias creme-claro · antes/depois marfim ·
+   avaliações vinho · visite creme-claro · rodapé vinho-escuro.
    ========================================================================== */
 
 :root{
@@ -33,9 +33,8 @@
   --espaco-secao: clamp(72px, 8vw, 112px);
 
   --raio-s: 2px;
-  --raio-m: 4px;
 
-  --cabecalho-altura: 64px;
+  --cabecalho-altura: 68px;
   --foco: var(--vinho);
 }
 
@@ -107,56 +106,35 @@ video:focus-visible,
 
 /* ==========================================================================
    RAMO DECORATIVO — símbolo original #ramo-dourado (sprite no <body>)
-   Só assinatura visual: nunca sobre fotos, mapa, horários ou botões.
+   Só dois pontos: um ramo na seção da Rita e um fragmento no rodapé. Nunca
+   sobre fotos, mapa, horários ou links; sem animação.
    ========================================================================== */
 .ramo-decorativo{
   position: absolute;
   z-index: 0;
   height: auto;
-  color: var(--caramelo);
-  opacity: 0.18;
+  color: var(--caramelo-escuro);
   pointer-events: none;
   user-select: none;
 }
-.ramo-decorativo--hero{
-  left: -36px;
-  bottom: -26px;
-  width: clamp(230px, 20vw, 310px);
-  color: var(--vinho);
-  opacity: 0.17;
-}
-.ramo-decorativo--categorias{
-  top: 14px;
-  right: clamp(190px, 21vw, 300px);
-  width: clamp(150px, 14vw, 200px);
-  opacity: 0.14;
-  transform: scaleX(-1);
-}
+/* Nasce atrás da mídia, na direção do texto. */
 .ramo-decorativo--sobre{
-  right: -70px;
-  top: 50%;
-  width: clamp(300px, 34vw, 480px);
-  opacity: 0.18;
-  transform: translateY(-50%) scaleX(-1) rotate(-8deg);
+  left: 33%;
+  top: 4%;
+  width: clamp(320px, 38vw, 520px);
+  opacity: 0.22;
 }
-.ramo-decorativo--visite{
-  left: -50px;
-  bottom: -44px;
-  width: clamp(220px, 22vw, 320px);
-  opacity: 0.12;
-}
-
-/* No celular ficam só os ramos do hero e do Sobre. */
-@media (max-width: 640px){
-  .ramo-decorativo--categorias,
-  .ramo-decorativo--visite{ display: none; }
+.ramo-decorativo--rodape{
+  right: -90px;
+  bottom: -34px;
+  width: clamp(260px, 28vw, 380px);
+  color: var(--caramelo-claro);
+  opacity: 0.1;
 }
 
 /* Seções com ramo cortam o que passa da borda (sem overflow horizontal). */
-.hero,
-.secao--categorias,
 .secao--sobre,
-.secao--visite{ overflow: hidden; }
+.rodape{ overflow: hidden; }
 
 /* ==========================================================================
    TIPOGRAFIA BASE
@@ -171,37 +149,12 @@ video:focus-visible,
   text-wrap: balance;
 }
 
-/* Cabeçalho padrão de seção: índice + linha caramelo, título e descrição. */
-.secao-cabecalho__indice{
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-bottom: 12px;
-  font-family: var(--fonte-titulo);
-  font-size: 15px;
-  font-weight: 500;
-  letter-spacing: 0.08em;
-  color: var(--vinho);
-}
-.secao-cabecalho__indice::after{
-  content: "";
-  width: 36px;
-  height: 2px;
-  background: var(--caramelo);
-}
 .secao-cabecalho__descricao{
   margin-top: 10px;
   max-width: 52ch;
   color: var(--texto-suave);
 }
 .secao-cabecalho--centro{ text-align: center; }
-.secao-cabecalho--centro .secao-cabecalho__indice{ justify-content: center; }
-.secao-cabecalho--centro .secao-cabecalho__indice::before{
-  content: "";
-  width: 36px;
-  height: 2px;
-  background: var(--caramelo);
-}
 .secao-cabecalho--centro .secao-cabecalho__descricao{ margin-inline: auto; }
 
 .rotulo{
@@ -211,67 +164,60 @@ video:focus-visible,
   color: var(--vinho);
 }
 
-.etiqueta{
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-bottom: 18px;
-  font-size: 12px;
-  letter-spacing: 0.14em;
-  color: var(--vinho);
-}
-
-/* Link com sublinhado caramelo que cresce ao passar o mouse (≤250 ms). */
-.link-seta{
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  min-height: 44px;
-  padding-bottom: 2px;
-  font-size: 15px;
-  color: var(--vinho);
-  background: linear-gradient(var(--caramelo), var(--caramelo)) 0 calc(100% - 10px) / 36px 1px no-repeat;
-  transition: color 0.2s ease, background-size 0.25s ease;
-}
-.link-seta:hover{
-  color: var(--vinho-escuro);
-  background-size: 100% 1px;
-}
-.link-seta__seta{ display: inline-block; transition: transform 0.2s ease; }
-.link-seta:hover .link-seta__seta{ transform: translateX(2px); }
-
 /* ==========================================================================
-   BOTÕES — retangulares, sem cápsula
+   LINKS E AÇÕES
+   Padrão do site: link editorial (texto + linha fina + seta). Botão só nos
+   controles funcionais; ação preenchida só em "Como chegar" na seção Visite.
    ========================================================================== */
-.botao{
+.link-editorial{
   display: inline-flex;
   align-items: center;
-  justify-content: center;
-  min-height: 48px;
-  padding: 0 24px;
-  font-family: var(--fonte-corpo);
-  font-size: 15px;
-  font-weight: 700;
-  line-height: 1.2;
-  text-align: center;
-  border: 1px solid transparent;
-  border-radius: var(--raio-s);
-  cursor: pointer;
-  transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
-}
-.botao--primario{
-  background: var(--vinho);
-  color: var(--marfim);
-}
-.botao--primario:hover{ background: var(--vinho-escuro); }
-
-.botao--contorno{
+  gap: 0.65rem;
+  width: fit-content;
+  min-height: 44px;
+  padding: 0.35rem 0;
+  border: 0;
+  border-bottom: 1px solid currentColor;
+  border-radius: 0;
+  background: transparent;
   color: var(--vinho);
-  border-color: var(--vinho);
+  font-family: var(--fonte-corpo);
+  font-size: 0.95rem;
+  font-weight: 500;
+  line-height: 1.2;
+  text-decoration: none;
 }
-.botao--contorno:hover{
+.link-editorial [aria-hidden="true"]{
+  transition: transform 180ms ease;
+}
+.link-editorial:hover [aria-hidden="true"],
+.link-editorial:focus-visible [aria-hidden="true"]{
+  transform: translateX(3px);
+}
+.link-editorial:hover{ color: var(--vinho-escuro); }
+.rodape .link-editorial{ color: var(--marfim); }
+.rodape .link-editorial:hover{ color: var(--caramelo-claro); }
+
+.acao-principal{
+  display: inline-flex;
+  align-items: center;
+  min-height: 46px;
+  padding: 0 20px;
+  border: 1px solid var(--vinho);
+  border-radius: 0;
   background: var(--vinho);
   color: var(--marfim);
+  font-family: var(--fonte-corpo);
+  font-size: 0.95rem;
+  font-weight: 500;
+  line-height: 1.2;
+  text-decoration: none;
+  box-shadow: none;
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+.acao-principal:hover{
+  background: var(--vinho-escuro);
+  border-color: var(--vinho-escuro);
 }
 
 /* ==========================================================================
@@ -333,7 +279,8 @@ html.splash-ativo .splash{
 }
 
 /* ==========================================================================
-   CABEÇALHO — fixo; transparente sobre o hero, claro depois de rolar
+   CABEÇALHO — fixo, marfim, logo real à esquerda, navegação ao centro e
+   WhatsApp como link textual à direita. Sem sombra, sem blur, sem botão.
    ========================================================================== */
 .cabecalho{
   position: fixed;
@@ -341,32 +288,10 @@ html.splash-ativo .splash{
   left: 0;
   right: 0;
   z-index: 500;
-  background: var(--creme-claro);
+  background: var(--marfim);
   color: var(--vinho-escuro);
   border-bottom: 1px solid var(--linha);
-  transition: background-color 0.25s ease, border-color 0.25s ease, color 0.25s ease;
 }
-/* Transparente só com JS (é ele que volta a sólido ao rolar). No celular o
-   cabeçalho fica sobre a foto (texto claro); no desktop o hero começa abaixo
-   dele, então o texto continua escuro. */
-html.js-pronto .cabecalho:not(.cabecalho--rolado){
-  background: transparent;
-  border-bottom-color: transparent;
-}
-@media (max-width: 899px){
-  html.js-pronto .cabecalho:not(.cabecalho--rolado){ color: var(--marfim); }
-}
-.cabecalho.cabecalho--rolado{
-  background: rgba(247, 241, 232, 0.96);
-  backdrop-filter: blur(6px);
-  -webkit-backdrop-filter: blur(6px);
-}
-html.menu-aberto .cabecalho{
-  background: var(--creme-claro);
-  border-bottom-color: var(--linha);
-  color: var(--vinho-escuro);
-}
-
 .cabecalho__barra{
   width: min(100% - 2 * var(--gutter), var(--container));
   height: calc(var(--cabecalho-altura) - 1px);
@@ -377,43 +302,79 @@ html.menu-aberto .cabecalho{
   column-gap: 24px;
 }
 
-.cabecalho__marca{
-  justify-self: start;
+/* Logo real (assets/logo/logo-texto.png; logo-texto.webp é a mesma imagem em WebP
+   sem perdas, 19 KB em vez de 83 KB). O PNG tem 37 px transparentes de
+   cada lado (430 × 175): margem negativa em em-proporção enquadra só a marca,
+   sem cortar letras nem editar o arquivo. Ele é claro (branco/dourado) sobre
+   transparente: em fundos claros o filtro #tinta-vinho o pinta em vinho-escuro;
+   sobre o vinho do rodapé vale a cor original. */
+.cabecalho__marca,
+.menu-mobile__logo,
+.rodape__logo{
+  --logo-h: 40px;
   display: inline-flex;
   align-items: center;
+  flex: none;
   min-height: 44px;
-  font-family: var(--fonte-titulo);
-  font-size: 1.25rem;
-  font-weight: 500;
-  white-space: nowrap;
+}
+.cabecalho__marca picture,
+.menu-mobile__logo picture,
+.rodape__logo picture{ display: contents; }
+.cabecalho__marca img,
+.menu-mobile__logo img,
+.rodape__logo img{
+  display: block;
+  width: auto;
+  max-width: none;
+  height: var(--logo-h);
+  margin-inline: calc(var(--logo-h) * -37 / 175);
+  object-fit: contain;
+}
+.cabecalho__marca img,
+.menu-mobile__logo img{ filter: url(#tinta-vinho); }
+
+.cabecalho__marca{
+  --logo-h: clamp(34px, 3.2vw, 44px);
+  justify-self: start;
 }
 
 .cabecalho__lista{
   display: flex;
   align-items: center;
-  gap: clamp(18px, 2.4vw, 36px);
+  gap: clamp(20px, 2.6vw, 40px);
 }
-.cabecalho__lista a:not(.botao){
+.cabecalho__lista a{
   display: inline-flex;
   align-items: center;
   min-height: 44px;
   font-size: 15px;
   white-space: nowrap;
-  background: linear-gradient(var(--caramelo), var(--caramelo)) 0 calc(100% - 9px) / 0 2px no-repeat;
+  background: linear-gradient(var(--caramelo), var(--caramelo)) 0 calc(100% - 9px) / 0 1px no-repeat;
   transition: background-size 0.25s ease;
 }
-.cabecalho__lista a:not(.botao):hover{ background-size: 100% 2px; }
-.cabecalho__item-cta{ display: none; }
+.cabecalho__lista a:hover{ background-size: 100% 1px; }
 
-.cabecalho__cta{
+.cabecalho__contato{
   justify-self: end;
-  min-height: 44px;
-  padding: 0 20px;
-  background: var(--vinho);
-  border-color: var(--vinho);
-  color: var(--marfim);
+  display: inline-block;
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 44px;
+  white-space: nowrap;
+  color: var(--vinho);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 6px;
 }
-.cabecalho__cta:hover{ background: var(--vinho-escuro); }
+.cabecalho__contato span{
+  display: inline-block;
+  margin-left: 0.15em;
+  text-decoration: none;
+  transition: transform 180ms ease;
+}
+.cabecalho__contato:hover{ color: var(--vinho-escuro); }
+.cabecalho__contato:hover span,
+.cabecalho__contato:focus-visible span{ transform: translate(2px, -2px); }
 
 .cabecalho__alternador{
   display: none;
@@ -428,250 +389,237 @@ html.menu-aberto .cabecalho{
   color: inherit;
   cursor: pointer;
 }
-.cabecalho__linha{
-  transform-origin: center;
-  transition: transform 0.25s ease, opacity 0.25s ease;
-}
-.cabecalho__alternador[aria-expanded="true"] .cabecalho__linha--1{ transform: translateY(5px) rotate(45deg); }
-.cabecalho__alternador[aria-expanded="true"] .cabecalho__linha--2{ opacity: 0; }
-.cabecalho__alternador[aria-expanded="true"] .cabecalho__linha--3{ transform: translateY(-5px) rotate(-45deg); }
 
-.cabecalho__fundo{ display: none; }
+/* ==========================================================================
+   MENU MOBILE — painel editorial pela direita (até 899px)
+   ========================================================================== */
+.menu-mobile,
+.menu-mobile__fundo{ display: none; }
 
 @media (max-width: 899px){
   .cabecalho__barra{ grid-template-columns: 1fr auto; }
-  .cabecalho__cta{ display: none; }
+  .cabecalho__nav,
+  .cabecalho__contato{ display: none; }
   .cabecalho__alternador{ display: inline-flex; }
+  html:not(.js-pronto) .cabecalho__alternador{ display: none; }
+  .cabecalho__marca{ --logo-h: 32px; }
 
-  /* Painel simples logo abaixo do cabeçalho, não um drawer lateral. */
-  .cabecalho__nav{
-    position: absolute;
-    top: 100%;
-    left: 0;
-    right: 0;
-    max-height: calc(100dvh - var(--cabecalho-altura));
-    overflow-y: auto;
-    padding: 4px var(--gutter) 24px;
-    background: var(--creme-claro);
-    color: var(--vinho-escuro);
-    border-bottom: 1px solid var(--linha);
-    visibility: hidden;
-    opacity: 0;
-    transform: translateY(-8px);
-    transition: opacity 0.2s ease, transform 0.2s ease, visibility 0s linear 0.2s;
-  }
-  html.menu-aberto .cabecalho__nav{
-    visibility: visible;
-    opacity: 1;
-    transform: none;
-    transition-delay: 0s;
-  }
-  .cabecalho__lista{
-    flex-direction: column;
-    align-items: stretch;
-    gap: 0;
-  }
-  .cabecalho__lista a:not(.botao){
-    display: flex;
-    min-height: 52px;
-    font-size: 17px;
-    border-bottom: 1px solid var(--linha);
-    background: none;
-  }
-  .cabecalho__item-cta{
-    display: block;
-    margin-top: 20px;
-  }
-  .cabecalho__item-cta .botao{ width: 100%; }
-
-  .cabecalho__fundo{
+  .menu-mobile__fundo{
     display: block;
     position: fixed;
-    inset: var(--cabecalho-altura) 0 0 0;
-    z-index: 499;
-    background: rgba(73, 53, 50, 0.45);
+    inset: 0;
+    z-index: 590;
+    background: rgba(73, 53, 50, 0.4);
     opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.2s ease;
+    visibility: hidden;
+    transition: opacity 220ms ease, visibility 0s linear 220ms;
   }
-  html.menu-aberto .cabecalho__fundo{
+  html.menu-aberto .menu-mobile__fundo{
     opacity: 1;
-    pointer-events: auto;
+    visibility: visible;
+    transition-delay: 0s;
   }
-  /* Trava a rolagem do fundo enquanto o menu está aberto. */
+
+  .menu-mobile{
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 600;
+    width: min(88vw, 380px);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    background: var(--creme-claro);
+    color: var(--vinho-escuro);
+    border-left: 2px solid var(--caramelo);
+    transform: translateX(100%);
+    visibility: hidden;
+    transition: transform 220ms ease, visibility 0s linear 220ms;
+  }
+  html.menu-aberto .menu-mobile{
+    transform: none;
+    visibility: visible;
+    transition-delay: 0s;
+  }
+  /* Trava a rolagem do documento enquanto o menu está aberto. */
   html.menu-aberto{ overflow: hidden; }
-}
 
-/* ==========================================================================
-   HERO — fachada em retrato
-   Celular: foto no topo (sob o cabeçalho transparente) e texto abaixo.
-   Desktop (900px+): composição dividida, texto ~42% / foto ~58%, abaixo do
-   cabeçalho; a foto não recebe overlay.
-   ========================================================================== */
-.hero{
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  background: var(--creme-claro);
-  color: var(--texto);
-}
-
-.hero__midia{
-  order: -1;
-  position: relative;
-  z-index: 1;
-  display: block;
-  height: 52vh;
-  height: 52svh;
-  min-height: 320px;
-  overflow: hidden;
-  background: var(--creme);
-}
-/* Faixa só no topo, para o cabeçalho transparente ler bem sobre a foto. */
-.hero__midia::before{
-  content: "";
-  position: absolute;
-  inset: 0 0 auto 0;
-  z-index: 1;
-  height: 130px;
-  background: linear-gradient(to bottom, rgba(73, 53, 50, 0.6), rgba(73, 53, 50, 0));
-  pointer-events: none;
-}
-.hero__foto{
-  display: block;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: 50% 45%;
-  transition: opacity 0.45s ease;
-}
-/* Com JS, a foto só aparece (fade) depois de carregada; o fundo é creme. */
-html.js-pronto .hero__foto:not(.is-carregada){ opacity: 0; }
-
-.hero__conteudo{
-  position: relative;
-  z-index: 1;
-  width: min(100% - 2 * var(--gutter), var(--container));
-  margin-inline: auto;
-  padding: 26px 0 88px;
-  text-align: center;
-}
-.hero__categoria{
-  margin-bottom: 12px;
-  font-size: 12px;
-  letter-spacing: 0.12em;
-  color: var(--vinho);
-}
-.hero__titulo{
-  max-width: 14em;
-  margin-inline: auto;
-  font-family: var(--fonte-titulo);
-  font-weight: 400;
-  font-size: clamp(1.875rem, 1.3rem + 2.4vw, 2.75rem);
-  line-height: 1.15;
-  letter-spacing: 0;
-  color: var(--vinho-escuro);
-  text-wrap: balance;
-}
-.hero__texto{
-  margin: 14px auto 0;
-  max-width: 38ch;
-  color: var(--texto);
-  text-wrap: balance;
-}
-.hero__local{
-  margin-top: 8px;
-  font-size: 14px;
-  color: var(--vinho);
-}
-.hero__acoes{
-  display: flex;
-  gap: 10px;
-  margin-top: 22px;
-}
-.hero__acoes .botao{ flex: 1 1 0; padding-inline: 12px; }
-.hero__endereco{
-  margin-top: 16px;
-  font-size: 14px;
-  letter-spacing: 0.02em;
-  color: var(--texto-suave);
-}
-.hero__assinatura{
-  margin-top: 4px;
-  font-size: 13px;
-  letter-spacing: 0.04em;
-  color: var(--texto-suave);
-}
-
-@media (min-width: 900px){
-  .hero{
-    --coluna-esq: max(var(--gutter), calc((100% - var(--container)) / 2));
-    display: grid;
-    grid-template-columns:
-      var(--coluna-esq)
-      minmax(360px, calc(42% - var(--coluna-esq)))
-      minmax(0, 1fr);
-    height: clamp(680px, calc(100svh - var(--cabecalho-altura)), 760px);
-    margin-top: var(--cabecalho-altura);
+  .menu-mobile__cabecalho{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: var(--cabecalho-altura);
+    padding-inline: 20px 12px;
+    flex: none;
+    border-bottom: 1px solid var(--linha);
   }
-  .hero__conteudo{
-    grid-column: 2;
+  .menu-mobile__logo{ --logo-h: 34px; }
+  .menu-mobile__fechar{
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    padding: 0;
+    background: transparent;
+    border: 0;
+    color: var(--vinho-escuro);
+    cursor: pointer;
+  }
+
+  .menu-mobile__navegacao{
+    display: flex;
+    flex-direction: column;
+    padding-inline: 20px;
+  }
+  .menu-mobile__navegacao a{
+    display: flex;
+    align-items: center;
+    min-height: 58px;
+    font-family: var(--fonte-titulo);
+    font-size: 1.3rem;
+    line-height: 1.2;
+    border-bottom: 1px solid var(--linha);
+  }
+  .menu-mobile__navegacao a:hover{ color: var(--vinho); }
+
+  .menu-mobile__informacoes{
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    justify-content: center;
-    width: auto;
-    margin: 0;
-    padding: 32px clamp(24px, 3.5vw, 56px) 96px 0;
-    text-align: left;
+    margin-top: auto;
+    padding: 28px 20px 28px;
+    font-size: 15px;
+    line-height: 1.5;
+    color: var(--vinho-escuro);
   }
-  /* Linha vertical caramelo junto da categoria e do título. */
-  .hero__titulo-grupo{
-    position: relative;
-  }
-  .hero__titulo-grupo::before{
-    content: "";
-    position: absolute;
-    left: -20px;
-    top: 2px;
-    bottom: 4px;
-    width: 3px;
-    background: var(--caramelo);
-  }
-  .hero__titulo{ max-width: 11em; margin-inline: 0; }
-  .hero__texto{ margin-inline: 0; }
-  .hero__acoes{ margin-top: 26px; flex-wrap: wrap; }
-  .hero__acoes .botao{ flex: 0 0 auto; padding-inline: 28px; }
-  .hero__midia{
-    order: 0;
-    grid-column: 3;
-    height: auto;
-    min-height: 0;
-  }
-  .hero__midia::before{ display: none; }
-  /* Foto em retrato numa coluna larga: recorta pouco na altura e mantém do
-     beiral à calçada, com placa, vitrine e a entrada à direita. */
-  .hero__foto{ object-position: 50% 62%; }
+  .menu-mobile__informacoes .link-editorial:first-of-type{ margin-top: 12px; }
 }
 
-/* Entrada do texto (única): só quando o splash não roda. */
-html.sem-splash .hero__conteudo,
-html:not(.js-pronto) .hero__conteudo{ animation: hero-texto 500ms ease-out 100ms both; }
-
-@keyframes hero-texto{
-  from{ opacity: 0; transform: translateY(12px); }
-  to{ opacity: 1; transform: none; }
+/* ==========================================================================
+   ABERTURA — composição editorial com três fotos reais
+   Celular: texto, fachada em largura total e duas fotos menores lado a lado.
+   Desktop (900px+): texto no topo à esquerda; fachada maior abaixo dele;
+   decoração e mesa posta em alturas diferentes. Sem foto de fundo, sem texto
+   sobre foto, sem sombra nem raio.
+   ========================================================================== */
+.abertura{
+  background: var(--creme-claro);
+  padding: calc(var(--cabecalho-altura) + 28px) 0 clamp(40px, 6vw, 64px);
+}
+.abertura__conteudo{
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  align-items: start;
+}
+.abertura__texto{
+  grid-column: 1 / -1;
+  margin-bottom: 8px;
+}
+.abertura__titulo{
+  font-family: var(--fonte-titulo);
+  font-weight: 400;
+  font-size: clamp(2.25rem, 1.6rem + 3vw, 3.5rem);
+  line-height: 1.08;
+  letter-spacing: 0;
+  color: var(--vinho-escuro);
+}
+.abertura__descricao{
+  margin-top: 12px;
+  max-width: 34ch;
+  font-size: 17px;
+  color: var(--texto);
+  text-wrap: balance;
+}
+.abertura__links{
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 28px;
+  margin-top: 8px;
 }
 
-@media (max-width: 899px){
-  .ramo-decorativo--hero{
-    left: auto;
-    right: -24px;
-    bottom: -14px;
-    width: 150px;
-    opacity: 0.13;
-    transform: scaleX(-1);
+.abertura__foto{ margin: 0; }
+.abertura__foto img{
+  display: block;
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+  background: var(--creme);
+}
+.abertura__foto figcaption{
+  margin-top: 10px;
+  font-size: 13px;
+  line-height: 1.4;
+  color: var(--texto-suave);
+}
+.abertura__foto--fachada{ grid-column: 1 / -1; }
+.abertura__foto--fachada img{
+  aspect-ratio: 4 / 5;
+  object-position: 50% 42%;
+}
+.abertura__foto--decoracao img,
+.abertura__foto--mesa img{ aspect-ratio: 4 / 5; }
+
+/* Tablet: fachada à esquerda; decoração e mesa empilhadas à direita. */
+@media (min-width: 641px) and (max-width: 899px){
+  .abertura__conteudo{
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    gap: 20px;
   }
+  .abertura__texto{ grid-column: 1 / -1; }
+  .abertura__foto--fachada{ grid-column: 1 / 8; grid-row: 2 / 4; }
+  .abertura__foto--fachada img{ aspect-ratio: 3 / 4; }
+  .abertura__foto--decoracao{ grid-column: 8 / -1; grid-row: 2; }
+  .abertura__foto--mesa{ grid-column: 8 / -1; grid-row: 3; }
+  .abertura__foto--decoracao img,
+  .abertura__foto--mesa img{ aspect-ratio: 1 / 1; }
+}
+
+@media (min-width: 900px){
+  .abertura{
+    --fachada-h: clamp(380px, 30vw, 420px);
+    padding: calc(var(--cabecalho-altura) + 32px) 0 44px;
+  }
+  .abertura__conteudo{
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    column-gap: 24px;
+    row-gap: 28px;
+  }
+  .abertura__texto{ grid-column: 1 / 7; grid-row: 1; margin: 0; }
+  .abertura__titulo{ font-size: clamp(3rem, 1.6rem + 3.2vw, 4.25rem); }
+  .abertura__descricao{ margin-top: 14px; }
+  .abertura__links{ margin-top: 10px; }
+
+  .abertura__foto--fachada{
+    grid-column: 1 / 6;
+    grid-row: 2;
+    width: min(100%, calc(var(--fachada-h) * 3 / 4));
+  }
+  .abertura__foto--fachada img{
+    aspect-ratio: 3 / 4;
+    object-position: 50% 50%;
+  }
+  /* Retrato menor, deslocado para cima, ao lado do texto. */
+  .abertura__foto--decoracao{
+    grid-column: 7 / 10;
+    grid-row: 1 / 3;
+    justify-self: start;
+    margin-left: clamp(0px, 3vw, 48px);
+  }
+  /* Menor ainda, alinhada à base da fachada, na borda direita. */
+  .abertura__foto--mesa{
+    grid-column: 10 / 13;
+    grid-row: 2;
+    align-self: end;
+    justify-self: end;
+  }
+  .abertura__foto--decoracao img,
+  .abertura__foto--mesa img{ width: auto; max-width: 100%; }
+  .abertura__foto--decoracao img{ height: clamp(280px, 25vw, 340px); aspect-ratio: auto; }
+  .abertura__foto--mesa img{ height: clamp(240px, 22vw, 300px); aspect-ratio: auto; }
 }
 
 /* ==========================================================================
@@ -697,8 +645,6 @@ html:not(.js-pronto) .hero__conteudo{ animation: hero-texto 500ms ease-out 100ms
 }
 .secao--vinho .titulo-secao,
 .secao--vinho-escuro .titulo-secao{ color: var(--marfim); }
-.secao--vinho .secao-cabecalho__indice,
-.secao--vinho-escuro .secao-cabecalho__indice{ color: var(--caramelo-suave); }
 .secao--vinho .secao-cabecalho__descricao,
 .secao--vinho-escuro .secao-cabecalho__descricao{ color: var(--caramelo-suave); }
 
@@ -749,16 +695,14 @@ html:not(.js-pronto) .hero__conteudo{ animation: hero-texto 500ms ease-out 100ms
   padding: 0;
   background: transparent;
   color: var(--vinho);
-  border: 1px solid var(--vinho);
-  border-radius: var(--raio-s);
+  border: 0;
+  border-bottom: 1px solid currentColor;
+  border-radius: 0;
   cursor: pointer;
-  transition: background-color 0.2s ease, color 0.2s ease, opacity 0.2s ease;
+  transition: color 0.2s ease, opacity 0.2s ease;
 }
 .carrossel__botao svg{ transition: transform 0.2s ease; }
-.carrossel__botao:hover:not(:disabled){
-  background: var(--vinho);
-  color: var(--marfim);
-}
+.carrossel__botao:hover:not(:disabled){ color: var(--vinho-escuro); }
 .carrossel__botao--anterior:hover:not(:disabled) svg{ transform: translateX(-2px); }
 .carrossel__botao--proximo:hover:not(:disabled) svg{ transform: translateX(2px); }
 .carrossel__botao:disabled{
@@ -810,63 +754,7 @@ html:not(.js-pronto) .carrossel__controles{ display: none; }
   }
 }
 
-/* ---- Categorias ---------------------------------------------------------- */
-.secao--categorias{ padding-bottom: clamp(48px, 5vw, 72px); }
-.carrossel--categorias{ --visiveis: 3; --n: 2; }
-@media (max-width: 899px){ .carrossel--categorias{ --visiveis: 2; --n: 1; --gap: 16px; } }
-@media (max-width: 640px){
-  .carrossel--categorias{ --visiveis: 1.15; --n: 1; --gap: 12px; }
-  .carrossel--categorias .carrossel__botao{ display: none; }
-  .carrossel--categorias .carrossel__contador{ min-width: 0; margin-right: 0; text-align: left; }
-}
-
-.categoria__midia{
-  position: relative;
-  aspect-ratio: 4 / 5;
-  overflow: hidden;
-  background: var(--creme);
-}
-.categoria__midia picture{ display: block; height: 100%; }
-.categoria__midia img{
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-/* A foto das flores traz um texto sobreposto no rodapé: o recorte fica no alto. */
-.categoria__foto--flores{ object-position: 50% 15%; }
-
-/* Faixa inferior sutil sobre a foto: número, nome e seta. */
-.categoria__faixa{
-  position: absolute;
-  inset: auto 0 0 0;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  padding: 44px 16px 14px;
-  color: var(--marfim);
-  background: linear-gradient(to top, rgba(73, 53, 50, 0.85), rgba(73, 53, 50, 0));
-}
-.categoria__nome{
-  font-family: var(--fonte-titulo);
-  font-size: 1.125rem;
-  font-weight: 500;
-  line-height: 1.3;
-}
-.categoria__numero{ color: var(--caramelo-suave); }
-.categoria__seta{
-  flex: none;
-  opacity: 0.85;
-  transition: transform 0.2s ease;
-}
-@media (hover: hover) and (pointer: fine){
-  .categoria__midia img{ transition: transform 420ms cubic-bezier(0.2, 0.65, 0.3, 1); }
-  .categoria:hover .categoria__midia img,
-  .categoria:focus-within .categoria__midia img{ transform: scale(1.025); }
-  .categoria:hover .categoria__seta{ transform: translateX(2px); }
-}
-
-/* ---- Vídeos (Ambientes e composições): composição assimétrica -------------- */
+/* ---- Ideias com peças da loja: composição assimétrica ------------------------- */
 .secao--composicoes{ padding-bottom: calc(var(--espaco-secao) + 8px); }
 .carrossel--videos{
   --visiveis: 2;
@@ -883,19 +771,12 @@ html:not(.js-pronto) .carrossel__controles{ display: none; }
   justify-content: center;
   margin-top: clamp(20px, 2.5vw, 28px);
 }
-/* Linha fina caramelo que liga esta seção à seguinte. */
-.secao--composicoes::after{
-  content: "";
-  position: absolute;
-  left: 50%;
-  bottom: -32px;
-  z-index: 2;
-  width: 1px;
-  height: 64px;
-  background: var(--caramelo);
-}
 @media (max-width: 899px){ .carrossel--videos{ width: 100%; } }
 @media (max-width: 640px){
+  /* No celular o título acompanha o alinhamento à esquerda das outras seções. */
+  .carrossel--videos .carrossel__topo{ justify-content: flex-start; }
+  .secao-cabecalho--centro{ text-align: left; }
+  .composicoes__cta{ justify-content: flex-start; padding-inline: var(--gutter); }
   .carrossel--videos{ --visiveis: 1.08; --gap: 12px; }
   .carrossel--videos .carrossel__viewport > :nth-child(n){ flex-basis: calc((100% - var(--n) * var(--gap)) / var(--visiveis)); }
   .carrossel--videos .carrossel__pontos{ display: flex; }
@@ -908,14 +789,8 @@ html:not(.js-pronto) .carrossel__controles{ display: none; }
   justify-content: flex-end;
   margin-top: 24px;
 }
-.secao--avaliacoes .carrossel__botao{
-  color: var(--marfim);
-  border-color: var(--caramelo-claro);
-}
-.secao--avaliacoes .carrossel__botao:hover:not(:disabled){
-  background: var(--caramelo-claro);
-  color: var(--vinho-escuro);
-}
+.secao--avaliacoes .carrossel__botao{ color: var(--marfim); }
+.secao--avaliacoes .carrossel__botao:hover:not(:disabled){ color: var(--caramelo-claro); }
 .secao--avaliacoes .carrossel__contador{ color: var(--caramelo-suave); }
 @media (max-width: 899px){
   .carrossel--avaliacoes{ --visiveis: 2; --n: 1; --gap: 16px; }
@@ -945,6 +820,188 @@ html:not(.js-pronto) .carrossel__controles{ display: none; }
 @media (max-width: 640px){
   .carrossel--rua{ --visiveis: 1; --n: 1; --gap: 12px; }
   .carrossel--rua .carrossel__pontos{ display: flex; }
+}
+
+/* ==========================================================================
+   NA ESPAÇO DECORA — galeria com transição de ruído
+   Desktop (768px+ com movimento permitido): canvas WebGL sobre o <img>, que
+   continua por baixo como fallback. Celular, movimento reduzido ou falha de
+   WebGL: só o <img> (troca com cross-fade curto). O canvas só fica visível
+   depois do primeiro quadro desenhado: nunca aparece preto.
+   ========================================================================== */
+.galeria-morph{ padding-block: var(--espaco-secao); }
+.galeria-morph__grade{
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 18px;
+}
+.galeria-morph__cabecalho{
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+}
+.galeria-morph__contador{
+  flex: none;
+  font-size: 13px;
+  letter-spacing: 0.06em;
+  color: var(--texto-suave);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.galeria-morph__palco{
+  --foco: var(--marfim);
+  position: relative;
+  width: 100%;
+  max-width: 480px;
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
+  background: var(--creme);
+  touch-action: pan-y;
+  -webkit-user-select: none;
+  user-select: none;
+}
+.galeria-morph__palco:focus-visible{ outline-offset: -4px; }
+
+.galeria-morph__fallback,
+.galeria-morph__canvas{
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+.galeria-morph__fallback{
+  object-fit: cover;
+  -webkit-user-drag: none;
+}
+.galeria-morph__fallback--saida{ pointer-events: none; }
+.galeria-morph__canvas{ visibility: hidden; }
+.galeria-morph__palco--gl .galeria-morph__canvas{ visibility: visible; }
+
+/* Faixa só no rodapé: legenda à esquerda, setas à direita. */
+.galeria-morph__legenda{
+  position: absolute;
+  inset: auto 0 0 0;
+  z-index: 2;
+  padding: 72px 20px 20px;
+  color: var(--marfim);
+  background: linear-gradient(to top, rgba(73, 53, 50, 0.82), rgba(73, 53, 50, 0));
+  pointer-events: none;
+}
+.galeria-morph__legenda h3{
+  font-family: var(--fonte-titulo);
+  font-size: 1.25rem;
+  font-weight: 500;
+  line-height: 1.3;
+}
+
+.controle-galeria{
+  display: inline-grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 0;
+  border-bottom: 1px solid currentColor;
+  border-radius: 0;
+  background: transparent;
+  color: var(--marfim);
+  font-family: var(--fonte-corpo);
+  font-size: 1.25rem;
+  line-height: 1;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+}
+.controle-galeria span{ display: block; transition: transform 180ms ease; }
+.controle-galeria--anterior:hover:not(:disabled) span{ transform: translateX(-3px); }
+.controle-galeria--proximo:hover:not(:disabled) span{ transform: translateX(3px); }
+.controle-galeria:disabled{ opacity: 0.35; cursor: default; }
+.galeria-morph__palco .controle-galeria{
+  position: absolute;
+  bottom: 12px;
+  z-index: 3;
+}
+.controle-galeria--anterior{ right: 68px; }
+.controle-galeria--proximo{ right: 16px; }
+
+.galeria-morph__miniaturas{
+  display: flex;
+  gap: 8px;
+  max-width: 480px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.galeria-morph__miniaturas::-webkit-scrollbar{ display: none; }
+.galeria-morph__miniaturas li{ flex: 0 0 clamp(64px, 20vw, 88px); }
+.galeria-morph__miniatura{
+  display: block;
+  width: 100%;
+  aspect-ratio: 4 / 5;
+  padding: 0;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  border-radius: 0;
+  background: var(--creme);
+  cursor: pointer;
+  opacity: 0.55;
+  transition: opacity 180ms ease, border-color 180ms ease;
+}
+.galeria-morph__miniatura img{
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  -webkit-user-drag: none;
+}
+.galeria-morph__miniatura:hover{ opacity: 0.85; }
+.galeria-morph__miniatura[aria-current="true"]{
+  opacity: 1;
+  border-bottom-color: var(--vinho);
+}
+
+/* Sem JavaScript: o palco interativo some e as quatro fotos aparecem em grade. */
+html:not(.js-pronto) .galeria-morph__palco,
+html:not(.js-pronto) .galeria-morph__miniaturas,
+html:not(.js-pronto) .galeria-morph__contador{ display: none; }
+.galeria-morph__sem-js{
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 16px;
+}
+.galeria-morph__sem-js li{ display: grid; gap: 8px; }
+.galeria-morph__sem-js img{ width: 100%; height: auto; aspect-ratio: 4 / 5; object-fit: cover; }
+
+@media (min-width: 900px){
+  .galeria-morph__grade{
+    grid-template-columns: minmax(0, 1fr) 480px;
+    grid-template-rows: auto auto;
+    column-gap: clamp(48px, 9vw, 140px);
+    row-gap: 16px;
+    align-items: start;
+  }
+  /* Título no alto, contador na base, alinhados ao palco e às miniaturas. */
+  .galeria-morph__cabecalho{
+    grid-column: 1;
+    grid-row: 1 / 3;
+    align-self: stretch;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: space-between;
+  }
+  .galeria-morph .titulo-secao{ font-size: clamp(2.25rem, 1.4rem + 2.6vw, 3.5rem); }
+  .galeria-morph .secao-cabecalho__descricao{ margin-top: 14px; font-size: 17px; }
+  .galeria-morph__contador{
+    font-family: var(--fonte-titulo);
+    font-size: 1.25rem;
+    letter-spacing: 0;
+    color: var(--vinho);
+  }
+  .galeria-morph__palco{ grid-column: 2; grid-row: 1; }
+  .galeria-morph__miniaturas{ grid-column: 2; grid-row: 2; }
+  .galeria-morph__miniaturas li{ flex: 1 1 0; }
+  .galeria-morph__sem-js{ grid-column: 1 / -1; }
 }
 
 /* ==========================================================================
@@ -984,12 +1041,6 @@ html:not(.js-pronto) .carrossel__controles{ display: none; }
   margin-top: 16px;
   font-size: 13px;
   letter-spacing: 0.04em;
-  color: var(--caramelo-suave);
-}
-.explorador__nota{
-  margin-top: 14px;
-  max-width: 44ch;
-  font-size: 14px;
   color: var(--caramelo-suave);
 }
 
@@ -1165,13 +1216,10 @@ html:not(.js-pronto) .galeria__miniaturas{ display: none; }
   padding-left: 3px;
   background: rgba(255, 255, 251, 0.92);
   color: var(--vinho-escuro);
-  border-radius: 50%;
-  transition: transform 0.25s ease, background-color 0.25s ease;
+  border-radius: 0;
+  transition: background-color 0.25s ease;
 }
-.video-card__abrir:hover .video-card__icone{
-  background: var(--marfim);
-  transform: scale(1.06);
-}
+.video-card__abrir:hover .video-card__icone{ background: var(--marfim); }
 .video-card__abrir:focus-visible{
   outline-offset: -4px;
   --foco: var(--marfim);
@@ -1225,11 +1273,6 @@ html:not(.js-pronto) .galeria__miniaturas{ display: none; }
   grid-template-columns: minmax(260px, 30%) minmax(0, 1fr);
   align-items: center;
   gap: clamp(40px, 6vw, 88px);
-}
-.antes-depois__dica{
-  margin-top: 16px;
-  font-size: 14px;
-  color: var(--vinho);
 }
 
 .comparador{
@@ -1318,7 +1361,7 @@ img.comparador__camada{
   height: 44px;
   background: var(--marfim);
   color: var(--vinho-escuro);
-  border-radius: 50%;
+  border-radius: 0;
   transform: translate(-50%, -50%);
   pointer-events: none;
 }
@@ -1356,7 +1399,9 @@ img.comparador__camada{
 }
 
 /* ==========================================================================
-   SOBRE — mídia (~42%) + texto (~46%), bloco vinho parcial atrás da mídia
+   ESPAÇO DECORA POR RITA ASSUNÇÃO — logo após a abertura
+   Mídia (~42%) + texto (~46%), bloco vinho parcial atrás da mídia e um ramo
+   que nasce atrás dela. Sem card, sem raio, sem sombra.
    ========================================================================== */
 .sobre{
   display: grid;
@@ -1364,10 +1409,12 @@ img.comparador__camada{
   justify-content: space-between;
   align-items: center;
 }
-.sobre__midia{
+.sobre__midia,
+.sobre__texto{
   position: relative;
-  max-width: 540px;
+  z-index: 1;
 }
+.sobre__midia{ max-width: 540px; }
 /* Área de cor atrás de parte da mídia; a mídia ultrapassa a borda dela. */
 .sobre__midia::before{
   content: "";
@@ -1384,14 +1431,16 @@ img.comparador__camada{
   margin-top: 16px;
   font-size: 17px;
   color: var(--texto);
+  text-wrap: pretty;
 }
 .sobre__texto .titulo-secao + .sobre__paragrafo{ margin-top: 20px; }
 .sobre__assinatura{
   display: grid;
   gap: 2px;
-  margin: 24px 0 26px;
-  padding-left: 16px;
-  border-left: 3px solid var(--caramelo);
+  margin: 28px 0 14px;
+  padding-top: 16px;
+  border-top: 1px solid var(--linha-forte);
+  max-width: 34ch;
 }
 .sobre__nome{
   font-family: var(--fonte-titulo);
@@ -1410,22 +1459,20 @@ img.comparador__camada{
     gap: 44px;
   }
   .sobre__midia{ max-width: 440px; margin-left: 28px; }
-  .sobre__midia::before{ left: -28px; }
+  .ramo-decorativo--sobre{
+    left: auto;
+    right: -40px;
+    bottom: auto;
+    top: 34%;
+    width: 300px;
+  }
 }
 @media (max-width: 640px){
   .sobre{ gap: 40px; }
   .sobre__midia{ max-width: none; margin-left: 14px; }
   .sobre__midia::before{ left: -14px; bottom: -14px; }
   .sobre__midia .video-card{ aspect-ratio: 1 / 1; }
-  .sobre__texto .botao{ width: 100%; }
-  .ramo-decorativo--sobre{
-    width: 250px;
-    right: -60px;
-    top: auto;
-    bottom: 0;
-    opacity: 0.14;
-    transform: scaleX(-1) rotate(-8deg);
-  }
+  .ramo-decorativo--sobre{ top: 44%; width: 250px; right: -60px; }
 }
 
 /* ==========================================================================
@@ -1447,8 +1494,6 @@ img.comparador__camada{
   padding: 30px 28px 26px;
   background: var(--creme-claro);
   color: var(--vinho-escuro);
-  border-radius: var(--raio-m);
-  box-shadow: 0 2px 8px rgba(36, 29, 27, 0.16);
 }
 .avaliacao__estrelas{
   display: flex;
@@ -1493,17 +1538,12 @@ img.comparador__camada{
 /* ==========================================================================
    VISITE A LOJA — convite, informações + mapa e fotos da rua na mesma seção
    ========================================================================== */
-.secao--visite{ padding-bottom: calc(var(--espaco-secao) + 28px); }
-.visite__cabecalho{
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-  align-items: end;
-  gap: 16px clamp(32px, 6vw, 88px);
-  margin-bottom: clamp(28px, 3.5vw, 44px);
-}
+.secao--visite{ padding-bottom: calc(var(--espaco-secao) + 16px); }
+.visite__cabecalho{ margin-bottom: clamp(28px, 3.5vw, 44px); }
 .visite__convite{
+  margin-top: 10px;
   max-width: 52ch;
-  color: var(--texto);
+  color: var(--texto-suave);
 }
 
 .visite{
@@ -1517,8 +1557,6 @@ img.comparador__camada{
   flex-direction: column;
   align-items: flex-start;
   gap: 24px;
-  padding-left: clamp(20px, 2.4vw, 32px);
-  border-left: 3px solid var(--vinho);
 }
 .visite__bloco{ display: grid; gap: 6px; width: 100%; }
 .visite__endereco{ font-size: 17px; color: var(--vinho-escuro); }
@@ -1536,7 +1574,8 @@ img.comparador__camada{
 .visite__acoes{
   display: flex;
   flex-wrap: wrap;
-  gap: 12px;
+  align-items: center;
+  gap: 4px 28px;
 }
 
 .visite__mapa-coluna{
@@ -1588,10 +1627,6 @@ html:not(.js-pronto) .mapa__placeholder{ display: none; }
   line-height: 1.3;
   color: var(--vinho-escuro);
 }
-.rua__descricao{
-  margin-top: 4px;
-  color: var(--texto-suave);
-}
 .rua__item{
   position: relative;
   display: block;
@@ -1628,15 +1663,11 @@ html:not(.js-pronto) .mapa__placeholder{ display: none; }
 }
 
 @media (max-width: 899px){
-  .visite__cabecalho{ grid-template-columns: minmax(0, 1fr); align-items: start; }
   .visite{ grid-template-columns: minmax(0, 1fr); gap: 32px; }
   .carrossel--rua .rua__cabecalho{ width: auto; }
 }
 @media (max-width: 640px){
-  .visite__acoes{ width: 100%; flex-direction: column; }
-  .visite__acoes .botao{ width: 100%; }
   .visite__mapa{ flex: none; min-height: 0; height: 320px; }
-  .visite__info{ padding-left: 16px; }
 }
 
 /* ==========================================================================
@@ -1696,9 +1727,10 @@ html:not(.js-pronto) .mapa__placeholder{ display: none; }
 html.foto-dialog-aberto{ overflow: hidden; }
 
 /* ==========================================================================
-   RODAPÉ
+   RODAPÉ — logo real (cor original sobre o vinho) e um fragmento de ramo
    ========================================================================== */
 .rodape{
+  position: relative;
   padding: clamp(40px, 5vw, 60px) 0 24px;
   background: var(--vinho-escuro);
   border-top: 3px solid var(--caramelo);
@@ -1713,18 +1745,9 @@ html.foto-dialog-aberto{ overflow: hidden; }
   border-bottom: 1px solid rgba(255, 255, 251, 0.16);
 }
 .rodape__coluna{ display: flex; flex-direction: column; align-items: flex-start; }
-.rodape__marca{
-  font-family: var(--fonte-titulo);
-  font-size: 1.25rem;
-  font-weight: 500;
-}
-.rodape__sub{
-  margin-top: 2px;
-  font-size: 13px;
-  color: var(--caramelo-claro);
-}
+.rodape__logo{ --logo-h: 56px; }
 .rodape__endereco{
-  margin-top: 14px;
+  margin-top: 10px;
   font-size: 15px;
   color: rgba(255, 255, 251, 0.82);
 }
@@ -1733,18 +1756,16 @@ html.foto-dialog-aberto{ overflow: hidden; }
   grid-template-columns: repeat(2, max-content);
   column-gap: 32px;
 }
-.rodape__lista a,
-.rodape__link{
+.rodape__lista a{
   display: inline-flex;
   align-items: center;
-  gap: 8px;
+  min-width: 44px;
   min-height: 44px;
   font-size: 15px;
   color: rgba(255, 255, 251, 0.88);
   transition: color 0.2s ease;
 }
-.rodape__lista a:hover,
-.rodape__link:hover{ color: var(--caramelo-claro); }
+.rodape__lista a:hover{ color: var(--caramelo-claro); }
 .rodape__horarios{
   gap: 0;
   font-size: 15px;
@@ -1757,6 +1778,8 @@ html.foto-dialog-aberto{ overflow: hidden; }
 }
 .rodape__rotulo:first-child{ margin-top: 0; }
 .rodape__copy{
+  position: relative;
+  z-index: 1;
   width: min(100% - 2 * var(--gutter), var(--container));
   margin: 20px auto 0;
   font-size: 13px;
@@ -1808,6 +1831,5 @@ html.js-pronto [data-reveal]{
     opacity: 1;
     transform: none;
   }
-  html.js-pronto .hero__foto:not(.is-carregada){ opacity: 1; }
   html.splash-ativo .splash{ display: none; }
 }
