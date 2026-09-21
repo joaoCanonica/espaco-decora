@@ -1,0 +1,12 @@
+Swiper 14.2.0 (MIT) — distribuição oficial minificada, sem alterações.
+
+Origem : https://registry.npmjs.org/swiper/-/swiper-14.2.0.tgz  (npm: swiper@14.2.0)
+Arquivos: swiper-bundle.min.js (IIFE, expõe window.Swiper) e swiper-bundle.min.css
+Uso     : carregado uma só vez no index.html e compartilhado pelos dois carrosséis
+          (hero e categorias) em js/script.js. Só os módulos Autoplay, Keyboard,
+          EffectCreative, FreeMode e A11y são ativados; os demais vêm no bundle,
+          mas ficam desligados por configuração.
+sha384 do JS: sha384-/RHqZ3SjkuPxoYsTTu11J3Ox7DmtTwPr2AJVTYqdoD7k+mRDlf6LhNkm1kP7pQpn
+
+Para atualizar: baixe o tarball da nova versão, substitua os dois arquivos e
+atualize esta nota. Não usar URLs sem versão nem CDN.

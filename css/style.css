@@ -232,9 +232,12 @@ video:focus-visible,
 .pular-conteudo:focus{ top: 1rem; }
 
 /* ==========================================================================
-   SPLASH — até 2 s. A linha do tempo é toda CSS (logo em 350 ms, saída em
-   1750 ms): mesmo que o JS falhe, o splash some sozinho.
+   SPLASH — o vídeo (~10 s, sem áudio) toca inteiro; a saída é do JS (evento
+   "ended" + fade de 650 ms, ou "Pular introdução"). A rolagem fica travada
+   enquanto dura. O conteúdo por baixo continua no DOM e acessível: só fica
+   coberto (sem inert, sem aria-hidden, sem display: none).
    ========================================================================== */
+html.splash-ativo{ overflow: hidden; }
 .splash{
   display: none;
   position: fixed;
@@ -243,11 +246,10 @@ video:focus-visible,
   align-items: center;
   justify-content: center;
   background: var(--caramelo);
+  touch-action: none;
+  overscroll-behavior: contain;
 }
-html.splash-ativo .splash{
-  display: flex;
-  animation: splash-saida 250ms ease 1750ms both;
-}
+html.splash-ativo .splash{ display: flex; }
 
 .splash__video{
   position: absolute;
@@ -255,22 +257,56 @@ html.splash-ativo .splash{
   width: 100%;
   height: 100%;
   object-fit: cover;
+  pointer-events: none;
 }
 
+/* A logo não está no vídeo: entra por cima quando os ramos já cresceram. */
 .splash__texto{
   position: relative;
+  display: block;
   width: clamp(220px, 30vw, 440px);
-  height: auto;
-  animation: splash-logo 250ms ease 350ms both;
+  opacity: 0;
+  transition: opacity 800ms ease;
 }
+.splash__texto img{
+  display: block;
+  width: 100%;
+  height: auto;
+}
+.splash--logo .splash__texto{ opacity: 1; }
 
-@keyframes splash-logo{
+/* "Pular introdução": só texto, discreto, no canto inferior direito. A área
+   clicável tem 44 px; a cor escura mantém contraste sobre o caramelo. */
+.splash__pular{
+  position: absolute;
+  right: max(14px, env(safe-area-inset-right));
+  bottom: max(10px, env(safe-area-inset-bottom));
+  z-index: 2;
+  min-width: 44px;
+  min-height: 44px;
+  padding: 0 10px;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  color: #2a1713;
+  font-family: var(--fonte-corpo);
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 0.03em;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 5px;
+  cursor: pointer;
+  animation: splash-pular-entra 500ms ease both;
+}
+.splash__pular:hover{ text-decoration-thickness: 2px; }
+.splash__pular:focus-visible{
+  outline: 2px solid #2a1713;
+  outline-offset: 2px;
+}
+@keyframes splash-pular-entra{
   from{ opacity: 0; }
   to{ opacity: 1; }
-}
-@keyframes splash-saida{
-  from{ opacity: 1; visibility: visible; }
-  to{ opacity: 0; visibility: hidden; }
 }
 
 /* ==========================================================================
@@ -503,10 +539,11 @@ html.splash-ativo .splash{
 }
 
 /* ==========================================================================
-   HERO — texto de um lado, fachada do outro
-   Celular: texto primeiro e a fachada logo abaixo (4:5). Desktop (900px+):
-   duas colunas, texto ~42% e foto ~58%, altura entre 620 e 720 px. Sem foto
-   de fundo, sem texto sobre foto, sem filtro nem caixas sobre a fachada.
+   HERO — "Vitrine Viva": texto (~40%) e fotografias em Swiper (~60%).
+   Três painéis de texto ocupam a MESMA célula da grade (a altura do maior fica
+   reservada: nada pula na troca) e só o .is-ativo aparece. Fotos: cover, sem
+   raio, sem sombra, sem filtro. Sem JavaScript vale o primeiro painel/foto.
+   Ordem no celular: texto → ações → fotos → controles. Sem parallax.
    ========================================================================== */
 .hero{
   position: relative;
@@ -515,14 +552,48 @@ html.splash-ativo .splash{
   padding-top: var(--cabecalho-altura);
   background: var(--marfim);
   color: var(--texto);
+  /* Atraso do primeiro texto: 100 ms na entrada da página; 260 ms nas trocas
+     de slide (espera o painel anterior sumir; .hero-entrou vem do JS). */
+  --entrada-base: 100ms;
+  --foto-fundo: #776a62;
 }
+html.hero-entrou .hero{ --entrada-base: 260ms; }
+
 .hero__conteudo{
   width: min(100% - 2 * var(--gutter), var(--container));
   margin-inline: auto;
-  padding: 28px 0 24px;
+  padding: 16px 0 0;
 }
+
+/* ---- Painéis de texto ------------------------------------------------------ */
+.hero__textos{ display: grid; }
+.hero__painel{
+  grid-area: 1 / 1;
+  min-width: 0;
+  visibility: hidden;
+  transition: visibility 0s linear 260ms;
+}
+.hero__painel.is-ativo{
+  visibility: visible;
+  transition-delay: 0s;
+}
+.hero__painel > :nth-child(1){ --d: var(--entrada-base); }
+.hero__painel > :nth-child(2){ --d: calc(var(--entrada-base) + 80ms); }
+.hero__painel > :nth-child(3){ --d: calc(var(--entrada-base) + 160ms); }
+/* Saída rápida; entrada em ordem (identificador → título → texto), 20 px, 620 ms. */
+.hero__painel > *{
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 260ms ease, transform 0s linear 260ms;
+}
+.hero__painel.is-ativo > *{
+  opacity: 1;
+  transform: none;
+  transition: opacity 620ms ease var(--d), transform 620ms cubic-bezier(0.2, 0.65, 0.3, 1) var(--d);
+}
+
 .hero__identificador{
-  margin-bottom: 14px;
+  margin-bottom: 12px;
   font-size: 14px;
   font-weight: 600;
   letter-spacing: 0.12em;
@@ -531,115 +602,256 @@ html.splash-ativo .splash{
 .hero__titulo{
   font-family: var(--fonte-titulo);
   font-weight: 600;
-  font-size: clamp(2.25rem, 1.85rem + 2vw, 2.75rem);
-  line-height: 1.08;
+  font-size: clamp(2.125rem, 1.85rem + 1.4vw, 2.5rem);
+  line-height: 1.06;
   letter-spacing: 0;
   color: var(--vinho-escuro);
+  text-wrap: balance;
+  overflow-wrap: break-word;
 }
 .hero__texto{
-  margin-top: 16px;
+  margin-top: 10px;
   max-width: 44ch;
-  font-size: 17px;
+  font-size: 16px;
+  line-height: 1.45;
   color: var(--texto);
 }
 .hero__acoes{
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 4px 32px;
-  margin-top: 18px;
+  gap: 2px 32px;
+  margin-top: 10px;
 }
+.hero__acoes .link-editorial [aria-hidden="true"]{ transition: transform 0.25s ease; }
+.hero__acoes .link-editorial:hover [aria-hidden="true"]{ transform: translate(2px, -2px); }
+.hero__acoes .link-editorial--destaque:hover{ box-shadow: 0 1px 0 currentColor; }
 .hero__endereco{
-  margin-top: 18px;
-  font-size: 15px;
+  margin-top: 6px;
+  font-size: 14px;
   color: var(--texto-suave);
 }
 
-.hero__midia{
-  display: block;
-  width: min(100% - 2 * var(--gutter), var(--container));
-  margin: 8px auto clamp(40px, 8vw, 56px);
-  aspect-ratio: 4 / 5;
+/* ---- Fotografias ----------------------------------------------------------- */
+.hero__visual{
+  position: relative;
+  height: clamp(340px, 82vw, 430px);
+  margin-top: 12px;
   overflow: hidden;
-  background: var(--creme);
+  background: var(--foto-fundo);
 }
+/* Durante a troca as duas fotos ficam semitransparentes e o fundo aparece um
+   pouco. Um tom neutro quente, da mesma luminosidade média das fotos (não
+   creme nem preto), evita qualquer "flash" claro ou escuro no meio da troca. */
+.hero__swiper{
+  height: 100%;
+  background: var(--foto-fundo);
+}
+/* A foto que entra fica SEMPRE por cima (o Creative decide o z-index só pelo
+   arredondamento do progresso, o que faria um "estalo" no meio da troca). */
+.hero__swiper .swiper-slide-active{ z-index: 5 !important; }
+.hero__slide{ overflow: hidden; }
+.hero__slide picture{ display: block; height: 100%; }
 .hero__foto{
   display: block;
   width: 100%;
   height: 100%;
   object-fit: cover;
-  /* Retrato recortado em 4:5: mantém do letreiro até a vitrine. */
-  object-position: 50% 52%;
+  transform: scale(1);
+  /* volta a 1 só depois que a foto terminou de sair (troca de 900 ms) */
+  transition: transform 0s linear 900ms;
 }
+/* Movimento de câmera quase imperceptível, só no slide ativo, com a duração do
+   slide (--hero-zoom vem do JS); só depois de liberado o splash. */
+html.hero-pronto .hero__slide.swiper-slide-active .hero__foto{
+  transform: scale(1.035);
+  transition: transform var(--hero-zoom, 6400ms) linear;
+}
+/* Ponto focal de cada foto (celular). */
+.hero__foto--fachada{ object-position: 50% 75%; }
+.hero__foto--decoracao{ object-position: 50% 32%; }
+.hero__foto--mesa{ object-position: 50% 58%; }
 
-/* Celular (até 767px): conjunto compacto (~720–820 px com o cabeçalho). A foto
-   não precisa aparecer inteira: altura 380–460 px, recortada para manter a
-   placa e a vitrine (o topo, com fios e céu, é o que sai). */
-@media (max-width: 767px){
-  .hero__conteudo{ padding: 16px 0 0; }
-  .hero__identificador{ margin-bottom: 8px; }
-  .hero__titulo{
-    font-size: clamp(2.25rem, 2rem + 1.2vw, 2.625rem);
-    line-height: 1.05;
-  }
-  .hero__texto{
-    margin-top: 10px;
-    font-size: 16px;
-    line-height: 1.45;
-  }
-  .hero__acoes{ margin-top: 6px; }
-  .hero__endereco{ margin-top: 2px; }
-  .hero__midia{
-    height: clamp(380px, 56vw, 460px);
-    margin: 14px auto 28px;
-    aspect-ratio: auto;
-  }
-  .hero__foto{ object-position: 50% 75%; }
+/* Sem Swiper (falha ao carregar): só a primeira foto. */
+.hero__swiper:not(.swiper-initialized) .swiper-slide:not(:first-child){ display: none; }
+.hero__swiper:not(.swiper-initialized) .swiper-slide{ height: 100%; }
+
+/* ---- Controles ------------------------------------------------------------- */
+.hero__controles{
+  width: min(100% - 2 * var(--gutter), var(--container));
+  margin: 2px auto 0;
+  padding: 0 0 20px;
 }
-@media (min-width: 481px) and (max-width: 767px){
-  .hero__foto{ object-position: 50% 55%; }
+html:not(.js-pronto) .hero__controles,
+.hero--sem-swiper .hero__controles{ display: none; }
+
+/* Legendas empilhadas na mesma célula: a linha reserva a altura da maior. */
+.hero__legendas{ display: grid; }
+.hero__legenda{
+  grid-area: 1 / 1;
+  align-self: center;
+  padding-top: 6px;
+  font-size: 14px;
+  line-height: 1.3;
+  color: var(--texto-suave);
+  visibility: hidden;
+  opacity: 0;
+  transition: opacity 260ms ease, visibility 0s linear 260ms;
 }
+.hero__legenda.is-ativo{
+  visibility: visible;
+  opacity: 1;
+  transition: opacity 500ms ease 200ms;
+}
+.hero__barra{
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.hero__contador{
+  min-width: 5.2ch;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  color: var(--vinho-escuro);
+  font-variant-numeric: tabular-nums;
+}
+.hero__progresso{
+  flex: 1;
+  height: 2px;
+  background: var(--linha);
+  overflow: hidden;
+}
+.hero__progresso span{
+  display: block;
+  height: 100%;
+  background: var(--vinho);
+  transform-origin: 0 50%;
+  transform: scaleX(0);
+}
+.hero__botoes{
+  display: flex;
+  align-items: center;
+  margin-right: -10px; /* a área de 44 px sai pelo lado; o desenho alinha à borda */
+}
+.hero__icone-tocar{ display: none; }
+.hero.is-pausado .hero__icone-pausa{ display: none; }
+.hero.is-pausado .hero__icone-tocar{ display: block; }
+.hero[data-hero-sem-autoplay] .hero__progresso,
+.hero[data-hero-sem-autoplay] .botao-seta--pausa{ display: none; }
 
 @media (min-width: 768px) and (max-width: 899px){
-  .hero__midia{ aspect-ratio: 4 / 3; }
-  .hero__foto{ object-position: 50% 68%; }
+  .hero__conteudo{ padding-top: 32px; }
+  .hero__titulo{ font-size: clamp(2.75rem, 2rem + 2vw, 3.25rem); }
+  .hero__texto{ font-size: 17px; }
+  .hero__acoes{ margin-top: 14px; }
+  .hero__visual{ height: clamp(400px, 50vw, 480px); margin-top: 24px; }
+  .hero__foto--fachada{ object-position: 50% 62%; }
+  .hero__foto--decoracao{ object-position: 50% 34%; }
+  .hero__foto--mesa{ object-position: 50% 60%; }
+}
+@media (min-width: 481px) and (max-width: 767px){
+  .hero__foto--fachada{ object-position: 50% 58%; }
+}
+/* Telas de 320–359 px: títulos e texto um pouco menores mantêm o hero perto de 850 px. */
+@media (max-width: 359px){
+  .hero__titulo{ font-size: 1.9rem; }
+  .hero__texto{ font-size: 15px; }
 }
 
+/* ---- Desktop (900px+): texto ~40% / fotos ~60%, 680–760 px ---------------- */
 @media (min-width: 900px){
   .hero{
     --coluna-esq: max(var(--gutter), calc((100% - var(--container)) / 2));
     display: grid;
     grid-template-columns:
       var(--coluna-esq)
-      minmax(360px, calc(42% - var(--coluna-esq)))
+      minmax(clamp(340px, 26vw, 460px), calc(40% - var(--coluna-esq)))
       minmax(0, 1fr);
-    height: clamp(620px, calc(100vh - var(--cabecalho-altura)), 720px);
-    height: clamp(620px, calc(100svh - var(--cabecalho-altura)), 720px);
+    grid-template-rows: minmax(0, 1fr) auto;
+    height: clamp(680px, calc(100vh - var(--cabecalho-altura)), 760px);
+    height: clamp(680px, calc(100svh - var(--cabecalho-altura)), 760px);
     margin-top: var(--cabecalho-altura);
     padding-top: 0;
   }
   .hero__conteudo{
     grid-column: 2;
+    grid-row: 1;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
     justify-content: center;
     width: auto;
     margin: 0;
-    padding: 32px clamp(24px, 3.5vw, 56px) 32px 0;
+    padding: 32px clamp(24px, 3.5vw, 56px) 8px 0;
   }
-  .hero__titulo{ font-size: clamp(2.75rem, 1.4rem + 2.6vw, 3.75rem); }
-  .hero__texto{ font-size: 18px; }
-  .hero__acoes{ margin-top: 22px; }
-  .hero__midia{
+  .hero__textos{ width: 100%; }
+  .hero__identificador{ margin-bottom: 16px; }
+  .hero__titulo{ font-size: clamp(2.5rem, 1.2rem + 2.4vw, 3.5rem); }
+  .hero__texto{ margin-top: 18px; font-size: 18px; }
+  .hero__acoes{ margin-top: 26px; gap: 4px 32px; }
+  .hero__endereco{ margin-top: 20px; font-size: 15px; }
+
+  .hero__visual{
     grid-column: 3;
-    width: auto;
-    height: 100%;
+    grid-row: 1 / span 2;
+    height: auto;
     margin: 0;
-    aspect-ratio: auto;
   }
-  /* Coluna larga e baixa: recorta o retrato e mantém placa, vitrine e entrada. */
-  .hero__foto{ object-position: 50% 68%; }
+  .hero__foto--fachada{ object-position: 50% 68%; }
+  .hero__foto--decoracao{ object-position: 50% 36%; }
+  .hero__foto--mesa{ object-position: 50% 56%; }
+
+  .hero__controles{
+    grid-column: 2;
+    grid-row: 2;
+    width: auto;
+    margin: 0;
+    padding: 0 clamp(24px, 3.5vw, 56px) 30px 0;
+  }
+  .hero__barra{ gap: 16px; }
+}
+
+/* ---- Entrada da página (só depois do splash; ≤ 1,2 s no total) -------------
+   cabeçalho → identificador → título → texto e ações → foto → controles.
+   Só opacity, translate pequeno e um clip-path simples (com alternativa em
+   opacity onde ele não existe). Movimento reduzido: nada disso se aplica. */
+@media (prefers-reduced-motion: no-preference){
+  .cabecalho,
+  .hero__acoes,
+  .hero__endereco,
+  .hero__visual,
+  .hero__controles{
+    transition-property: opacity, transform, clip-path;
+    transition-timing-function: cubic-bezier(0.2, 0.65, 0.3, 1);
+    transition-duration: 500ms;
+  }
+  .hero__acoes,
+  .hero__endereco{ transition-delay: 300ms; }
+  .hero__visual{ transition-duration: 700ms; transition-delay: 350ms; }
+  .hero__controles{ transition-duration: 450ms; transition-delay: 700ms; }
+
+  html.js-pronto:not(.hero-pronto) .cabecalho{ opacity: 0; transform: translateY(-10px); }
+  html.js-pronto:not(.hero-pronto) .hero__acoes,
+  html.js-pronto:not(.hero-pronto) .hero__endereco{ opacity: 0; transform: translateY(16px); }
+  html.js-pronto:not(.hero-pronto) .hero__controles{ opacity: 0; transform: translateY(10px); }
+  /* Painel ativo escondido até a entrada, sem "sair" animando no carregamento. */
+  html.js-pronto:not(.hero-pronto) .hero__painel.is-ativo > *{
+    opacity: 0;
+    transform: translateY(20px);
+    transition: none;
+  }
+  @supports (clip-path: inset(0 0 100% 0)){
+    html.js-pronto:not(.hero-pronto) .hero__visual{ clip-path: inset(0 0 100% 0); }
+    .hero__visual{ clip-path: inset(0 0 0 0); }
+  }
+  @supports not (clip-path: inset(0 0 100% 0)){
+    html.js-pronto:not(.hero-pronto) .hero__visual{ opacity: 0; }
+  }
+  /* Depois da entrada, as ações não precisam mais de atraso (hover, etc.). */
+  html.hero-entrou .hero__acoes,
+  html.hero-entrou .hero__endereco,
+  html.hero-entrou .hero__controles{ transition-delay: 0s; }
 }
 
 /* ==========================================================================
@@ -766,41 +978,244 @@ html:not(.js-pronto) .carrossel__controles{ display: none; }
   }
 }
 
-/* ---- Categorias: trilho simples, o próximo card aparece pela metade ------- */
-.secao--categorias{ padding-bottom: clamp(56px, 6vw, 88px); }
-.carrossel--categorias{ --visiveis: 2.75; --n: 2; --gap: 20px; }
-@media (max-width: 899px){ .carrossel--categorias{ --visiveis: 2.15; --n: 2; --gap: 16px; } }
+/* ---- Categorias: trilho editorial em Swiper -----------------------------------
+   Sangra até a borda direita da tela (o próximo card sempre aparece pela
+   metade) e alinha ao container à esquerda. Sem cards: foto grande 4:5, número
+   e título logo abaixo. Sem JavaScript: overflow-x nativo. ---------------------- */
+.secao--categorias{
+  --coluna: max(var(--gutter), calc((100% - var(--container)) / 2));
+  padding-bottom: clamp(56px, 6vw, 88px);
+  overflow-x: hidden;
+  overflow-x: clip;
+}
+.categorias__cabecalho{
+  width: min(100% - 2 * var(--gutter), var(--container));
+  margin: 0 auto clamp(20px, 3vw, 40px);
+}
 @media (max-width: 640px){
-  .carrossel--categorias{ --visiveis: 1.15; --n: 1; --gap: 12px; }
-  .carrossel--categorias .carrossel__controles{ display: none; }
+  /* Ao chegar pelo "Conheça a loja" o trilho e os controles cabem na primeira tela. */
+  .secao--categorias{ padding-top: 36px; }
+}
+.categorias__identificador{
+  margin-bottom: 12px;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  color: var(--terracota);
 }
 
+.categorias__cabecalho .secao-cabecalho__descricao{
+  max-width: 68ch;
+  text-wrap: pretty;
+}
+
+.categorias__trilho{ position: relative; }
+.categorias__swiper{ padding-inline: var(--coluna); }
+.categorias__swiper:focus-visible{ outline-offset: -3px; }
+.categorias__swiper:not(.swiper-initialized){
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-padding-inline: var(--coluna);
+  scrollbar-width: none;
+}
+.categorias__swiper:not(.swiper-initialized)::-webkit-scrollbar{ display: none; }
+.categorias__swiper:not(.swiper-initialized) .swiper-wrapper{ gap: 14px; }
+.categorias__swiper:not(.swiper-initialized) .swiper-slide{
+  flex: 0 0 min(80%, 340px);
+  width: auto;
+  scroll-snap-align: start;
+}
+.categorias--sem-swiper .categorias__controles{ display: none; }
+
+.categoria__figura{ margin: 0; }
 .categoria__midia{
-  height: clamp(380px, 32vw, 500px);
+  aspect-ratio: 4 / 5;
   overflow: hidden;
   background: var(--creme);
 }
 .categoria__midia picture{ display: block; height: 100%; }
 .categoria__midia img{
+  display: block;
   width: 100%;
   height: 100%;
   object-fit: cover;
+  transition: transform 420ms cubic-bezier(0.2, 0.65, 0.3, 1);
 }
 /* A foto das flores traz um texto sobreposto no rodapé: o recorte fica no alto. */
 .categoria__foto--flores{ object-position: 50% 15%; }
-.categoria__nome{
-  margin-top: 14px;
-  font-family: var(--fonte-titulo);
-  font-size: 1.5rem;
+
+.categoria__legenda{
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  margin-top: 16px;
+}
+.categoria__numero{
+  font-size: 13px;
   font-weight: 600;
-  line-height: 1.2;
+  letter-spacing: 0.14em;
+  color: var(--terracota);
+  font-variant-numeric: tabular-nums;
+}
+.categoria__nome{
+  font-family: var(--fonte-titulo);
+  font-size: 1.75rem;
+  font-weight: 600;
+  line-height: 1.15;
   color: var(--vinho-escuro);
 }
-@media (max-width: 640px){ .categoria__midia{ height: auto; aspect-ratio: 4 / 5; } }
-@media (hover: hover) and (pointer: fine){
-  .categoria__midia img{ transition: transform 420ms cubic-bezier(0.2, 0.65, 0.3, 1); }
-  .categoria:hover .categoria__midia img{ transform: scale(1.025); }
+
+/* Durante o movimento: o que está inteiro na janela fica em 1 (.is-inteiro, posta
+   pelo JS com 2 px de tolerância); o resto (o próximo card parcial) esmaece para
+   0,78 e a foto encolhe só até 0,975, ancorada embaixo para a legenda não subir. */
+.categorias__swiper.swiper-initialized .categoria{
+  opacity: 0.78;
+  transition: opacity 500ms ease;
 }
+.categorias__swiper.swiper-initialized .categoria .categoria__midia{
+  transform: scale(0.975);
+  transform-origin: 0 100%;
+  transition: transform 500ms ease;
+}
+.categorias__swiper.swiper-initialized .categoria.is-inteiro{ opacity: 1; }
+.categorias__swiper.swiper-initialized .categoria.is-inteiro .categoria__midia{ transform: none; }
+@media (hover: hover) and (pointer: fine){
+  .categoria__legenda{ transition: transform 420ms cubic-bezier(0.2, 0.65, 0.3, 1); }
+  .categoria:hover .categoria__midia img{ transform: scale(1.025); }
+  .categoria:hover .categoria__legenda{ transform: translateX(3px); }
+}
+
+/* ---- Controles das categorias ---------------------------------------------- */
+.categorias__controles{
+  width: min(100% - 2 * var(--gutter), var(--container));
+  margin: clamp(16px, 2.4vw, 28px) auto 0;
+}
+html:not(.js-pronto) .categorias__controles{ display: none; }
+.categorias__dica{
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 4px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  color: var(--texto-suave);
+  transition: opacity 600ms ease;
+}
+.categorias__dica::before{
+  content: "";
+  width: 24px;
+  height: 1px;
+  background: currentColor;
+}
+.categorias__controles.is-usada .categorias__dica{ opacity: 0; }
+.categorias__barra{
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.categorias__contador{
+  min-width: 6ch;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  color: var(--vinho-escuro);
+  font-variant-numeric: tabular-nums;
+}
+.categorias__progresso{
+  flex: 1;
+  height: 2px;
+  background: var(--linha);
+  overflow: hidden;
+}
+.categorias__progresso span{
+  display: block;
+  height: 100%;
+  background: var(--vinho);
+  transform-origin: 0 50%;
+  transform: scaleX(0.25);
+  transition: transform 300ms ease;
+}
+.categorias__botoes{
+  display: flex;
+  align-items: center;
+  margin-right: -10px;
+}
+@media (min-width: 900px) and (hover: hover){
+  .categorias__dica{ display: none; }
+}
+/* Desktop: as setas e o progresso sobem para o canto do cabeçalho (perto do
+   título, sempre à vista ao chegar pelo "Conheça a loja"); o trilho fica embaixo. */
+@media (min-width: 900px){
+  .secao--categorias{
+    display: grid;
+    grid-template-columns: var(--coluna) minmax(0, 1fr) auto var(--coluna);
+    padding-top: clamp(64px, 6vw, 88px);
+  }
+  .categorias__cabecalho{
+    grid-column: 2;
+    grid-row: 1;
+    width: auto;
+    margin: 0 0 clamp(24px, 3vw, 36px);
+  }
+  .categorias__controles{
+    grid-column: 3;
+    grid-row: 1;
+    align-self: end;
+    width: 320px;
+    margin: 0 0 clamp(24px, 3vw, 36px);
+  }
+  .categorias__trilho{ grid-column: 1 / -1; grid-row: 2; }
+}
+
+/* Entrada ao rolar (uma vez): título revelado pelo [data-reveal], trilho vindo
+   da direita e cada card com pequeno atraso (80 ms entre eles). */
+html.js-pronto .categorias__trilho{
+  opacity: 0;
+  transform: translateX(6%);
+  transition: opacity 700ms ease, transform 800ms cubic-bezier(0.2, 0.65, 0.3, 1);
+}
+html.js-pronto .categoria__figura{
+  opacity: 0;
+  transform: translateX(28px);
+  transition: opacity 600ms ease var(--atraso, 0ms), transform 700ms cubic-bezier(0.2, 0.65, 0.3, 1) var(--atraso, 0ms);
+}
+.categoria:nth-child(2){ --atraso: 80ms; }
+.categoria:nth-child(3){ --atraso: 160ms; }
+.categoria:nth-child(4){ --atraso: 240ms; }
+html.js-pronto [data-categorias].is-visible .categorias__trilho,
+html.js-pronto [data-categorias].is-visible .categoria__figura{
+  opacity: 1;
+  transform: none;
+}
+
+/* ---- Botão-seta (hero e categorias): só a seta, área de toque de 44 px ------ */
+.botao-seta{
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  color: var(--vinho);
+  cursor: pointer;
+  transition: color 0.2s ease, opacity 0.2s ease;
+}
+.botao-seta svg{ transition: transform 0.25s ease; }
+.botao-seta:hover{ color: var(--terracota); }
+.botao-seta[data-hero-anterior]:hover svg,
+.botao-seta[data-categorias-anterior]:hover svg{ transform: translateX(-3px); }
+.botao-seta[data-hero-proximo]:hover svg,
+.botao-seta[data-categorias-proximo]:hover svg{ transform: translateX(3px); }
+.botao-seta[aria-disabled="true"]{
+  opacity: 0.3;
+  cursor: default;
+}
+.botao-seta[aria-disabled="true"]:hover{ color: var(--vinho); }
+.botao-seta[aria-disabled="true"]:hover svg{ transform: none; }
 
 /* ---- Ideias com peças da loja: composição assimétrica ------------------------- */
 .secao--composicoes{ padding-bottom: calc(var(--espaco-secao) + 8px); }
@@ -1626,5 +2041,17 @@ html.js-pronto [data-reveal]{
     opacity: 1;
     transform: none;
   }
-  html.splash-ativo .splash{ display: none; }
+  html.js-pronto .categorias__trilho,
+  html.js-pronto .categoria__figura{
+    opacity: 1;
+    transform: none;
+  }
+  /* Sem zoom de câmera nem movimento nas fotos do hero. */
+  .hero__foto{ transform: none !important; }
+  .categorias__swiper.swiper-initialized .categoria .categoria__midia{ transform: none; }
+}
+
+/* Rolagem suave só para "Conheça a loja" e só quando o sistema permite. */
+@media (prefers-reduced-motion: no-preference){
+  html.rolagem-suave{ scroll-behavior: smooth; }
 }

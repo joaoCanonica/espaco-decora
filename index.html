@@ -74,29 +74,41 @@
   as="image"
   type="image/webp"
   fetchpriority="high"
-  imagesizes="(max-width: 899px) 100vw, 58vw"
+  imagesizes="(max-width: 899px) 100vw, 60vw"
   imagesrcset="assets/fachada-640.webp 640w, assets/fachada-960.webp 960w, assets/fachada-1280.webp 1280w, assets/fachada-1728.webp 1728w"
 >
 
+<!-- Swiper 14.2.0 (oficial, minificado, local; ver assets/vendor/swiper/LEIA-ME.txt).
+     Carregado uma vez e compartilhado pelo hero e pelas categorias. -->
+<link rel="stylesheet" href="assets/vendor/swiper/swiper-bundle.min.css">
 <link rel="stylesheet" href="css/style.css">
 <noscript>
   <!-- Sem JS o poster do primeiro vídeo (adiado pelo script) entra como fundo. -->
   <style>.galeria__video{ background: #000 url("assets/posters/entrando-na-loja.jpg") center / contain no-repeat; }</style>
 </noscript>
 <script>
-  // js-pronto: só com JavaScript ativo o CSS esconde blocos [data-reveal] e
-  // mostra o splash. sem-splash: intro já vista na sessão (ou movimento
-  // reduzido). splash-ativo: a intro vai rodar agora.
+  // js-pronto: só com JavaScript ativo o CSS esconde blocos [data-reveal] e mostra
+  // o splash. sem-splash: intro já vista na sessão. splash-ativo: a intro roda
+  // agora (com movimento reduzido ela vira um estado estático de ~700 ms).
+  // hero-pronto: acrescentado pelo script depois que o splash sai.
   (function () {
     var raiz = document.documentElement;
     raiz.classList.add('js-pronto');
     try {
-      var reduz = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
       var vista = sessionStorage.getItem('edIntroVista');
-      raiz.classList.add(reduz || vista ? 'sem-splash' : 'splash-ativo');
+      raiz.classList.add(vista ? 'sem-splash' : 'splash-ativo');
     } catch (e) {
       raiz.classList.add('sem-splash');
     }
+    // Rede de segurança: se js/script.js não iniciar (arquivo ausente ou erro),
+    // solta a página em vez de deixar o splash e o hero escondidos para sempre.
+    setTimeout(function () {
+      if (window.edSplashIniciado) return;
+      raiz.classList.remove('splash-ativo');
+      raiz.classList.add('sem-splash', 'hero-pronto');
+      var splash = document.getElementById('splash');
+      if (splash) splash.remove();
+    }, 8000);
   })();
 </script>
 </head>
@@ -104,20 +116,28 @@
 
 <a class="pular-conteudo" href="#conteudo-principal">Pular para o conteúdo</a>
 
-<!-- Intro de marca: até 2 s, uma vez por sessão, pulável. Os data-* viram src só
-     via JS (js/script.js), para quem já viu não baixar o vídeo. Sem poster: o
-     quadro do poster já traz a logo e duplicaria a camada .splash__texto. -->
-<div id="splash" class="splash" aria-hidden="true">
+<!-- Intro de marca: o vídeo (~10 s, sem áudio) toca inteiro, uma vez por sessão; a
+     saída vem do evento "ended" (fade de 650 ms) ou do botão "Pular introdução".
+     Os data-* viram src só via JS (js/script.js), para quem já viu não baixar o
+     vídeo. Sem poster e sem loop. O vídeo não traz a logo: .splash__texto (a logo
+     real em HTML) entra por cima quando os ramos já cresceram. -->
+<div id="splash" class="splash" role="region" aria-label="Introdução da Espaço Decora">
   <video
     class="splash__video"
     muted
-    loop
+    autoplay
     playsinline
     preload="none"
+    aria-hidden="true"
+    tabindex="-1"
     data-src="assets/video/logo-animada.mp4"
     data-src-movel="assets/video/logo-animada-mobile.mp4"
   ></video>
-  <img class="splash__texto" src="assets/logo/logo-texto.png" alt="" width="430" height="175" loading="lazy">
+  <picture class="splash__texto">
+    <source type="image/webp" srcset="assets/logo/logo-texto.webp">
+    <img src="assets/logo/logo-texto.png" alt="Espaço Decora By Rita Assunção" width="430" height="175" decoding="async">
+  </picture>
+  <button type="button" class="splash__pular" data-splash-pular hidden>Pular introdução</button>
 </div>
 
 <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
@@ -227,13 +247,33 @@
 
 <main id="conteudo-principal">
 
-<section class="hero" id="topo" aria-labelledby="hero-titulo">
+<!-- Vitrine Viva: três momentos (a loja, a decoração, a mesa e os presentes).
+     Sem JavaScript vale o primeiro: painel e foto 1 visíveis, "Conheça a loja"
+     leva a #categorias. Com JavaScript, o Swiper cuida das fotos e o painel de
+     texto correspondente entra junto (js/script.js, iniciarHero). Os três painéis
+     ocupam a mesma célula da grade, então o bloco reserva a altura do maior. -->
+<section class="hero" id="topo" aria-label="Apresentação da loja" data-hero>
   <div class="hero__conteudo">
-    <p class="hero__identificador">ESPAÇO DECORA · LAGES</p>
-    <h1 class="hero__titulo" id="hero-titulo">Decoração, mesa posta e presentes escolhidos com cuidado.</h1>
-    <p class="hero__texto">Uma loja para conhecer de perto, encontrar peças para a casa e escolher presentes com atendimento pessoal.</p>
+    <div class="hero__textos" data-hero-textos>
+      <div class="hero__painel is-ativo" data-hero-painel>
+        <p class="hero__identificador">ESPAÇO DECORA · LAGES</p>
+        <h1 class="hero__titulo" id="hero-titulo">Decoração, mesa posta e presentes escolhidos com cuidado.</h1>
+        <p class="hero__texto">Uma loja para conhecer de perto, encontrar peças para a casa e escolher presentes com atendimento pessoal.</p>
+      </div>
+      <div class="hero__painel" data-hero-painel>
+        <p class="hero__identificador">DECORAÇÃO</p>
+        <h2 class="hero__titulo">Peças que transformam os detalhes da casa.</h2>
+        <p class="hero__texto">Objetos, arranjos e composições escolhidos para trazer personalidade a cada ambiente.</p>
+      </div>
+      <div class="hero__painel" data-hero-painel>
+        <p class="hero__identificador">MESA POSTA · PRESENTES</p>
+        <h2 class="hero__titulo">Para receber, presentear e criar momentos especiais.</h2>
+        <p class="hero__texto">Uma seleção para deixar a mesa mais bonita e encontrar presentes com significado.</p>
+      </div>
+    </div>
+
     <div class="hero__acoes">
-      <a class="link-editorial link-editorial--destaque" href="#sobre">Conheça a loja</a>
+      <a class="link-editorial link-editorial--destaque" href="#categorias" data-rolagem-suave>Conheça a loja</a>
       <a
         class="link-editorial link-editorial--secundario"
         href="https://www.google.com/maps/search/?api=1&amp;query=R.%20Frei%20Rog%C3%A9rio%2C%2083%20-%20Centro%2C%20Lages%2FSC"
@@ -244,23 +284,82 @@
     <p class="hero__endereco">R. Frei Rogério, 83 · Centro · Lages/SC</p>
   </div>
 
-  <picture class="hero__midia">
-    <source
-      type="image/webp"
-      sizes="(max-width: 899px) 100vw, 58vw"
-      srcset="assets/fachada-640.webp 640w, assets/fachada-960.webp 960w, assets/fachada-1280.webp 1280w, assets/fachada-1728.webp 1728w"
-    >
-    <img
-      class="hero__foto"
-      src="assets/fachada.jpg"
-      alt="Fachada da loja Espaço Decora, no Centro de Lages"
-      width="1512"
-      height="2016"
-      loading="eager"
-      decoding="async"
-      fetchpriority="high"
-    >
-  </picture>
+  <div class="hero__visual">
+    <div class="swiper hero__swiper" data-hero-swiper>
+      <div class="swiper-wrapper">
+        <div class="swiper-slide hero__slide">
+          <picture>
+            <source
+              type="image/webp"
+              sizes="(max-width: 899px) 100vw, 60vw"
+              srcset="assets/fachada-640.webp 640w, assets/fachada-960.webp 960w, assets/fachada-1280.webp 1280w, assets/fachada-1728.webp 1728w"
+            >
+            <img
+              draggable="false"
+              class="hero__foto hero__foto--fachada"
+              src="assets/fachada.jpg"
+              alt="Fachada da loja Espaço Decora, no Centro de Lages"
+              width="1512"
+              height="2016"
+              loading="eager"
+              decoding="async"
+              fetchpriority="high"
+            >
+          </picture>
+        </div>
+        <div class="swiper-slide hero__slide">
+          <picture>
+            <source type="image/webp" srcset="assets/04-decoracao-geral.webp">
+            <img
+              draggable="false"
+              class="hero__foto hero__foto--decoracao"
+              src="assets/04-decoracao-geral.png"
+              alt="Almofadas decorativas com estampas de cavalo, xadrez e listras"
+              width="476"
+              height="752"
+              loading="lazy"
+              decoding="async"
+            >
+          </picture>
+        </div>
+        <div class="swiper-slide hero__slide">
+          <picture>
+            <source type="image/webp" srcset="assets/08-decoracao-mesa.webp">
+            <img
+              draggable="false"
+              class="hero__foto hero__foto--mesa"
+              src="assets/08-decoracao-mesa.png"
+              alt="Vaso de vidro e prato decorativo sobre mesa de vidro"
+              width="463"
+              height="748"
+              loading="lazy"
+              decoding="async"
+            >
+          </picture>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="hero__controles" data-hero-controles>
+    <div class="hero__legendas" data-hero-legendas>
+      <p class="hero__legenda is-ativo">Nossa loja no Centro de Lages</p>
+      <p class="hero__legenda">Decoração para diferentes estilos e espaços</p>
+      <p class="hero__legenda">Mesa posta e presentes para diferentes ocasiões</p>
+    </div>
+    <div class="hero__barra">
+      <p class="hero__contador" aria-hidden="true"><span data-hero-atual>01</span> / 03</p>
+      <div class="hero__progresso" aria-hidden="true"><span data-hero-progresso></span></div>
+      <div class="hero__botoes">
+        <button type="button" class="botao-seta" data-hero-anterior aria-label="Foto anterior"><svg viewBox="0 0 24 12" width="22" height="11" aria-hidden="true" focusable="false"><path d="M23 6H2M7 1L2 6l5 5" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+        <button type="button" class="botao-seta" data-hero-proximo aria-label="Próxima foto"><svg viewBox="0 0 24 12" width="22" height="11" aria-hidden="true" focusable="false"><path d="M1 6h21M17 1l5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+        <button type="button" class="botao-seta botao-seta--pausa" data-hero-pausa aria-label="Pausar a troca automática">
+          <svg class="hero__icone-pausa" viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" focusable="false"><path d="M8 5v14M16 5v14" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+          <svg class="hero__icone-tocar" viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" focusable="false"><path d="M8 5.5v13l10-6.5z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>
+        </button>
+      </div>
+    </div>
+  </div>
 </section>
 
 <section class="secao secao--creme secao--sobre" id="sobre" aria-labelledby="sobre-titulo">
@@ -283,61 +382,90 @@
   </div>
 </section>
 
-<section class="secao secao--marfim secao--categorias" id="categorias" aria-labelledby="categorias-titulo">
-  <div class="carrossel carrossel--categorias" data-carrossel>
-    <div class="carrossel__topo">
-      <div class="secao-cabecalho" data-reveal>
-        <h2 class="titulo-secao" id="categorias-titulo">Peças para diferentes cantos da casa</h2>
-        <p class="secao-cabecalho__descricao">Decoração, mesa posta, flores, arranjos e presentes para conhecer na loja.</p>
-      </div>
-      <div class="carrossel__controles">
-        <button type="button" class="carrossel__botao carrossel__botao--anterior" data-carrossel-anterior aria-label="Categoria anterior">
-          <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </button>
-        <button type="button" class="carrossel__botao carrossel__botao--proximo" data-carrossel-proximo aria-label="Próxima categoria">
-          <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M9 5l7 7-7 7" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </button>
+<!-- Peças para diferentes cantos da casa: trilho horizontal com Swiper (o mesmo
+     carregado para o hero), sem autoplay e sem roda do mouse. Sem JavaScript o
+     trilho rola nativamente (overflow-x: auto). Categorias são só exploráveis:
+     article/figure, sem links falsos. -->
+<section class="secao secao--marfim secao--categorias" id="categorias" aria-labelledby="categorias-titulo" data-categorias>
+  <div class="categorias__cabecalho" data-reveal>
+    <p class="categorias__identificador">EXPLORE A LOJA</p>
+    <h2 class="titulo-secao" id="categorias-titulo">Peças para diferentes cantos da casa</h2>
+    <p class="secao-cabecalho__descricao">Decoração, mesa posta, flores, arranjos e presentes para conhecer de perto.</p>
+  </div>
+
+  <div class="categorias__trilho">
+    <div class="swiper categorias__swiper" role="region" aria-label="Categorias da loja" tabindex="0" data-categorias-swiper>
+      <div class="swiper-wrapper">
+        <article class="swiper-slide categoria">
+          <figure class="categoria__figura">
+            <div class="categoria__midia">
+              <picture>
+                <source srcset="assets/04-decoracao-geral.webp" type="image/webp">
+                <img draggable="false" src="assets/04-decoracao-geral.png" alt="Almofadas decorativas com estampas de cavalo, xadrez e listras" loading="lazy" decoding="async" width="476" height="752">
+              </picture>
+            </div>
+            <figcaption class="categoria__legenda">
+              <span class="categoria__numero" aria-hidden="true">01</span>
+              <h3 class="categoria__nome">Decoração</h3>
+            </figcaption>
+          </figure>
+        </article>
+        <article class="swiper-slide categoria">
+          <figure class="categoria__figura">
+            <div class="categoria__midia">
+              <picture>
+                <source srcset="assets/07-decoracao-facas.webp" type="image/webp">
+                <img draggable="false" src="assets/07-decoracao-facas.png" alt="Jogo de talheres dourados em caixa" loading="lazy" decoding="async" width="443" height="592">
+              </picture>
+            </div>
+            <figcaption class="categoria__legenda">
+              <span class="categoria__numero" aria-hidden="true">02</span>
+              <h3 class="categoria__nome">Mesa posta</h3>
+            </figcaption>
+          </figure>
+        </article>
+        <article class="swiper-slide categoria">
+          <figure class="categoria__figura">
+            <div class="categoria__midia">
+              <picture>
+                <source srcset="assets/06-decoracao-flores.webp" type="image/webp">
+                <img draggable="false" class="categoria__foto--flores" src="assets/06-decoracao-flores.png" alt="Planta ornamental de folhagem em vaso" loading="lazy" decoding="async" width="450" height="758">
+              </picture>
+            </div>
+            <figcaption class="categoria__legenda">
+              <span class="categoria__numero" aria-hidden="true">03</span>
+              <h3 class="categoria__nome">Flores e arranjos</h3>
+            </figcaption>
+          </figure>
+        </article>
+        <article class="swiper-slide categoria">
+          <figure class="categoria__figura">
+            <div class="categoria__midia">
+              <picture>
+                <source srcset="assets/08-decoracao-mesa.webp" type="image/webp">
+                <img draggable="false" src="assets/08-decoracao-mesa.png" alt="Vaso de vidro e prato decorativo sobre mesa de vidro" loading="lazy" decoding="async" width="463" height="748">
+              </picture>
+            </div>
+            <figcaption class="categoria__legenda">
+              <span class="categoria__numero" aria-hidden="true">04</span>
+              <h3 class="categoria__nome">Presentes</h3>
+            </figcaption>
+          </figure>
+        </article>
       </div>
     </div>
+  </div>
 
-    <ul class="carrossel__viewport" role="list" tabindex="0" aria-label="Categorias da loja" data-carrossel-viewport>
-      <li class="categoria">
-        <div class="categoria__midia">
-          <picture>
-            <source srcset="assets/04-decoracao-geral.webp" type="image/webp">
-            <img src="assets/04-decoracao-geral.png" alt="Almofadas decorativas com estampas de cavalo, xadrez e listras" loading="lazy" width="476" height="752">
-          </picture>
-        </div>
-        <h3 class="categoria__nome">Decoração</h3>
-      </li>
-      <li class="categoria">
-        <div class="categoria__midia">
-          <picture>
-            <source srcset="assets/07-decoracao-facas.webp" type="image/webp">
-            <img src="assets/07-decoracao-facas.png" alt="Jogo de talheres dourados em caixa" loading="lazy" width="443" height="592">
-          </picture>
-        </div>
-        <h3 class="categoria__nome">Mesa posta</h3>
-      </li>
-      <li class="categoria">
-        <div class="categoria__midia">
-          <picture>
-            <source srcset="assets/06-decoracao-flores.webp" type="image/webp">
-            <img class="categoria__foto--flores" src="assets/06-decoracao-flores.png" alt="Planta ornamental de folhagem em vaso" loading="lazy" width="450" height="758">
-          </picture>
-        </div>
-        <h3 class="categoria__nome">Flores e arranjos</h3>
-      </li>
-      <li class="categoria">
-        <div class="categoria__midia">
-          <picture>
-            <source srcset="assets/08-decoracao-mesa.webp" type="image/webp">
-            <img src="assets/08-decoracao-mesa.png" alt="Vaso de vidro e prato decorativo sobre mesa de vidro" loading="lazy" width="463" height="748">
-          </picture>
-        </div>
-        <h3 class="categoria__nome">Presentes</h3>
-      </li>
-    </ul>
+  <div class="categorias__controles" data-categorias-controles>
+    <p class="categorias__dica" data-categorias-dica>ARRASTE PARA EXPLORAR</p>
+    <div class="categorias__barra">
+      <p class="categorias__contador" aria-hidden="true"><span data-categorias-atual>01</span> — 04</p>
+      <div class="categorias__progresso" aria-hidden="true"><span data-categorias-progresso></span></div>
+      <div class="categorias__botoes">
+        <button type="button" class="botao-seta" data-categorias-anterior aria-label="Categoria anterior" aria-disabled="true"><svg viewBox="0 0 24 12" width="22" height="11" aria-hidden="true" focusable="false"><path d="M23 6H2M7 1L2 6l5 5" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+        <button type="button" class="botao-seta" data-categorias-proximo aria-label="Próxima categoria"><svg viewBox="0 0 24 12" width="22" height="11" aria-hidden="true" focusable="false"><path d="M1 6h21M17 1l5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+      </div>
+    </div>
   </div>
 </section>
 
@@ -683,6 +811,7 @@
   <p class="rodape__copy">&copy; <span id="ano">2026</span> Espaço Decora By Rita Assunção</p>
 </footer>
 
-<script src="js/script.js"></script>
+<script defer src="assets/vendor/swiper/swiper-bundle.min.js"></script>
+<script defer src="js/script.js"></script>
 </body>
 </html>
