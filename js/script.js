@@ -104,7 +104,23 @@ function iniciarCabecalho() {
 }
 
 // ---------------------------------------------------------------------------
-// Revelação ao rolar: anima o conjunto da seção, uma única vez.
+// Hero: a fachada aparece (fade) quando termina de carregar; até lá o contêiner
+// mostra o creme da marca. Se falhar, a classe entra mesmo assim.
+// ---------------------------------------------------------------------------
+function iniciarHero() {
+  const foto = document.querySelector('.hero__foto');
+  if (!foto) return;
+  const mostrar = () => foto.classList.add('is-carregada');
+  if (foto.complete) mostrar();
+  else {
+    foto.addEventListener('load', mostrar, { once: true });
+    foto.addEventListener('error', mostrar, { once: true });
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Revelação ao rolar: só cabeçalhos e blocos de texto ([data-reveal]), uma
+// única vez. A mídia principal nunca fica escondida.
 // ---------------------------------------------------------------------------
 function iniciarRevelacao() {
   const alvos = document.querySelectorAll('[data-reveal]');
@@ -119,7 +135,7 @@ function iniciarRevelacao() {
       entrada.target.classList.add('is-visible');
       observador.unobserve(entrada.target);
     });
-  }, { threshold: 0.05, rootMargin: '0px 0px -8% 0px' });
+  }, { threshold: 0.06, rootMargin: '0px 0px -4% 0px' });
 
   alvos.forEach((el) => observador.observe(el));
 }
@@ -407,6 +423,21 @@ function iniciarMapa() {
   const placeholder = mapa && mapa.querySelector('.mapa__placeholder');
   if (!iframe || !placeholder) return;
   iframe.addEventListener('load', () => { placeholder.hidden = true; }, { once: true });
+
+  // Se o mapa já está na tela e não dispara "load" em 12 s (rede lenta ou
+  // bloqueio), o texto deixa de prometer o carregamento e aponta para o link
+  // externo, sem spinner. O tempo só corre depois que o mapa entra na viewport.
+  if (!('IntersectionObserver' in window)) return;
+  const visto = new IntersectionObserver((entradas) => {
+    if (!entradas.some((e) => e.isIntersecting)) return;
+    visto.disconnect();
+    setTimeout(() => {
+      if (placeholder.hidden) return;
+      const texto = placeholder.querySelector('span');
+      if (texto) texto.textContent = 'Mapa indisponível agora. Use "Abrir no Google Maps".';
+    }, 12000);
+  });
+  visto.observe(mapa);
 }
 
 // ---------------------------------------------------------------------------
@@ -417,6 +448,7 @@ if (anoAtual) anoAtual.textContent = new Date().getFullYear();
 
 const splashPronto = iniciarSplash();
 iniciarCabecalho();
+iniciarHero();
 iniciarRevelacao();
 
 document.querySelectorAll('[data-carrossel]').forEach(iniciarCarrossel);
