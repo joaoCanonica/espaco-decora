@@ -252,12 +252,15 @@ html.splash-ativo .splash{
   border-bottom: 1px solid var(--linha);
   transition: background-color 0.25s ease, border-color 0.25s ease, color 0.25s ease;
 }
-/* O estado transparente só existe com JS: ele depende do JS para voltar a
-   ficar sólido ao rolar. */
+/* Transparente só com JS (é ele que volta a sólido ao rolar). No celular o
+   cabeçalho fica sobre a foto (texto claro); no desktop o hero começa abaixo
+   dele, então o texto continua escuro. */
 html.js-pronto .cabecalho:not(.cabecalho--rolado){
   background: transparent;
   border-bottom-color: transparent;
-  color: var(--claro);
+}
+@media (max-width: 899px){
+  html.js-pronto .cabecalho:not(.cabecalho--rolado){ color: var(--claro); }
 }
 .cabecalho.cabecalho--rolado{
   background: rgba(255, 255, 251, 0.94);
@@ -312,18 +315,11 @@ html.menu-aberto .cabecalho{
   justify-self: end;
   min-height: 44px;
   padding: 0 20px;
-  color: var(--claro);
-  border-color: rgba(255, 255, 251, 0.85);
-}
-.cabecalho__cta:hover{ background: rgba(255, 255, 251, 0.16); }
-.cabecalho--rolado .cabecalho__cta,
-html:not(.js-pronto) .cabecalho__cta{
   background: var(--accent);
   border-color: var(--accent);
   color: var(--claro);
 }
-.cabecalho--rolado .cabecalho__cta:hover,
-html:not(.js-pronto) .cabecalho__cta:hover{ background: #4b3835; }
+.cabecalho__cta:hover{ background: #4b3835; }
 
 .cabecalho__alternador{
   display: none;
@@ -412,55 +408,50 @@ html:not(.js-pronto) .cabecalho__cta:hover{ background: #4b3835; }
 }
 
 /* ==========================================================================
-   HERO — fachada em largura total
+   HERO — fachada em retrato
+   Celular: foto no topo (sob o cabeçalho transparente) e texto abaixo.
+   Desktop (900px+): composição dividida, texto ~38% / foto ~62%, abaixo do
+   cabeçalho; a foto não recebe overlay.
    ========================================================================== */
 .hero{
-  position: relative;
   display: flex;
-  align-items: flex-end;
-  height: 74vh;
-  height: 74svh;
-  min-height: 480px;
+  flex-direction: column;
+  background: var(--claro);
+  color: var(--texto);
+}
+
+.hero__midia{
+  order: -1;
+  position: relative;
+  display: block;
+  height: 58vh;
+  height: 58svh;
+  min-height: 340px;
   overflow: hidden;
   background: #cfc9c1;
-  color: var(--claro);
 }
-.hero picture{
+/* Faixa só no topo, para o cabeçalho transparente ler bem sobre a foto. */
+.hero__midia::before{
+  content: "";
   position: absolute;
-  inset: 0;
+  inset: 0 0 auto 0;
+  z-index: 1;
+  height: 130px;
+  background: linear-gradient(to bottom, rgba(10, 7, 6, 0.6), rgba(10, 7, 6, 0));
+  pointer-events: none;
 }
 .hero__foto{
+  display: block;
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: 55% 50%;
-}
-/* Overlay só onde há texto: faixa no topo (cabeçalho) e no rodapé. */
-.hero::before,
-.hero::after{
-  content: "";
-  position: absolute;
-  left: 0;
-  right: 0;
-  pointer-events: none;
-}
-.hero::before{
-  top: 0;
-  height: 150px;
-  background: linear-gradient(to bottom, rgba(10, 7, 6, 0.62), rgba(10, 7, 6, 0));
-}
-.hero::after{
-  bottom: 0;
-  height: 62%;
-  background: linear-gradient(to top, rgba(10, 7, 6, 0.74), rgba(10, 7, 6, 0.4) 45%, rgba(10, 7, 6, 0));
+  object-position: 50% 45%;
 }
 
 .hero__conteudo{
-  position: relative;
-  z-index: 2;
   width: min(100% - 2 * var(--gutter), var(--container));
   margin-inline: auto;
-  padding-bottom: 32px;
+  padding: 28px 0 40px;
   text-align: center;
 }
 .hero__titulo{
@@ -476,7 +467,7 @@ html:not(.js-pronto) .cabecalho__cta:hover{ background: #4b3835; }
 .hero__texto{
   margin: 10px auto 0;
   max-width: 34ch;
-  font-size: 16px;
+  color: var(--texto-suave);
 }
 .hero__acoes{
   display: flex;
@@ -488,34 +479,53 @@ html:not(.js-pronto) .cabecalho__cta:hover{ background: #4b3835; }
   margin-top: 14px;
   font-size: 13px;
   letter-spacing: 0.02em;
-  opacity: 0.9;
+  color: var(--texto-suave);
 }
 
 @media (min-width: 900px){
   .hero{
-    height: clamp(620px, 86vh, 760px);
-    min-height: 0;
-  }
-  .hero__foto{ object-position: 50% 40%; }
-  .hero::after{
-    height: 70%;
-    background: linear-gradient(to top, rgba(10, 7, 6, 0.7), rgba(10, 7, 6, 0.32) 50%, rgba(10, 7, 6, 0));
+    --coluna-esq: max(var(--gutter), calc((100% - var(--container)) / 2));
+    display: grid;
+    grid-template-columns:
+      var(--coluna-esq)
+      minmax(340px, calc(37.5% - var(--coluna-esq)))
+      minmax(0, 1fr);
+    height: clamp(650px, calc(100svh - var(--cabecalho-h)), 780px);
+    margin-top: var(--cabecalho-h);
+    scroll-margin-top: var(--cabecalho-h);
   }
   .hero__conteudo{
-    padding-bottom: 64px;
+    grid-column: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-end;
+    width: auto;
+    margin: 0;
+    padding: clamp(32px, 6vh, 64px) clamp(24px, 3.5vw, 56px) clamp(48px, 8vh, 90px) 0;
     text-align: left;
   }
-  .hero__titulo{ max-width: 12em; margin-inline: 0; }
+  .hero__titulo{ max-width: 11em; margin-inline: 0; }
   .hero__texto{ margin-inline: 0; }
-  .hero__acoes{ margin-top: 24px; }
+  .hero__acoes{ margin-top: 24px; flex-wrap: wrap; }
   .hero__acoes .botao{ flex: 0 0 auto; padding-inline: 28px; }
+  .hero__midia{
+    order: 0;
+    grid-column: 3;
+    height: auto;
+    min-height: 0;
+  }
+  .hero__midia::before{ display: none; }
+  /* Foto em retrato numa coluna larga: recorta pouco na altura e mantém do
+     beiral à calçada, com placa, vitrine e a entrada à direita. */
+  .hero__foto{ object-position: 50% 62%; }
 }
 
 /* Entrada única: só quando o splash não roda (ele já é a entrada). */
 html.sem-splash .hero__foto,
 html:not(.js-pronto) .hero__foto{ animation: hero-foto 500ms ease-out both; }
 html.sem-splash .hero__conteudo,
-html:not(.js-pronto) .hero__conteudo{ animation: hero-texto 550ms ease-out 100ms both; }
+html:not(.js-pronto) .hero__conteudo{ animation: hero-texto 500ms ease-out 100ms both; }
 
 @keyframes hero-foto{
   from{ opacity: 0; }
@@ -649,9 +659,9 @@ html:not(.js-pronto) .carrossel__controles{ display: none; }
 }
 
 /* ---- Categorias ---------------------------------------------------------- */
-.carrossel--categorias{ --visiveis: 3.4; --n: 3; }
-@media (max-width: 899px){ .carrossel--categorias{ --visiveis: 2.2; --n: 2; --gap: 16px; } }
-@media (max-width: 640px){ .carrossel--categorias{ --visiveis: 1.25; --n: 1; --gap: 12px; } }
+.carrossel--categorias{ --visiveis: 3; --n: 2; }
+@media (max-width: 899px){ .carrossel--categorias{ --visiveis: 2; --n: 1; --gap: 16px; } }
+@media (max-width: 640px){ .carrossel--categorias{ --visiveis: 1.15; --n: 1; --gap: 12px; } }
 
 .categoria__midia{
   aspect-ratio: 4 / 5;
@@ -663,7 +673,6 @@ html:not(.js-pronto) .carrossel__controles{ display: none; }
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: transform 0.45s ease;
 }
 /* A foto das flores traz um texto sobreposto no rodapé: o recorte fica no alto. */
 .categoria__foto--flores{ object-position: 50% 15%; }
@@ -675,7 +684,9 @@ html:not(.js-pronto) .carrossel__controles{ display: none; }
   line-height: 1.3;
 }
 @media (hover: hover) and (pointer: fine){
-  .categoria:hover .categoria__midia img{ transform: scale(1.025); }
+  .categoria__midia img{ transition: transform 420ms cubic-bezier(0.2, 0.65, 0.3, 1); }
+  .categoria:hover .categoria__midia img,
+  .categoria:focus-within .categoria__midia img{ transform: scale(1.025); }
 }
 
 @media (max-width: 640px){
@@ -725,27 +736,38 @@ html:not(.js-pronto) .carrossel__controles{ display: none; }
 }
 
 /* ==========================================================================
-   CONHEÇA A LOJA POR DENTRO — player único + miniaturas
+   CONHEÇA A LOJA POR DENTRO — vídeos verticais (9:16, 1080×1920)
+   Celular: título, player e miniaturas em trilho. Desktop (900px+): player
+   vertical à esquerda; título e miniaturas compactas à direita.
    ========================================================================== */
 .galeria{
-  width: min(100% - 2 * var(--gutter), 960px);
+  width: min(100% - 2 * var(--gutter), var(--container));
   margin-inline: auto;
 }
-.galeria .secao__cabecalho{ text-align: center; }
-.galeria .secao__texto{ margin-inline: auto; }
+.galeria__cabecalho{
+  margin-bottom: clamp(20px, 2.5vw, 32px);
+  text-align: center;
+}
+.galeria__cabecalho .secao__texto{ margin-inline: auto; }
 
-.galeria__palco{
-  height: min(62svh, calc((100vw - 2 * var(--gutter)) * 16 / 9));
-  background: #000;
+/* Quadro na proporção real do vídeo: sem faixas laterais nem corte. */
+.galeria__player{
+  width: min(100%, 420px, calc(72vh * 9 / 16));
+  width: min(100%, 420px, calc(72svh * 9 / 16));
+  margin-inline: auto;
+  aspect-ratio: 9 / 16;
+  overflow: hidden;
+  background: transparent;
 }
 .galeria__video{
+  display: block;
   width: 100%;
   height: 100%;
   object-fit: contain;
-  background: #000;
+  background: transparent;
   transition: opacity 0.2s ease;
 }
-.galeria__palco.is-trocando .galeria__video{ opacity: 0; }
+.galeria__player.is-trocando .galeria__video{ opacity: 0; }
 
 .galeria__miniaturas{
   display: flex;
@@ -777,7 +799,7 @@ html:not(.js-pronto) .galeria__miniaturas{ display: none; }
   font: inherit;
   text-align: left;
   cursor: pointer;
-  transition: color 0.2s ease;
+  transition: color 0.2s ease, background-color 0.2s ease;
 }
 .miniatura img{
   width: 100%;
@@ -821,8 +843,56 @@ html:not(.js-pronto) .galeria__miniaturas{ display: none; }
   border-bottom: 1px solid currentColor;
 }
 
-@media (min-width: 641px){
-  .galeria__palco{ height: clamp(400px, 60vh, 540px); }
+@media (min-width: 900px){
+  .galeria{
+    display: grid;
+    grid-template-columns: auto minmax(280px, 380px);
+    grid-template-rows: 1fr auto auto 1fr;
+    grid-template-areas:
+      "player ."
+      "player titulo"
+      "player lista"
+      "player .";
+    justify-content: center;
+    column-gap: clamp(48px, 7vw, 112px);
+  }
+  .galeria__cabecalho{
+    grid-area: titulo;
+    margin-bottom: 24px;
+    text-align: left;
+  }
+  .galeria__cabecalho .secao__texto{ margin-inline: 0; }
+  .galeria__player{
+    grid-area: player;
+    width: clamp(380px, calc((100svh - 140px) * 9 / 16), 420px);
+    margin: 0;
+  }
+  .galeria__lista{ grid-area: lista; }
+
+  /* Miniaturas compactas em coluna, uma linha por vídeo. */
+  .galeria__miniaturas{
+    flex-direction: column;
+    gap: 6px;
+    margin-top: 0;
+    padding: 0;
+    overflow: visible;
+  }
+  .galeria__miniaturas li{ flex: none; min-width: 0; max-width: none; }
+  .miniatura{
+    flex-direction: row;
+    align-items: center;
+    gap: 16px;
+    padding: 8px 12px 8px 8px;
+    border-left: 2px solid transparent;
+    border-radius: var(--raio-s);
+  }
+  .miniatura img{ width: 64px; flex: none; }
+  .miniatura:hover{ background: rgba(255, 255, 251, 0.06); }
+  .miniatura[aria-current="true"]{
+    background: rgba(255, 255, 251, 0.1);
+    border-left-color: var(--primaria);
+  }
+  .miniatura__titulo{ font-size: 16px; }
 }
 
 /* ==========================================================================
@@ -1142,11 +1212,32 @@ img.comparador__camada{
   margin-top: 4px;
 }
 
+.visite__mapa-coluna{
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+}
 .visite__mapa{
   position: relative;
+  flex: 1;
+  width: 100%;
   min-height: 380px;
   background: var(--creme);
 }
+/* Cobre o iframe até ele disparar "load"; sem JS não aparece. */
+.mapa__placeholder{
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--creme);
+  color: var(--texto-suave);
+  font-size: 15px;
+}
+html:not(.js-pronto) .mapa__placeholder{ display: none; }
 .visite__mapa iframe{
   position: absolute;
   inset: 0;
@@ -1161,7 +1252,7 @@ img.comparador__camada{
 @media (max-width: 640px){
   .visite__acoes{ width: 100%; flex-direction: column; }
   .visite__acoes .botao{ width: 100%; }
-  .visite__mapa{ min-height: 0; height: 320px; }
+  .visite__mapa{ flex: none; min-height: 0; height: 320px; }
 }
 
 .rua__titulo{
@@ -1330,14 +1421,14 @@ html.foto-dialog-aberto{ overflow: hidden; }
 }
 
 /* ==========================================================================
-   REVELAÇÃO AO ROLAR — o conjunto da seção, uma vez, 16 px / 550 ms
+   REVELAÇÃO AO ROLAR — o conjunto da seção, uma vez, 16 px / 500 ms
    ========================================================================== */
 html.js-pronto [data-reveal]:not(.is-visible){
   opacity: 0;
   transform: translateY(16px);
 }
 html.js-pronto [data-reveal]{
-  transition: opacity 0.55s ease, transform 0.55s ease;
+  transition: opacity 0.5s ease, transform 0.5s ease;
 }
 
 /* ==========================================================================

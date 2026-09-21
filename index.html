@@ -74,7 +74,7 @@
   as="image"
   type="image/webp"
   fetchpriority="high"
-  imagesizes="(max-width: 640px) 100vw, min(100vw, 1280px)"
+  imagesizes="(max-width: 899px) 100vw, 63vw"
   imagesrcset="assets/fachada-640.webp 640w, assets/fachada-960.webp 960w, assets/fachada-1280.webp 1280w, assets/fachada-1728.webp 1728w"
 >
 
@@ -165,10 +165,20 @@
 <main id="conteudo-principal">
 
 <section class="hero" id="topo">
-  <picture>
+  <div class="hero__conteudo">
+    <h1 class="hero__titulo">Decoração para ver de perto.</h1>
+    <p class="hero__texto">Peças para casa, mesa e presentes no Centro de Lages.</p>
+    <div class="hero__acoes">
+      <a class="botao botao--primario" href="#loja">Conhecer a loja</a>
+      <a class="botao botao--contorno" href="https://www.google.com/maps/search/?api=1&amp;query=R.%20Frei%20Rog%C3%A9rio%2C%2083%20-%20Centro%2C%20Lages%2FSC" target="_blank" rel="noopener noreferrer">Como chegar</a>
+    </div>
+    <p class="hero__endereco">R. Frei Rogério, 83 · Centro</p>
+  </div>
+
+  <picture class="hero__midia">
     <source
       type="image/webp"
-      sizes="(max-width: 640px) 100vw, min(100vw, 1280px)"
+      sizes="(max-width: 899px) 100vw, 63vw"
       srcset="assets/fachada-640.webp 640w, assets/fachada-960.webp 960w, assets/fachada-1280.webp 1280w, assets/fachada-1728.webp 1728w"
     >
     <img
@@ -180,16 +190,6 @@
       fetchpriority="high"
     >
   </picture>
-
-  <div class="hero__conteudo">
-    <h1 class="hero__titulo">Decoração para ver de perto.</h1>
-    <p class="hero__texto">Peças para casa, mesa e presentes no Centro de Lages.</p>
-    <div class="hero__acoes">
-      <a class="botao botao--claro" href="#loja">Conhecer a loja</a>
-      <a class="botao botao--contorno-claro" href="https://www.google.com/maps/search/?api=1&amp;query=R.%20Frei%20Rog%C3%A9rio%2C%2083%20-%20Centro%2C%20Lages%2FSC" target="_blank" rel="noopener noreferrer">Como chegar</a>
-    </div>
-    <p class="hero__endereco">R. Frei Rogério, 83 · Centro</p>
-  </div>
 </section>
 
 <section class="secao" id="loja" aria-labelledby="loja-titulo">
@@ -197,7 +197,7 @@
     <div class="carrossel__topo">
       <h2 class="titulo-secao" id="loja-titulo">Escolhas para cada ambiente</h2>
       <div class="carrossel__controles">
-        <p class="carrossel__contador" data-carrossel-contador aria-live="polite" aria-atomic="true">01 / 04</p>
+        <p class="carrossel__contador" data-carrossel-contador aria-live="polite" aria-atomic="true">1–3 de 4</p>
         <button type="button" class="carrossel__botao" data-carrossel-anterior aria-label="Categoria anterior">
           <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </button>
@@ -250,12 +250,12 @@
 
 <section class="secao secao--escura" id="por-dentro" aria-labelledby="por-dentro-titulo">
   <div class="galeria" data-galeria data-reveal>
-    <div class="secao__cabecalho">
+    <div class="galeria__cabecalho">
       <h2 class="titulo-secao" id="por-dentro-titulo">Conheça a loja por dentro</h2>
       <p class="secao__texto">Escolha um vídeo e caminhe pelos ambientes.</p>
     </div>
 
-    <div class="galeria__palco" data-galeria-palco>
+    <div class="galeria__player" data-galeria-player>
       <video
         class="galeria__video"
         controls
@@ -271,39 +271,41 @@
       </video>
     </div>
 
-    <ul class="galeria__miniaturas" role="list" aria-label="Vídeos da loja">
-      <li>
-        <button type="button" class="miniatura" aria-current="true"
-          data-video="videos/entrando-na-loja.mp4" data-poster="assets/posters/entrando-na-loja.jpg" data-titulo="Da fachada à entrada">
-          <img src="assets/posters/explorador-etapa-1.jpg" alt="" loading="lazy" width="168" height="299">
-          <span class="miniatura__titulo">Da fachada à entrada</span>
-        </button>
-      </li>
-      <li>
-        <button type="button" class="miniatura"
-          data-video="videos/interior-1.mp4" data-poster="assets/posters/interior-1.jpg" data-titulo="Ambiente principal">
-          <img src="assets/posters/explorador-etapa-2.jpg" alt="" loading="lazy" width="168" height="299">
-          <span class="miniatura__titulo">Ambiente principal</span>
-        </button>
-      </li>
-      <li>
-        <button type="button" class="miniatura"
-          data-video="videos/interior-2.mp4" data-poster="assets/posters/interior-2.jpg" data-titulo="Segundo ambiente">
-          <img src="assets/posters/explorador-etapa-3.jpg" alt="" loading="lazy" width="168" height="299">
-          <span class="miniatura__titulo">Segundo ambiente</span>
-        </button>
-      </li>
-    </ul>
-
-    <noscript>
-      <ul class="galeria__alternativas">
-        <li><a href="videos/entrando-na-loja.mp4">Da fachada à entrada (MP4)</a></li>
-        <li><a href="videos/interior-1.mp4">Ambiente principal (MP4)</a></li>
-        <li><a href="videos/interior-2.mp4">Segundo ambiente (MP4)</a></li>
+    <div class="galeria__lista">
+      <ul class="galeria__miniaturas" role="list" aria-label="Vídeos da loja">
+        <li>
+          <button type="button" class="miniatura" aria-current="true"
+            data-video="videos/entrando-na-loja.mp4" data-poster="assets/posters/entrando-na-loja.jpg" data-titulo="Da fachada à entrada">
+            <img src="assets/posters/explorador-etapa-1.jpg" alt="" loading="lazy" width="168" height="299">
+            <span class="miniatura__titulo">Da fachada à entrada</span>
+          </button>
+        </li>
+        <li>
+          <button type="button" class="miniatura"
+            data-video="videos/interior-1.mp4" data-poster="assets/posters/interior-1.jpg" data-titulo="Ambiente principal">
+            <img src="assets/posters/explorador-etapa-2.jpg" alt="" loading="lazy" width="168" height="299">
+            <span class="miniatura__titulo">Ambiente principal</span>
+          </button>
+        </li>
+        <li>
+          <button type="button" class="miniatura"
+            data-video="videos/interior-2.mp4" data-poster="assets/posters/interior-2.jpg" data-titulo="Segundo ambiente">
+            <img src="assets/posters/explorador-etapa-3.jpg" alt="" loading="lazy" width="168" height="299">
+            <span class="miniatura__titulo">Segundo ambiente</span>
+          </button>
+        </li>
       </ul>
-    </noscript>
 
-    <p class="sr-only" role="status" aria-live="polite" data-galeria-status></p>
+      <noscript>
+        <ul class="galeria__alternativas">
+          <li><a href="videos/entrando-na-loja.mp4">Da fachada à entrada (MP4)</a></li>
+          <li><a href="videos/interior-1.mp4">Ambiente principal (MP4)</a></li>
+          <li><a href="videos/interior-2.mp4">Segundo ambiente (MP4)</a></li>
+        </ul>
+      </noscript>
+
+      <p class="sr-only" role="status" aria-live="polite" data-galeria-status></p>
+    </div>
   </div>
 </section>
 
@@ -484,13 +486,17 @@
       </div>
     </div>
 
-    <div class="visite__mapa">
-      <iframe
-        src="https://maps.google.com/maps?q=R.+Frei+Rogerio,+83+-+Centro,+Lages+-+SC&z=16&output=embed"
-        title="Mapa com a localização do Espaço Decora em Lages - SC"
-        loading="lazy"
-        referrerpolicy="no-referrer-when-downgrade"
-      ></iframe>
+    <div class="visite__mapa-coluna">
+      <div class="visite__mapa">
+        <div class="mapa__placeholder" aria-hidden="true"><span>Mapa da Espaço Decora</span></div>
+        <iframe
+          src="https://maps.google.com/maps?q=R.+Frei+Rogerio,+83+-+Centro,+Lages+-+SC&z=16&output=embed"
+          title="Mapa com a localização do Espaço Decora em Lages - SC"
+          loading="lazy"
+          referrerpolicy="no-referrer-when-downgrade"
+        ></iframe>
+      </div>
+      <a class="link-seta" href="https://www.google.com/maps/search/?api=1&amp;query=R.%20Frei%20Rog%C3%A9rio%2C%2083%20-%20Centro%2C%20Lages%2FSC" target="_blank" rel="noopener noreferrer">Abrir no Google Maps</a>
     </div>
   </div>
 

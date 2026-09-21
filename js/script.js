@@ -131,9 +131,14 @@ function iniciarRevelacao() {
 //   [data-carrossel-anterior] / [data-carrossel-proximo]   botões (opcionais)
 //   [data-carrossel-contador]  texto do indicador, aria-live (opcional)
 //   [data-carrossel-pontos]    barrinhas, uma por slide (opcional)
-// Sem intervalos automáticos; a rolagem respeita prefers-reduced-motion.
+// A posição vem da matemática do trilho, não de qual card aparece mais:
+//   passo   = largura do slide + gap (distância entre dois slides)
+//   inicio  = round(scrollLeft / passo)        → primeiro card da janela
+//   ultimo  = min(inicio + visíveis, total)    → visíveis = parte inteira de --visiveis
+// Indicador: "1–3 de 4" (vários cards) ou "2 de 4" (um card). Sem autoplay, sem
+// loop; a rolagem respeita prefers-reduced-motion.
 // ---------------------------------------------------------------------------
-function iniciarCarrossel(raiz, formatar = (i, total) => `${i + 1} de ${total}`) {
+function iniciarCarrossel(raiz) {
   const viewport = raiz.querySelector('[data-carrossel-viewport]');
   if (!viewport) return;
 
@@ -147,16 +152,15 @@ function iniciarCarrossel(raiz, formatar = (i, total) => `${i + 1} de ${total}`)
     ? slides.map(() => pontos.appendChild(document.createElement('span')))
     : [];
 
-  let primeiroVisivel = 0;
+  let inicio = 0;
+  let larguraAnterior = viewport.clientWidth;
   let agendado = 0;
 
-  const fracoesVisiveis = () => {
-    const area = viewport.getBoundingClientRect();
-    return slides.map((slide) => {
-      const r = slide.getBoundingClientRect();
-      const visivel = Math.min(r.right, area.right) - Math.max(r.left, area.left);
-      return r.width ? Math.max(0, visivel) / r.width : 0;
-    });
+  const medidas = () => {
+    const passo = total > 1 ? slides[1].offsetLeft - slides[0].offsetLeft : viewport.clientWidth;
+    const visiveis = Math.max(1, Math.floor(parseFloat(getComputedStyle(raiz).getPropertyValue('--visiveis')) || 1));
+    const limite = Math.max(0, viewport.scrollWidth - viewport.clientWidth);
+    return { passo, visiveis, limite, ultimoInicio: Math.max(0, total - visiveis) };
   };
 
   const desativarBotao = (botao, desativar, outro) => {
@@ -168,57 +172,56 @@ function iniciarCarrossel(raiz, formatar = (i, total) => `${i + 1} de ${total}`)
 
   const atualizar = () => {
     agendado = 0;
-    const fracoes = fracoesVisiveis();
-    const limite = viewport.scrollWidth - viewport.clientWidth;
-    const noInicio = viewport.scrollLeft <= 2;
-    const noFim = viewport.scrollLeft >= limite - 2;
-
-    primeiroVisivel = fracoes.findIndex((f) => f >= 0.5);
-    if (primeiroVisivel < 0) primeiroVisivel = fracoes.indexOf(Math.max(...fracoes));
-
-    // Indicador: nas pontas o item é o primeiro/último, senão o predominante.
-    let indice = primeiroVisivel;
-    if (noInicio) indice = 0;
-    else if (noFim) indice = total - 1;
+    const { passo, visiveis, limite, ultimoInicio } = medidas();
+    const rolagem = Math.min(viewport.scrollLeft, limite);
+    inicio = passo > 0 ? Math.min(ultimoInicio, Math.round(rolagem / passo)) : 0;
+    const ultimo = Math.min(inicio + visiveis, total);
 
     if (contador) {
-      const texto = formatar(indice, total);
+      const texto = ultimo > inicio + 1
+        ? `${inicio + 1}–${ultimo} de ${total}`
+        : `${inicio + 1} de ${total}`;
       if (contador.textContent !== texto) contador.textContent = texto;
     }
-    marcadores.forEach((m, i) => m.classList.toggle('is-ativo', i === indice));
-    desativarBotao(anterior, noInicio || limite <= 2, proximo);
-    desativarBotao(proximo, noFim || limite <= 2, anterior);
+    marcadores.forEach((m, i) => m.classList.toggle('is-ativo', i === inicio));
+    const semRolagem = limite <= 2;
+    desativarBotao(anterior, semRolagem || rolagem <= 2, proximo);
+    desativarBotao(proximo, semRolagem || rolagem >= limite - 2, anterior);
   };
 
   const agendar = () => {
     if (!agendado) agendado = requestAnimationFrame(atualizar);
   };
 
-  const irPara = (indice) => {
-    const alvo = slides[Math.min(total - 1, Math.max(0, indice))];
-    const recuo = parseFloat(getComputedStyle(viewport).paddingLeft) || 0;
-    viewport.scrollTo({ left: alvo.offsetLeft - recuo, behavior: comportamentoRolagem() });
+  const irPara = (indice, comportamento = comportamentoRolagem()) => {
+    const { passo, limite, ultimoInicio } = medidas();
+    const alvo = Math.min(ultimoInicio, Math.max(0, indice));
+    viewport.scrollTo({ left: Math.min(limite, alvo * passo), behavior: comportamento });
   };
 
-  if (anterior) anterior.addEventListener('click', () => irPara(primeiroVisivel - 1));
-  if (proximo) proximo.addEventListener('click', () => irPara(primeiroVisivel + 1));
+  if (anterior) anterior.addEventListener('click', () => irPara(inicio - 1));
+  if (proximo) proximo.addEventListener('click', () => irPara(inicio + 1));
 
   // Teclado com o próprio trilho focado (setas e Home/End).
   viewport.addEventListener('keydown', (e) => {
     if (e.target !== viewport) return;
-    const destinos = {
-      ArrowLeft: primeiroVisivel - 1,
-      ArrowRight: primeiroVisivel + 1,
-      Home: 0,
-      End: total - 1,
-    };
+    const destinos = { ArrowLeft: inicio - 1, ArrowRight: inicio + 1, Home: 0, End: total };
     if (!(e.key in destinos)) return;
     e.preventDefault();
     irPara(destinos[e.key]);
   });
 
+  // Ao mudar a largura (giro, breakpoint), o trilho volta para uma posição
+  // exata do mesmo primeiro card, respeitando o novo limite de rolagem.
+  window.addEventListener('resize', () => {
+    if (viewport.clientWidth !== larguraAnterior) {
+      larguraAnterior = viewport.clientWidth;
+      irPara(inicio, 'auto');
+    }
+    agendar();
+  });
+
   viewport.addEventListener('scroll', agendar, { passive: true });
-  window.addEventListener('resize', agendar);
   atualizar();
 }
 
@@ -301,8 +304,8 @@ function iniciarGaleriaVideos(splashPronto) {
   const raiz = document.querySelector('[data-galeria]');
   if (!raiz) return;
 
-  const palco = raiz.querySelector('[data-galeria-palco]');
-  const video = palco.querySelector('video');
+  const player = raiz.querySelector('[data-galeria-player]');
+  const video = player.querySelector('video');
   const status = raiz.querySelector('[data-galeria-status]');
   const botoes = Array.from(raiz.querySelectorAll('[data-video]'));
   const alternativa = video.querySelector('a');
@@ -318,7 +321,7 @@ function iniciarGaleriaVideos(splashPronto) {
     });
     if (!video.paused) video.pause();
 
-    palco.classList.add('is-trocando');
+    player.classList.add('is-trocando');
     clearTimeout(troca);
     troca = setTimeout(() => {
       video.preload = 'metadata';
@@ -326,7 +329,7 @@ function iniciarGaleriaVideos(splashPronto) {
       video.src = botao.dataset.video;
       video.setAttribute('aria-label', botao.dataset.titulo);
       if (alternativa) alternativa.href = botao.dataset.video;
-      palco.classList.remove('is-trocando');
+      player.classList.remove('is-trocando');
     }, reduzMovimento.matches ? 0 : 200);
 
     status.textContent = `Vídeo selecionado: ${botao.dataset.titulo}.`;
@@ -394,6 +397,19 @@ function iniciarFotoAmpliada() {
 }
 
 // ---------------------------------------------------------------------------
+// Mapa: o iframe usa loading="lazy" (só carrega perto da tela); o placeholder
+// cobre o vazio até o evento "load". O link "Abrir no Google Maps" não depende
+// do iframe.
+// ---------------------------------------------------------------------------
+function iniciarMapa() {
+  const mapa = document.querySelector('.visite__mapa');
+  const iframe = mapa && mapa.querySelector('iframe');
+  const placeholder = mapa && mapa.querySelector('.mapa__placeholder');
+  if (!iframe || !placeholder) return;
+  iframe.addEventListener('load', () => { placeholder.hidden = true; }, { once: true });
+}
+
+// ---------------------------------------------------------------------------
 // Início
 // ---------------------------------------------------------------------------
 const anoAtual = document.getElementById('ano');
@@ -403,17 +419,11 @@ const splashPronto = iniciarSplash();
 iniciarCabecalho();
 iniciarRevelacao();
 
-const doisDigitos = (n) => String(n).padStart(2, '0');
-document.querySelectorAll('[data-carrossel]').forEach((raiz) => {
-  if (raiz.classList.contains('carrossel--categorias')) {
-    iniciarCarrossel(raiz, (i, total) => `${doisDigitos(i + 1)} / ${doisDigitos(total)}`);
-  } else {
-    iniciarCarrossel(raiz);
-  }
-});
+document.querySelectorAll('[data-carrossel]').forEach(iniciarCarrossel);
 
 iniciarComparador();
 pausarOutrosVideos();
 iniciarVideoCards();
 iniciarGaleriaVideos(splashPronto);
 iniciarFotoAmpliada();
+iniciarMapa();
