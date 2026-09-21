@@ -6,9 +6,12 @@ node_modules/
 videos/*
 !videos/01-apresentacao-rita.mp4
 !videos/10-transformacao-loft.mp4
-!videos/09-decoracao-recomeco.mp4
-!videos/04-decoracao-clinica.mp4
-!videos/11-evento-decora.mp4
 !videos/02-apresentando-fragrancias.mp4
 !videos/13-decoracoes-mesa.mp4
-!videos/14-decoracoes-vasos.mp4
+
+# Explorador da loja: versões WEB (recodificadas e SEM áudio, 6/19/29 MB) dos vídeos da visita
+# guiada. Os originais 4K (30/260/338 MB) ficam FORA do projeto, em
+# ../espacoDecora-originais/videos, e não devem ser versionados.
+!videos/entrando-na-loja.mp4
+!videos/interior-1.mp4
+!videos/interior-2.mp4
