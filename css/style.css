@@ -70,11 +70,27 @@ a{ color: inherit; text-decoration: none; }
 
 /* Foco de teclado visível em qualquer elemento interativo — nunca escondido. */
 a:focus-visible,
+ul[tabindex]:focus-visible,
 button:focus-visible,
-input:focus-visible{
+input:focus-visible,
+video:focus-visible{
   outline: var(--foco-largura) solid var(--foco);
   outline-offset: 3px;
 }
+
+/* --foco (vinho) some sobre fundos escuros/vinho — nessas seções o anel de
+   foco usa a variante clara da paleta. */
+.explorador,
+.inspiracoes,
+.transformacao,
+.faixa-visita,
+.rodape,
+.foto-dialog{
+  --foco: var(--primaria-clara);
+}
+
+/* Autor com display:flex/grid não pode anular o atributo hidden. */
+[hidden]{ display: none !important; }
 
 .sr-only{
   position: absolute;
@@ -114,14 +130,17 @@ input:focus-visible{
 /* ==========================================================================
    SPLASH — tela de abertura (vídeo de ramos + texto real da marca)
    ========================================================================== */
-html.sem-splash .splash{ display: none; }
+/* O splash só existe quando o JS inicial (<head>) marcou html.js-pronto:
+   sem JavaScript nada o removeria e ele cobriria o site inteiro. */
+html.js-pronto .splash{ display: flex; }
+html.js-pronto.sem-splash .splash{ display: none; }
 html.splash-ativo{ overflow: hidden; }
 
 .splash{
   position: fixed;
   inset: 0;
   z-index: 9999;
-  display: flex;
+  display: none;
   align-items: center;
   justify-content: center;
   background: var(--primaria);
@@ -184,7 +203,7 @@ html.splash-ativo{ overflow: hidden; }
 @media (prefers-reduced-motion: reduce){
   /* Uma animação de ramos se desenhando é o tipo de movimento que essa
      preferência existe para evitar — pula direto para o conteúdo real. */
-  .splash{ display: none; }
+  html.js-pronto .splash{ display: none; }
 }
 
 .eyebrow{
@@ -244,6 +263,7 @@ main > section{
   transition: background-color 0.25s ease, box-shadow 0.25s ease;
 }
 .cabecalho.cabecalho--rolado{
+  background: rgba(239, 227, 208, 0.9);
   background: color-mix(in srgb, var(--creme) 90%, transparent);
   backdrop-filter: blur(8px);
   box-shadow: var(--sombra-suave);
@@ -261,6 +281,9 @@ main > section{
 }
 
 .cabecalho__marca{
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
   font-family: var(--fonte-titulo);
   font-size: clamp(1.2rem, 2vw, 1.5rem);
   font-weight: 500;
@@ -353,6 +376,7 @@ main > section{
   position: fixed;
   inset: 0;
   z-index: 498;
+  background: rgba(10, 7, 6, 0.45);
   background: color-mix(in srgb, var(--escuro) 45%, transparent);
   opacity: 0;
   pointer-events: none;
@@ -426,17 +450,27 @@ html.menu-aberto{ overflow: hidden; }
   width: 100%;
   height: 100%;
   object-fit: cover;
-  /* Enquadramento por breakpoint (ver media queries abaixo) para manter a
-     placa "aromas decorações" e o letreiro "DECORA" visíveis — a foto é
-     em retrato (3024×4032) e o recorte do cover varia bastante conforme a
-     proporção do hero em cada largura de tela. */
-  object-position: 34% 20%;
+  /* Foto em retrato (3:4), letreiro "DECORA" e vitrine já bem
+     centralizados no quadro original. Testado por simulação do recorte do
+     object-fit:cover em 360/390/768/1024/1440px: um único ponto focal
+     mantém placa "aromas decorações", entrada e vitrine reconhecíveis em
+     toda a faixa — ao contrário da foto anterior, não precisa de valores
+     diferentes por breakpoint. */
+  object-position: 50% 35%;
 }
 
 .hero__nevoa{
   position: absolute;
   inset: 0;
   z-index: 1;
+  /* Cor estática primeiro: sem color-mix() (Safari < 16.2) o texto do hero
+     ficaria sem overlay. É o mesmo tom: 78% --accent + 22% --escuro. */
+  background: linear-gradient(
+    180deg,
+    rgba(10, 7, 6, 0) 0%,
+    rgba(10, 7, 6, 0.05) 35%,
+    #503c39 100%
+  );
   background: linear-gradient(
     180deg,
     rgba(10, 7, 6, 0) 0%,
@@ -463,17 +497,40 @@ html.menu-aberto{ overflow: hidden; }
   padding: clamp(32px, 6vw, 56px) var(--gutter) clamp(44px, 7vw, 72px);
   color: var(--claro);
 }
-.hero__conteudo .eyebrow{ color: var(--primaria); }
+.hero__conteudo .eyebrow{
+  /* Tom claro + halo escuro: o dourado puro ficava ilegível sobre o letreiro
+     e os reflexos da vitrine (contraste medido 1,1:1 em vários aparelhos). */
+  color: var(--primaria-clara);
+  text-shadow: 0 0 6px rgba(10, 7, 6, 1), 0 0 12px rgba(10, 7, 6, 0.95), 0 0 3px rgba(10, 7, 6, 1);
+}
+
+/* Em telas estreitas/médias o bloco de texto cobre boa parte da foto: um
+   painel de gradiente que nasce na borda do próprio bloco (e não no hero
+   inteiro) garante contraste sem escurecer a fachada acima dele. */
+@media (max-width: 899px){
+  .hero__conteudo::before{
+    content: "";
+    position: absolute;
+    inset: -56px 0 0 0;
+    z-index: -1;
+    background: linear-gradient(180deg, rgba(10, 7, 6, 0), rgba(10, 7, 6, 0.5) 56px, rgba(45, 33, 31, 0.72) 100%);
+    pointer-events: none;
+  }
+}
 
 .hero__titulo{
   font-family: var(--fonte-titulo);
   font-weight: 600;
   font-size: clamp(1.9rem, 4.4vw, 3.1rem);
   line-height: 1.18;
-  max-width: 15ch;
+  max-width: 18ch;
   margin: 0 0 0.7rem;
   color: var(--claro);
-  text-shadow: 0 2px 20px rgba(10, 7, 6, 0.3);
+  text-shadow: 0 0 10px rgba(10, 7, 6, 0.9), 0 0 24px rgba(10, 7, 6, 0.8), 0 2px 4px rgba(10, 7, 6, 0.8);
+}
+/* Menos linhas no título = bloco de texto mais baixo, fora do letreiro. */
+@media (min-width: 640px){
+  .hero__titulo{ max-width: 24ch; }
 }
 
 .hero__texto{
@@ -483,6 +540,7 @@ html.menu-aberto{ overflow: hidden; }
   margin: 0 0 1.6rem;
   color: var(--claro);
   opacity: 0.92;
+  text-shadow: 0 0 8px rgba(10, 7, 6, 0.95), 0 0 16px rgba(10, 7, 6, 0.85), 0 1px 3px rgba(10, 7, 6, 0.9);
 }
 
 .hero__acoes{
@@ -490,6 +548,16 @@ html.menu-aberto{ overflow: hidden; }
   flex-wrap: wrap;
   gap: 0.9rem;
   margin-bottom: 1.4rem;
+}
+
+/* Celular: os dois botões dividem uma linha (economiza ~60px de altura e
+   mantém o bloco de texto abaixo do letreiro); o eyebrow cabe em uma linha. */
+@media (max-width: 480px){
+  .hero__acoes{ flex-wrap: nowrap; gap: 0.6rem; }
+  .hero__acoes .botao{ flex: 1 1 auto; padding: 0.7em 0.9em; font-size: 0.82rem; white-space: nowrap; }
+}
+@media (max-width: 400px){
+  .hero__conteudo .eyebrow{ letter-spacing: 0.2em; }
 }
 
 .botao{
@@ -553,19 +621,7 @@ html.menu-aberto{ overflow: hidden; }
   color: var(--claro);
   opacity: 0.85;
   margin: 0;
-}
-
-/* Fachada em retrato: em telas mais largas e curtas o recorte horizontal
-   do cover cresce, então o ponto focal precisa migrar um pouco para a
-   direita para não perder a placa "aromas decorações" (mais central na
-   foto original) por trás do texto ou fora da tela. O valor vertical foi
-   recalibrado para descer o enquadramento: a versão anterior mostrava
-   céu vazio demais e pouca fachada, competindo com o texto por atenção. */
-@media (min-width: 640px){
-  .hero__foto{ object-position: 40% 30%; }
-}
-@media (min-width: 1024px){
-  .hero__foto{ object-position: 46% 35%; }
+  text-shadow: 0 0 8px rgba(10, 7, 6, 0.95), 0 0 16px rgba(10, 7, 6, 0.85), 0 1px 3px rgba(10, 7, 6, 0.9);
 }
 
 /* ==========================================================================
@@ -586,7 +642,11 @@ html.menu-aberto{ overflow: hidden; }
   text-align: center;
 }
 .vitrine__cabecalho .eyebrow{ display:inline-block; }
-.vitrine__cabecalho .titulo-secao{ margin: 0 auto; }
+/* Espaço entre título e texto de apoio deste cabeçalho: menor que o
+   margin-bottom padrão de .titulo-secao (pensado para quando o título é o
+   último elemento), mas positivo — sem margem negativa "puxando" o texto
+   por cima do título. */
+.vitrine__cabecalho .titulo-secao{ margin: 0 auto 0.85rem; }
 
 /* .eyebrow padrão (--primaria) só tem contraste AA sobre fundo escuro
    (usado em .transformacao). Sobre creme, --primaria-escura. */
@@ -594,7 +654,7 @@ html.menu-aberto{ overflow: hidden; }
 
 .curadoria__intro{
   max-width: 56ch;
-  margin: -0.6rem auto 0;
+  margin: 0 auto;
   font-size: 0.95rem;
   line-height: 1.6;
   color: var(--escuro);
@@ -651,14 +711,9 @@ html.menu-aberto{ overflow: hidden; }
 .categoria-card__texto{
   font-size: 0.85rem;
   line-height: 1.5;
-  margin: -0.4rem 0 0;
+  margin: 0;
   color: var(--escuro);
   opacity: 0.7;
-}
-
-.curadoria__cta{
-  text-align: center;
-  margin-top: clamp(40px, 5vw, 64px);
 }
 
 /* Sai discretamente do canto superior direito, atrás do cabeçalho da
@@ -669,6 +724,423 @@ html.menu-aberto{ overflow: hidden; }
   width: clamp(120px, 14vw, 190px);
   opacity: 0.5;
   transform: rotate(18deg) scaleX(-1);
+}
+
+/* ==========================================================================
+   EXPLORADOR DA LOJA — visita guiada em três etapas (vídeos convencionais,
+   não 360°). Sem JS: .explorador__blocos (três blocos com controles
+   nativos). Com JS: .explorador__palco (um único player + etapas).
+   ========================================================================== */
+.explorador{
+  position: relative;
+  background: var(--escuro);
+  color: var(--claro);
+  padding: clamp(72px, 10vw, 128px) var(--gutter);
+}
+.explorador__intro{
+  max-width: 56ch;
+  margin: 0 auto;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: var(--claro);
+  opacity: 0.8;
+}
+.explorador__app{
+  max-width: var(--container);
+  margin: 0 auto;
+}
+
+/* --- Versão sem JavaScript: três blocos simples ------------------------ */
+.explorador__blocos{
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: clamp(20px, 2.4vw, 36px);
+}
+.explorador__bloco{
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+  min-width: 0;
+}
+.explorador__bloco-video{
+  width: 100%;
+  aspect-ratio: 9 / 16;
+  max-height: 520px;
+  object-fit: contain;
+  background: #000;
+  border: 1px solid color-mix(in srgb, var(--claro) 30%, transparent);
+}
+.explorador__bloco-titulo{
+  font-family: var(--fonte-titulo);
+  font-weight: 500;
+  font-size: 1.25rem;
+  margin: 0;
+}
+.explorador__bloco-duracao{
+  margin: 0;
+  font-size: 0.78rem;
+  letter-spacing: 0.06em;
+  color: var(--primaria-clara);
+}
+.explorador__bloco-desc{
+  margin: 0;
+  font-size: 0.88rem;
+  line-height: 1.6;
+  opacity: 0.85;
+}
+.explorador__bloco-capitulos{
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.2rem;
+}
+.explorador__bloco-capitulos a{
+  display: inline-flex;
+  align-items: center;
+  gap: 0.7em;
+  min-height: 44px;
+  font-size: 0.85rem;
+  color: var(--claro);
+  border-bottom: 1px solid transparent;
+}
+.explorador__bloco-capitulos a:hover{ border-color: var(--primaria-clara); }
+.explorador__bloco-capitulos span{
+  font-variant-numeric: tabular-nums;
+  color: var(--primaria-clara);
+}
+
+/* --- Versão com JavaScript: um único player + etapas -------------------- */
+.explorador__palco{
+  display: grid;
+  grid-template-columns: minmax(0, 380px) minmax(0, 1fr);
+  gap: clamp(28px, 5vw, 72px);
+  align-items: start;
+}
+
+.explorador__midia{
+  width: min(100%, 380px, max(calc(74dvh * 9 / 16), 240px));
+  margin: 0 auto;
+}
+.explorador__quadro{
+  aspect-ratio: 9 / 16;
+  background: #000;
+  border: 1px solid color-mix(in srgb, var(--primaria) 50%, transparent);
+  overflow: hidden;
+}
+.explorador__video{
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  background: #000;
+}
+
+.explorador__info{
+  display: flex;
+  flex-direction: column;
+  gap: 1.6rem;
+  min-width: 0;
+}
+
+.explorador__passo{
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: var(--primaria);
+  margin: 0 0 0.7rem;
+}
+.explorador__titulo-etapa{
+  font-family: var(--fonte-titulo);
+  font-weight: 500;
+  font-size: clamp(1.6rem, 2.6vw, 2.2rem);
+  line-height: 1.2;
+  margin: 0 0 0.5rem;
+}
+.explorador__duracao{
+  margin: 0 0 1rem;
+  font-size: 0.8rem;
+  letter-spacing: 0.06em;
+  color: var(--primaria-clara);
+}
+.explorador__desc{
+  margin: 0;
+  max-width: 48ch;
+  line-height: 1.7;
+  opacity: 0.88;
+}
+
+/* Troca de etapa: uma única entrada suave (não é animação contínua). */
+.explorador__texto.is-entrando{
+  animation: explorador-entrada 0.24s ease-out;
+}
+@keyframes explorador-entrada{
+  from{ opacity: 0; transform: translateY(6px); }
+  to{ opacity: 1; transform: translateY(0); }
+}
+
+.explorador__botao{
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  min-width: 44px;
+  padding: 0.7em 1.4em;
+  font-family: var(--fonte-corpo);
+  font-size: 0.85rem;
+  font-weight: 500;
+  letter-spacing: 0.03em;
+  color: var(--claro);
+  background: transparent;
+  border: 1px solid color-mix(in srgb, var(--claro) 50%, transparent);
+  border-radius: var(--raio-pill);
+  cursor: pointer;
+  transition: background 0.2s ease, border-color 0.2s ease, opacity 0.2s ease;
+}
+.explorador__botao:hover{
+  background: color-mix(in srgb, var(--claro) 14%, transparent);
+  border-color: var(--claro);
+}
+.explorador__botao[aria-disabled="true"]{
+  opacity: 0.4;
+  cursor: default;
+}
+.explorador__botao[aria-disabled="true"]:hover{
+  background: transparent;
+  border-color: color-mix(in srgb, var(--claro) 50%, transparent);
+}
+.explorador__botao--primario{
+  color: var(--escuro);
+  background: var(--primaria);
+  border-color: transparent;
+}
+.explorador__botao--primario:hover{
+  background: color-mix(in srgb, var(--primaria) 85%, white);
+  border-color: transparent;
+}
+.explorador__botao[aria-pressed="true"]{
+  color: var(--escuro);
+  background: var(--primaria-clara);
+  border-color: transparent;
+}
+
+.explorador__fim{
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.8rem 1.2rem;
+  padding: 1rem 1.2rem;
+  border-left: 2px solid var(--primaria);
+  background: color-mix(in srgb, var(--claro) 7%, transparent);
+}
+.explorador__fim p{
+  margin: 0;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.explorador__nav{
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.explorador__etapas{
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.6rem;
+}
+.explorador__etapa{
+  display: grid;
+  grid-template-columns: 56px minmax(0, 1fr);
+  align-items: center;
+  gap: 0 1rem;
+  width: 100%;
+  min-height: 72px;
+  padding: 0.5rem 0.9rem 0.5rem 0.5rem;
+  text-align: left;
+  font-family: var(--fonte-corpo);
+  color: var(--claro);
+  background: transparent;
+  border: 1px solid color-mix(in srgb, var(--claro) 24%, transparent);
+  cursor: pointer;
+  transition: border-color 0.2s ease, background 0.2s ease;
+}
+.explorador__etapa:hover{
+  border-color: color-mix(in srgb, var(--claro) 60%, transparent);
+}
+.explorador__etapa[aria-current="step"]{
+  border-color: var(--primaria);
+  background: color-mix(in srgb, var(--primaria) 14%, transparent);
+}
+.explorador__etapa.is-proxima{
+  border-color: var(--primaria-clara);
+  box-shadow: inset 0 0 0 1px var(--primaria-clara);
+}
+.explorador__miniatura{
+  grid-row: 1 / span 2;
+  width: 56px;
+  aspect-ratio: 9 / 16;
+  height: auto;
+  object-fit: cover;
+  border: 1px solid color-mix(in srgb, var(--claro) 25%, transparent);
+}
+.explorador__etapa-titulo{
+  font-family: var(--fonte-titulo);
+  font-size: 1.15rem;
+  font-weight: 500;
+  line-height: 1.25;
+  align-self: end;
+}
+.explorador__etapa-meta{
+  font-size: 0.75rem;
+  letter-spacing: 0.06em;
+  color: var(--primaria-clara);
+  align-self: start;
+  margin-top: 0.25rem;
+}
+
+.explorador__observar{
+  display: grid;
+  gap: 0.9rem;
+  justify-items: start;
+  padding-top: 1.4rem;
+  border-top: 1px solid color-mix(in srgb, var(--claro) 18%, transparent);
+}
+.explorador__nota{
+  margin: 0;
+  max-width: 52ch;
+  font-size: 0.82rem;
+  line-height: 1.6;
+  opacity: 0.75;
+}
+.explorador__detalhes{
+  display: grid;
+  gap: 1rem;
+  width: 100%;
+}
+.explorador__controles{
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.6rem;
+}
+.explorador__velocidade{
+  margin: 0;
+  font-size: 0.8rem;
+  letter-spacing: 0.06em;
+  font-variant-numeric: tabular-nums;
+  color: var(--primaria-clara);
+}
+.explorador__capitulos-titulo{
+  margin: 0 0 0.4rem;
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--primaria-clara);
+}
+.explorador__capitulos{
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.3rem;
+}
+.explorador__capitulo{
+  display: grid;
+  grid-template-columns: 4.2em minmax(0, 1fr);
+  align-items: center;
+  gap: 0.8rem;
+  width: 100%;
+  min-height: 44px;
+  padding: 0.4rem 0.8rem;
+  text-align: left;
+  font-family: var(--fonte-corpo);
+  font-size: 0.88rem;
+  color: var(--claro);
+  background: transparent;
+  border: 1px solid color-mix(in srgb, var(--claro) 18%, transparent);
+  cursor: pointer;
+  transition: border-color 0.2s ease, background 0.2s ease;
+}
+.explorador__capitulo:hover{
+  border-color: var(--primaria-clara);
+  background: color-mix(in srgb, var(--claro) 6%, transparent);
+}
+.explorador__capitulo-tempo{
+  font-variant-numeric: tabular-nums;
+  color: var(--primaria-clara);
+}
+
+/* Conclusão: sem JS fecha a seção; com JS só aparece ao terminar a etapa 3. */
+.explorador__conclusao{
+  margin-top: clamp(48px, 6vw, 80px);
+  padding: clamp(28px, 4vw, 44px) clamp(20px, 4vw, 48px);
+  text-align: center;
+  border-top: 1px solid color-mix(in srgb, var(--primaria) 45%, transparent);
+  border-bottom: 1px solid color-mix(in srgb, var(--primaria) 45%, transparent);
+}
+.explorador__conclusao.is-entrando{
+  animation: explorador-entrada 0.24s ease-out;
+}
+.explorador__conclusao-titulo{
+  font-family: var(--fonte-titulo);
+  font-weight: 500;
+  font-size: clamp(1.6rem, 2.8vw, 2.2rem);
+  line-height: 1.2;
+  margin: 0 0 0.6rem;
+}
+.explorador__conclusao-texto{
+  max-width: 52ch;
+  margin: 0 auto 1.4rem;
+  line-height: 1.6;
+  opacity: 0.85;
+}
+.explorador__conclusao-acoes{
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.9rem;
+}
+
+@media (max-width: 899px){
+  .explorador__palco{ grid-template-columns: minmax(0, 1fr); }
+  .explorador__blocos{
+    grid-template-columns: minmax(0, 340px);
+    justify-content: center;
+    gap: 48px;
+  }
+
+  /* Etapas em lista horizontal com scroll-snap: a fatia da próxima etapa
+     espiando na borda avisa que há mais de uma. */
+  .explorador__etapas{
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    margin: 0 calc(var(--gutter) * -1);
+    padding: 0 var(--gutter) 0.4rem;
+    -webkit-overflow-scrolling: touch;
+  }
+  .explorador__etapa{
+    flex: 0 0 min(78%, 280px);
+    scroll-snap-align: start;
+  }
+}
+
+@media (prefers-reduced-motion: reduce){
+  .explorador__texto.is-entrando,
+  .explorador__conclusao.is-entrando{ animation: none; }
+  .explorador__botao,
+  .explorador__etapa,
+  .explorador__capitulo{ transition: none; }
+  .explorador__etapas{ scroll-snap-type: none; }
 }
 
 /* ==========================================================================
@@ -687,7 +1159,7 @@ html.menu-aberto{ overflow: hidden; }
 
 .inspiracoes__intro{
   max-width: 56ch;
-  margin: -0.6rem auto 0;
+  margin: 0 auto;
   font-size: 0.95rem;
   line-height: 1.6;
   color: var(--claro);
@@ -834,7 +1306,7 @@ html.menu-aberto{ overflow: hidden; }
   text-align: center;
 }
 .transformacao__intro{
-  margin: -0.8rem 0 0;
+  margin: 0;
   font-size: 0.9rem;
   font-weight: 300;
   color: var(--claro);
@@ -871,7 +1343,7 @@ html.menu-aberto{ overflow: hidden; }
   position: absolute;
   top: 1em;
   z-index: 2;
-  font-size: 0.68rem;
+  font-size: 0.72rem;
   letter-spacing: 0.24em;
   text-transform: uppercase;
   color: var(--claro);
@@ -975,6 +1447,78 @@ html.menu-aberto{ overflow: hidden; }
 }
 
 /* ==========================================================================
+   AVALIAÇÕES — nove avaliações reais do Google, sem avatar, data, contagem,
+   média nem selo. Grade: 1 coluna (mobile), 2 (tablet), 3 (desktop).
+   Nenhum texto é truncado: cada card cresce até caber o comentário inteiro.
+   ========================================================================== */
+.avaliacoes{
+  position: relative;
+  background: var(--claro);
+  padding: clamp(72px, 10vw, 128px) var(--gutter);
+  color: var(--escuro);
+}
+.avaliacoes .eyebrow{ color: var(--primaria-escura); }
+.avaliacoes__apoio{
+  max-width: 56ch;
+  margin: 0 auto;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  opacity: 0.75;
+}
+
+.avaliacoes__lista{
+  list-style: none;
+  margin: 0 auto;
+  padding: 0;
+  max-width: var(--container);
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: clamp(16px, 2.4vw, 28px);
+}
+@media (min-width: 640px){
+  .avaliacoes__lista{ grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (min-width: 1024px){
+  .avaliacoes__lista{ grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+
+.avaliacao{
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+  padding: clamp(20px, 2.4vw, 28px);
+  background: var(--creme);
+  border: 1px solid color-mix(in srgb, var(--primaria) 45%, transparent);
+}
+.avaliacao__estrelas{
+  display: flex;
+  gap: 0.15rem;
+  margin: 0;
+  color: var(--primaria-escura);
+}
+.estrela{ width: 18px; height: 18px; flex: none; }
+.estrela--cheia{ fill: currentColor; stroke: currentColor; }
+.estrela--vazia{ fill: none; stroke: currentColor; }
+.avaliacao__texto{
+  flex: 1;
+  margin: 0;
+}
+.avaliacao__texto p{
+  margin: 0;
+  font-family: var(--fonte-titulo);
+  font-size: clamp(1.15rem, 1.6vw, 1.35rem);
+  font-weight: 500;
+  line-height: 1.45;
+}
+.avaliacao__autor{
+  margin: 0;
+  font-size: 0.85rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  color: var(--accent);
+}
+
+/* ==========================================================================
    FAIXA PRÁTICA — como encontrar e falar com a loja
    ========================================================================== */
 .faixa-visita{
@@ -1009,6 +1553,25 @@ html.menu-aberto{ overflow: hidden; }
   margin: 0;
 }
 
+.faixa-visita__horarios{
+  max-width: var(--container);
+  margin: 0 auto clamp(32px, 5vw, 48px);
+}
+/* Faixa de horário nunca quebra no meio (ex.: "13:30–" / "18:30"). */
+.hora{ white-space: nowrap; }
+
+.horarios{
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  justify-items: center;
+  gap: 0.35rem;
+  font-size: 1rem;
+  line-height: 1.5;
+  color: var(--claro);
+}
+
 .faixa-visita__acoes{
   display: flex;
   flex-wrap: wrap;
@@ -1025,6 +1588,176 @@ html.menu-aberto{ overflow: hidden; }
   color: var(--primaria-clara);
   opacity: 0.45;
   transform: rotate(-10deg);
+}
+
+/* ==========================================================================
+   RECONHEÇA A LOJA AO CHEGAR — apoio visual às ações principais acima
+   (Como chegar / WhatsApp), não substitui elas.
+   ========================================================================== */
+.reconheca{
+  position: relative;
+  z-index: 2;
+  max-width: var(--container);
+  margin: clamp(40px, 5vw, 56px) auto 0;
+  padding-top: clamp(28px, 4vw, 40px);
+  border-top: 1px solid color-mix(in srgb, var(--claro) 20%, transparent);
+}
+
+.reconheca__titulo{
+  font-family: var(--fonte-titulo);
+  font-weight: 500;
+  font-size: clamp(1.25rem, 2vw, 1.6rem);
+  margin: 0 0 0.5rem;
+  color: var(--claro);
+}
+
+.reconheca__texto{
+  max-width: 52ch;
+  margin: 0 auto clamp(24px, 3vw, 36px);
+  font-size: 0.9rem;
+  line-height: 1.6;
+  color: var(--claro);
+  opacity: 0.82;
+}
+
+.reconheca__lista{
+  list-style: none;
+  margin: 0 auto;
+  padding: 0;
+  max-width: 760px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: clamp(16px, 2.4vw, 28px);
+  text-align: left;
+}
+
+.reconheca__item{
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  color: var(--claro);
+  text-decoration: none;
+}
+
+.reconheca__foto{
+  width: 100%;
+  aspect-ratio: 3 / 4;
+  object-fit: cover;
+  border: 1px solid color-mix(in srgb, var(--claro) 30%, transparent);
+  transition: border-color 0.2s ease;
+}
+.reconheca__item:hover .reconheca__foto,
+.reconheca__item:focus-visible .reconheca__foto{
+  border-color: var(--claro);
+}
+
+.reconheca__legenda{
+  font-size: 0.82rem;
+  line-height: 1.4;
+  opacity: 0.9;
+}
+
+/* Até 640px, a grade de 3 colunas fica apertada demais — vira lista
+   horizontal com scroll-snap (mesmo padrão de .inspiracoes__lista),
+   sem avançar sozinha. */
+@media (max-width: 640px){
+  .reconheca__lista{
+    display: flex;
+    grid-template-columns: unset;
+    max-width: none;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    margin: 0 calc(var(--gutter) * -1);
+    padding: 0 var(--gutter) 0.4rem;
+    -webkit-overflow-scrolling: touch;
+  }
+  /* O item flexível de verdade é o <li> (filho direto de .reconheca__lista);
+     .reconheca__item é o <a> um nível abaixo, então a largura precisa ser
+     definida aqui, não nele. */
+  .reconheca__lista > li{
+    flex: 0 0 62%;
+    scroll-snap-align: start;
+  }
+}
+
+@media (prefers-reduced-motion: reduce){
+  .reconheca__lista{ scroll-snap-type: none; }
+}
+
+/* ==========================================================================
+   FOTO AMPLIADA — <dialog> reaproveitado pelos 3 links de "Reconheça a
+   loja ao chegar" (ver js/script.js). Sem JS, cada link abre o arquivo da
+   foto direto — este dialog nunca chega a existir como modal.
+   ========================================================================== */
+.foto-dialog{
+  border: none;
+  padding: 0;
+  max-width: min(92vw, 880px);
+  max-height: 88dvh;
+  background: transparent;
+}
+.foto-dialog::backdrop{
+  background: color-mix(in srgb, var(--escuro) 80%, transparent);
+}
+
+.foto-dialog__quadro{
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  max-height: 88dvh;
+  padding: clamp(14px, 2.4vw, 22px);
+  background: var(--escuro);
+  border: 1px solid color-mix(in srgb, var(--primaria) 45%, transparent);
+}
+
+.foto-dialog__img{
+  display: block;
+  margin: 0 auto;
+  max-width: 100%;
+  max-height: 72dvh;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+}
+
+.foto-dialog__legenda{
+  margin: 0;
+  text-align: center;
+  font-size: 0.85rem;
+  color: var(--claro);
+  opacity: 0.85;
+}
+
+.foto-dialog__fechar{
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  color: var(--claro);
+  background: color-mix(in srgb, var(--escuro) 55%, transparent);
+  border: 1px solid color-mix(in srgb, var(--claro) 40%, transparent);
+  border-radius: 50%;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+.foto-dialog__fechar:hover{
+  background: var(--accent);
+}
+
+/* Trava a rolagem do fundo só enquanto o dialog está aberto (reforça o
+   comportamento nativo de showModal(), que já bloqueia interação com o
+   resto da página) — mesmo padrão usado em html.menu-aberto. */
+html.foto-dialog-aberto{ overflow: hidden; }
+
+@media (prefers-reduced-motion: reduce){
+  .foto-dialog__fechar{ transition: none; }
 }
 
 /* ==========================================================================
@@ -1078,6 +1811,16 @@ html.menu-aberto{ overflow: hidden; }
   color: var(--claro);
   opacity: 0.75;
   margin: 0;
+}
+
+.rodape__horarios{
+  display: grid;
+  gap: 0.15rem;
+  margin: 0;
+  font-size: 0.8rem;
+  line-height: 1.5;
+  color: var(--claro);
+  opacity: 0.75;
 }
 
 .rodape__link-mapa{
