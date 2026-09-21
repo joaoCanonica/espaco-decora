@@ -398,6 +398,7 @@ html.splash-ativo .splash{
     inset: 0;
     z-index: 590;
     background: rgba(67, 40, 36, 0.42);
+    touch-action: none;
     opacity: 0;
     visibility: hidden;
     transition: opacity 240ms ease, visibility 0s linear 240ms;
@@ -571,7 +572,35 @@ html.splash-ativo .splash{
   object-position: 50% 52%;
 }
 
-@media (min-width: 641px) and (max-width: 899px){
+/* Celular (até 767px): conjunto compacto (~720–820 px com o cabeçalho). A foto
+   não precisa aparecer inteira: altura 380–460 px, recortada para manter a
+   placa e a vitrine (o topo, com fios e céu, é o que sai). */
+@media (max-width: 767px){
+  .hero__conteudo{ padding: 16px 0 0; }
+  .hero__identificador{ margin-bottom: 8px; }
+  .hero__titulo{
+    font-size: clamp(2.25rem, 2rem + 1.2vw, 2.625rem);
+    line-height: 1.05;
+  }
+  .hero__texto{
+    margin-top: 10px;
+    font-size: 16px;
+    line-height: 1.45;
+  }
+  .hero__acoes{ margin-top: 6px; }
+  .hero__endereco{ margin-top: 2px; }
+  .hero__midia{
+    height: clamp(380px, 56vw, 460px);
+    margin: 14px auto 28px;
+    aspect-ratio: auto;
+  }
+  .hero__foto{ object-position: 50% 75%; }
+}
+@media (min-width: 481px) and (max-width: 767px){
+  .hero__foto{ object-position: 50% 55%; }
+}
+
+@media (min-width: 768px) and (max-width: 899px){
   .hero__midia{ aspect-ratio: 4 / 3; }
   .hero__foto{ object-position: 50% 68%; }
 }
@@ -584,6 +613,7 @@ html.splash-ativo .splash{
       var(--coluna-esq)
       minmax(360px, calc(42% - var(--coluna-esq)))
       minmax(0, 1fr);
+    height: clamp(620px, calc(100vh - var(--cabecalho-altura)), 720px);
     height: clamp(620px, calc(100svh - var(--cabecalho-altura)), 720px);
     margin-top: var(--cabecalho-altura);
     padding-top: 0;
@@ -961,6 +991,7 @@ html:not(.js-pronto) .galeria__miniaturas{ display: none; }
   }
   .galeria__player{
     grid-area: player;
+    width: clamp(300px, calc((100vh - 220px) * 9 / 16 + 16px), 340px);
     width: clamp(300px, calc((100svh - 220px) * 9 / 16 + 16px), 340px);
     margin: 0;
   }
@@ -1460,6 +1491,7 @@ html:not(.js-pronto) .mapa__placeholder{ display: none; }
   width: auto;
   height: auto;
   max-width: 100%;
+  max-height: 78vh;
   max-height: 78dvh;
   object-fit: contain;
 }
