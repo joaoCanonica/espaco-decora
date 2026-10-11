@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://espaco-decora.vercel.app/sitemap.xml
