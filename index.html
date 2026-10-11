@@ -27,39 +27,232 @@
 <meta name="twitter:image" content="https://espaco-decora.vercel.app/assets/og-image.jpg">
 <meta name="twitter:image:alt" content="Logo da Espaço Decora By Rita Assunção sobre ramos dourados">
 
+<!-- Dados estruturados em um único @graph: loja, Rita, site, página, os seis
+     vídeos exibidos e as perguntas frequentes da seção Visite (iguais ao texto
+     visível). Sem aggregateRating nem review: as avaliações do site são
+     comentários reais do Google, exibidos como publicados. Sem priceRange e sem
+     geo (coordenada não confirmada em duas fontes). -->
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
-  "@type": "HomeGoodsStore",
-  "name": "Espaço Decora By Rita Assunção",
-  "url": "https://espaco-decora.vercel.app/",
-  "image": "https://espaco-decora.vercel.app/assets/video/splash-poster.jpg",
-  "telephone": "+55 49 3224-2543",
-  "address": {
-    "@type": "PostalAddress",
-    "streetAddress": "R. Frei Rogério, 83",
-    "addressLocality": "Lages",
-    "addressRegion": "SC",
-    "addressCountry": "BR"
-  },
-  "openingHoursSpecification": [
+  "@graph": [
     {
-      "@type": "OpeningHoursSpecification",
-      "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
-      "opens": "09:00",
-      "closes": "12:00"
+      "@type": "HomeGoodsStore",
+      "@id": "https://espaco-decora.vercel.app/#loja",
+      "name": "Espaço Decora By Rita Assunção",
+      "alternateName": [
+        "Espaço Decora"
+      ],
+      "description": "Loja de decoração no Centro de Lages (SC) com mesa posta, flores, arranjos e presentes escolhidos por Rita Assunção. Visite ou fale pelo WhatsApp.",
+      "url": "https://espaco-decora.vercel.app/",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://espaco-decora.vercel.app/assets/logo/apple-touch-icon.png",
+        "width": 180,
+        "height": 180
+      },
+      "image": [
+        "https://espaco-decora.vercel.app/assets/fachada.jpg",
+        "https://espaco-decora.vercel.app/assets/og-image.jpg"
+      ],
+      "telephone": "+554932242543",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "R. Frei Rogério, 83",
+        "addressLocality": "Lages",
+        "addressRegion": "SC",
+        "postalCode": "88502-161",
+        "addressCountry": "BR"
+      },
+      "hasMap": "https://www.google.com/maps/search/?api=1&query=R.%20Frei%20Rog%C3%A9rio%2C%2083%20-%20Centro%2C%20Lages%2FSC",
+      "sameAs": [
+        "https://www.instagram.com/espacodecorabyritaassuncao"
+      ],
+      "areaServed": {
+        "@type": "City",
+        "name": "Lages"
+      },
+      "founder": {
+        "@id": "https://espaco-decora.vercel.app/#rita"
+      },
+      "openingHoursSpecification": [
+        {
+          "@type": "OpeningHoursSpecification",
+          "dayOfWeek": [
+            "Monday",
+            "Tuesday",
+            "Wednesday",
+            "Thursday",
+            "Friday"
+          ],
+          "opens": "09:00",
+          "closes": "12:00"
+        },
+        {
+          "@type": "OpeningHoursSpecification",
+          "dayOfWeek": [
+            "Monday",
+            "Tuesday",
+            "Wednesday",
+            "Thursday",
+            "Friday"
+          ],
+          "opens": "13:30",
+          "closes": "18:30"
+        },
+        {
+          "@type": "OpeningHoursSpecification",
+          "dayOfWeek": "Saturday",
+          "opens": "09:00",
+          "closes": "13:00"
+        }
+      ],
+      "hasOfferCatalog": {
+        "@type": "OfferCatalog",
+        "name": "Peças da loja",
+        "itemListElement": [
+          {
+            "@type": "OfferCatalog",
+            "name": "Decoração"
+          },
+          {
+            "@type": "OfferCatalog",
+            "name": "Mesa posta"
+          },
+          {
+            "@type": "OfferCatalog",
+            "name": "Flores e arranjos"
+          },
+          {
+            "@type": "OfferCatalog",
+            "name": "Presentes"
+          }
+        ]
+      }
     },
     {
-      "@type": "OpeningHoursSpecification",
-      "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
-      "opens": "13:30",
-      "closes": "18:30"
+      "@type": "Person",
+      "@id": "https://espaco-decora.vercel.app/#rita",
+      "name": "Rita Assunção",
+      "worksFor": {
+        "@id": "https://espaco-decora.vercel.app/#loja"
+      },
+      "image": "https://espaco-decora.vercel.app/assets/posters/01-apresentacao-rita.jpg",
+      "description": "Criadora da Espaço Decora, seleciona as peças e conduz o atendimento da loja."
     },
     {
-      "@type": "OpeningHoursSpecification",
-      "dayOfWeek": "Saturday",
-      "opens": "09:00",
-      "closes": "13:00"
+      "@type": "WebSite",
+      "@id": "https://espaco-decora.vercel.app/#website",
+      "url": "https://espaco-decora.vercel.app/",
+      "name": "Espaço Decora By Rita Assunção",
+      "inLanguage": "pt-BR",
+      "publisher": {
+        "@id": "https://espaco-decora.vercel.app/#loja"
+      }
+    },
+    {
+      "@type": "WebPage",
+      "@id": "https://espaco-decora.vercel.app/#webpage",
+      "url": "https://espaco-decora.vercel.app/",
+      "name": "Espaço Decora By Rita Assunção | Loja de Decoração em Lages, SC",
+      "description": "Loja de decoração no Centro de Lages (SC) com mesa posta, flores, arranjos e presentes escolhidos por Rita Assunção. Visite ou fale pelo WhatsApp.",
+      "isPartOf": {
+        "@id": "https://espaco-decora.vercel.app/#website"
+      },
+      "about": {
+        "@id": "https://espaco-decora.vercel.app/#loja"
+      },
+      "primaryImageOfPage": {
+        "@type": "ImageObject",
+        "url": "https://espaco-decora.vercel.app/assets/og-image.jpg",
+        "width": 1200,
+        "height": 630
+      },
+      "inLanguage": "pt-BR"
+    },
+    {
+      "@type": "VideoObject",
+      "@id": "https://espaco-decora.vercel.app/#video-01-apresentacao-rita",
+      "name": "Apresentação de Rita Assunção",
+      "description": "Rita Assunção aparece falando entre estantes, vasos e arranjos da loja.",
+      "thumbnailUrl": "https://espaco-decora.vercel.app/assets/posters/01-apresentacao-rita.jpg",
+      "contentUrl": "https://espaco-decora.vercel.app/videos/01-apresentacao-rita.mp4",
+      "uploadDate": "2026-09-12T20:39:41-03:00",
+      "duration": "PT37S",
+      "inLanguage": "pt-BR",
+      "isPartOf": {
+        "@id": "https://espaco-decora.vercel.app/#webpage"
+      }
+    },
+    {
+      "@type": "VideoObject",
+      "@id": "https://espaco-decora.vercel.app/#video-entrando-na-loja",
+      "name": "Entrada e fachada",
+      "description": "Caminho pela calçada da Rua Frei Rogério até a porta e a entrada da loja.",
+      "thumbnailUrl": "https://espaco-decora.vercel.app/assets/posters/entrando-na-loja.jpg",
+      "contentUrl": "https://espaco-decora.vercel.app/videos/entrando-na-loja.mp4",
+      "uploadDate": "2026-09-21T13:07:03-03:00",
+      "duration": "PT13S",
+      "inLanguage": "pt-BR",
+      "isPartOf": {
+        "@id": "https://espaco-decora.vercel.app/#webpage"
+      }
+    },
+    {
+      "@type": "VideoObject",
+      "@id": "https://espaco-decora.vercel.app/#video-interior-1",
+      "name": "Primeiro ambiente",
+      "description": "Prateleiras da loja com utensílios de cozinha, produtos embalados, objetos decorativos e flores.",
+      "thumbnailUrl": "https://espaco-decora.vercel.app/assets/posters/interior-1.jpg",
+      "contentUrl": "https://espaco-decora.vercel.app/videos/interior-1.mp4",
+      "uploadDate": "2026-09-21T13:07:03-03:00",
+      "duration": "PT55S",
+      "inLanguage": "pt-BR",
+      "isPartOf": {
+        "@id": "https://espaco-decora.vercel.app/#webpage"
+      }
+    },
+    {
+      "@type": "VideoObject",
+      "@id": "https://espaco-decora.vercel.app/#video-interior-2",
+      "name": "Segundo ambiente",
+      "description": "Ambiente da loja com peças de vidro e cristal, pratos decorados e prateleiras com objetos.",
+      "thumbnailUrl": "https://espaco-decora.vercel.app/assets/posters/interior-2.jpg",
+      "contentUrl": "https://espaco-decora.vercel.app/videos/interior-2.mp4",
+      "uploadDate": "2026-09-21T13:07:03-03:00",
+      "duration": "PT1M25S",
+      "inLanguage": "pt-BR",
+      "isPartOf": {
+        "@id": "https://espaco-decora.vercel.app/#webpage"
+      }
+    },
+    {
+      "@type": "VideoObject",
+      "@id": "https://espaco-decora.vercel.app/#video-10-transformacao-loft",
+      "name": "Transformação de ambiente",
+      "description": "Um loft vazio, com escada e mezanino, aparece depois mobiliado e decorado, com cozinha e sala.",
+      "thumbnailUrl": "https://espaco-decora.vercel.app/assets/posters/10-transformacao-loft.jpg",
+      "contentUrl": "https://espaco-decora.vercel.app/videos/10-transformacao-loft.mp4",
+      "uploadDate": "2026-09-12T20:39:41-03:00",
+      "duration": "PT35S",
+      "inLanguage": "pt-BR",
+      "isPartOf": {
+        "@id": "https://espaco-decora.vercel.app/#webpage"
+      }
+    },
+    {
+      "@type": "VideoObject",
+      "@id": "https://espaco-decora.vercel.app/#video-13-decoracoes-mesa",
+      "name": "Mesa posta",
+      "description": "Composições sobre mesa com arranjo de flores secas, vasos, livro e esculturas decorativas.",
+      "thumbnailUrl": "https://espaco-decora.vercel.app/assets/posters/13-decoracoes-mesa.jpg",
+      "contentUrl": "https://espaco-decora.vercel.app/videos/13-decoracoes-mesa.mp4",
+      "uploadDate": "2026-09-12T20:39:41-03:00",
+      "duration": "PT33S",
+      "inLanguage": "pt-BR",
+      "isPartOf": {
+        "@id": "https://espaco-decora.vercel.app/#webpage"
+      }
     }
   ]
 }
