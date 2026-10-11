@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1"
+        xmlns:video="http://www.google.com/schemas/sitemap-video/1.1">
+  <url>
+    <loc>https://espaco-decora.vercel.app/</loc>
+    <lastmod>2026-10-11</lastmod>
+    <image:image>
+      <image:loc>https://espaco-decora.vercel.app/assets/fachada.jpg</image:loc>
+      <image:title>Fachada da loja Espaço Decora, no Centro de Lages</image:title>
+      <image:caption>Fachada da loja Espaço Decora, no Centro de Lages</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://espaco-decora.vercel.app/assets/og-image.jpg</image:loc>
+      <image:title>Logo da Espaço Decora By Rita Assunção sobre ramos dourados</image:title>
+      <image:caption>Logo da Espaço Decora By Rita Assunção sobre ramos dourados</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://espaco-decora.vercel.app/assets/04-decoracao-geral.png</image:loc>
+      <image:title>Almofadas decorativas com estampas de cavalo, xadrez e listras</image:title>
+      <image:caption>Almofadas decorativas com estampas de cavalo, xadrez e listras</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://espaco-decora.vercel.app/assets/07-decoracao-facas.png</image:loc>
+      <image:title>Jogo de talheres dourados em caixa</image:title>
+      <image:caption>Jogo de talheres dourados em caixa</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://espaco-decora.vercel.app/assets/06-decoracao-flores.png</image:loc>
+      <image:title>Planta ornamental de folhagem em vaso</image:title>
+      <image:caption>Planta ornamental de folhagem em vaso</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://espaco-decora.vercel.app/assets/08-decoracao-mesa.png</image:loc>
+      <image:title>Vaso de vidro e prato decorativo sobre mesa de vidro</image:title>
+      <image:caption>Vaso de vidro e prato decorativo sobre mesa de vidro</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://espaco-decora.vercel.app/assets/posters/01-apresentacao-rita.jpg</image:loc>
+      <image:title>Rita Assunção sentada em uma poltrona branca, ao lado de uma planta e de um arranjo de flores secas</image:title>
+      <image:caption>Rita Assunção sentada em uma poltrona branca, ao lado de uma planta e de um arranjo de flores secas</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://espaco-decora.vercel.app/assets/01-antes-decoracao.png</image:loc>
+      <image:title>Antes: canto vazio, apenas parede branca e tomada</image:title>
+      <image:caption>Antes: canto vazio, apenas parede branca e tomada</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://espaco-decora.vercel.app/assets/02-depois-decoracao.png</image:loc>
+      <image:title>Depois: cantinho com espelho iluminado, penteadeira e puff de couro</image:title>
+      <image:caption>Depois: cantinho com espelho iluminado, penteadeira e puff de couro</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://espaco-decora.vercel.app/assets/rua-vista-de-baixo.jpg</image:loc>
+      <image:title>Rua com prédios dos dois lados e carros estacionados ao longe, vista de quem chega pela parte de baixo</image:title>
+      <image:caption>Rua com prédios dos dois lados e carros estacionados ao longe, vista de quem chega pela parte de baixo</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://espaco-decora.vercel.app/assets/rua-vista-de-cima.jpg</image:loc>
+      <image:title>Rua com lojas à esquerda, uma caminhonete preta em primeiro plano e prédios ao fundo, vista de quem chega pela parte de cima</image:title>
+      <image:caption>Rua com lojas à esquerda, uma caminhonete preta em primeiro plano e prédios ao fundo, vista de quem chega pela parte de cima</image:caption>
+    </image:image>
+    <video:video>
+      <video:thumbnail_loc>https://espaco-decora.vercel.app/assets/posters/01-apresentacao-rita.jpg</video:thumbnail_loc>
+      <video:title>Apresentação de Rita Assunção</video:title>
+      <video:description>Rita Assunção aparece falando entre estantes, vasos e arranjos da loja.</video:description>
+      <video:content_loc>https://espaco-decora.vercel.app/videos/01-apresentacao-rita.mp4</video:content_loc>
+      <video:duration>37</video:duration>
+      <video:publication_date>2026-09-12T20:39:41-03:00</video:publication_date>
+    </video:video>
+    <video:video>
+      <video:thumbnail_loc>https://espaco-decora.vercel.app/assets/posters/entrando-na-loja.jpg</video:thumbnail_loc>
+      <video:title>Entrada e fachada</video:title>
+      <video:description>Caminho pela calçada da Rua Frei Rogério até a porta e a entrada da loja.</video:description>
+      <video:content_loc>https://espaco-decora.vercel.app/videos/entrando-na-loja.mp4</video:content_loc>
+      <video:duration>13</video:duration>
+      <video:publication_date>2026-09-21T13:07:03-03:00</video:publication_date>
+    </video:video>
+    <video:video>
+      <video:thumbnail_loc>https://espaco-decora.vercel.app/assets/posters/interior-1.jpg</video:thumbnail_loc>
+      <video:title>Primeiro ambiente</video:title>
+      <video:description>Prateleiras da loja com utensílios de cozinha, produtos embalados, objetos decorativos e flores.</video:description>
+      <video:content_loc>https://espaco-decora.vercel.app/videos/interior-1.mp4</video:content_loc>
+      <video:duration>55</video:duration>
+      <video:publication_date>2026-09-21T13:07:03-03:00</video:publication_date>
+    </video:video>
+    <video:video>
+      <video:thumbnail_loc>https://espaco-decora.vercel.app/assets/posters/interior-2.jpg</video:thumbnail_loc>
+      <video:title>Segundo ambiente</video:title>
+      <video:description>Ambiente da loja com peças de vidro e cristal, pratos decorados e prateleiras com objetos.</video:description>
+      <video:content_loc>https://espaco-decora.vercel.app/videos/interior-2.mp4</video:content_loc>
+      <video:duration>85</video:duration>
+      <video:publication_date>2026-09-21T13:07:03-03:00</video:publication_date>
+    </video:video>
+    <video:video>
+      <video:thumbnail_loc>https://espaco-decora.vercel.app/assets/posters/10-transformacao-loft.jpg</video:thumbnail_loc>
+      <video:title>Transformação de ambiente</video:title>
+      <video:description>Um loft vazio, com escada e mezanino, aparece depois mobiliado e decorado, com cozinha e sala.</video:description>
+      <video:content_loc>https://espaco-decora.vercel.app/videos/10-transformacao-loft.mp4</video:content_loc>
+      <video:duration>35</video:duration>
+      <video:publication_date>2026-09-12T20:39:41-03:00</video:publication_date>
+    </video:video>
+    <video:video>
+      <video:thumbnail_loc>https://espaco-decora.vercel.app/assets/posters/13-decoracoes-mesa.jpg</video:thumbnail_loc>
+      <video:title>Mesa posta</video:title>
+      <video:description>Composições sobre mesa com arranjo de flores secas, vasos, livro e esculturas decorativas.</video:description>
+      <video:content_loc>https://espaco-decora.vercel.app/videos/13-decoracoes-mesa.mp4</video:content_loc>
+      <video:duration>33</video:duration>
+      <video:publication_date>2026-09-12T20:39:41-03:00</video:publication_date>
+    </video:video>
+  </url>
+</urlset>

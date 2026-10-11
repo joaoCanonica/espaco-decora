@@ -8,6 +8,27 @@
    marfim · rodapé vinho-escuro.
    ========================================================================== */
 
+/* Fontes self-hospedadas: os mesmos arquivos woff2 (variáveis, subset latin)
+   que o Google Fonts servia, com os mesmos pesos e o mesmo unicode-range.
+   Cormorant Garamond 500–600 e Manrope 400–600; o peso 400 de Cormorant cai
+   no 500, como acontecia antes. Licença SIL Open Font License 1.1. */
+@font-face{
+  font-family: "Cormorant Garamond";
+  font-style: normal;
+  font-weight: 500 600;
+  font-display: swap;
+  src: url("../assets/fonts/cormorant-garamond-latin-wght.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face{
+  font-family: "Manrope";
+  font-style: normal;
+  font-weight: 400 600;
+  font-display: swap;
+  src: url("../assets/fonts/manrope-latin-wght.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
 :root{
   --vinho:          #63382f;
   --vinho-escuro:   #432824;
@@ -592,6 +613,13 @@ html.hero-entrou .hero{ --entrada-base: 260ms; }
   transition: opacity 620ms ease var(--d), transform 620ms cubic-bezier(0.2, 0.65, 0.3, 1) var(--d);
 }
 
+/* No primeiro painel o identificador fica dentro do <h1> (marca e cidade no
+   título); display:block e os valores de texto do corpo mantêm o visual do <p>. */
+.hero__titulo .hero__identificador{
+  display: block;
+  font-family: var(--fonte-corpo);
+  line-height: 1.6;
+}
 .hero__identificador{
   margin-bottom: 12px;
   font-size: 14px;
@@ -1044,19 +1072,7 @@ html:not(.js-pronto) .carrossel__controles{ display: none; }
 /* A foto das flores traz um texto sobreposto no rodapé: o recorte fica no alto. */
 .categoria__foto--flores{ object-position: 50% 15%; }
 
-.categoria__legenda{
-  display: flex;
-  align-items: baseline;
-  gap: 12px;
-  margin-top: 16px;
-}
-.categoria__numero{
-  font-size: 13px;
-  font-weight: 600;
-  letter-spacing: 0.14em;
-  color: var(--terracota);
-  font-variant-numeric: tabular-nums;
-}
+.categoria__legenda{ margin-top: 16px; }
 .categoria__nome{
   font-family: var(--fonte-titulo);
   font-size: 1.75rem;
@@ -1869,6 +1885,39 @@ html:not(.js-pronto) .mapa__placeholder{ display: none; }
 @media (hover: hover) and (pointer: fine){
   .rua__item img{ transition: transform 420ms cubic-bezier(0.2, 0.65, 0.3, 1); }
   .rua__item:hover img{ transform: scale(1.025); }
+}
+
+/* Perguntas frequentes: mesma moldura de "Fotos da rua" (linha fina e título
+   em Cormorant); <details> nativo, sem ícone nem animação próprios. */
+.faq{ margin-top: clamp(44px, 5vw, 72px); }
+.faq__titulo{
+  padding-top: 20px;
+  margin-bottom: 8px;
+  border-top: 1px solid var(--linha);
+  font-family: var(--fonte-titulo);
+  font-size: 1.375rem;
+  font-weight: 400;
+  line-height: 1.3;
+  color: var(--vinho-escuro);
+}
+.faq__item{ border-bottom: 1px solid var(--linha); }
+.faq__pergunta{
+  display: list-item;
+  padding: 12px 0;
+  min-height: 44px;
+  cursor: pointer;
+  font-family: var(--fonte-titulo);
+  font-size: 1.25rem;
+  font-weight: 600;
+  line-height: 1.3;
+  color: var(--vinho-escuro);
+}
+.faq__pergunta::marker{ color: var(--caramelo-escuro); font-size: 0.8em; }
+.faq__pergunta:hover{ color: var(--terracota); }
+.faq__resposta{
+  max-width: 64ch;
+  padding: 0 0 16px;
+  color: var(--texto-suave);
 }
 
 @media (max-width: 899px){
